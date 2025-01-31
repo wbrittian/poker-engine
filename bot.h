@@ -9,6 +9,8 @@
 
 #pragma once
 
+#include <string>
+
 #include "player.h"
 
 class Bot : public Player {
@@ -20,11 +22,11 @@ private:
 
 public:
 
-    Bot(int startingCash)
-        : Player(startingCash), Level(5)
+    Bot(string name, int startingCash)
+        : Player(name, startingCash), Level(5)
         {}
-    Bot(int startingCash, int level)
-        : Player(startingCash), Level(level)
+    Bot(string name, int startingCash, int level)
+        : Player(name, startingCash), Level(level)
         {}
     
 

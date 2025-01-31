@@ -10,8 +10,10 @@
 #pragma once
 
 #include <vector>
+#include <algorithm>
 
 #include "player.h"
+#include "bot.h"
 #include "deck.h"
 
 using namespace std;
@@ -25,7 +27,7 @@ private:
     Deck Deck;
 
     Player* BigBlind;
-    Player* LittleBlind;
+    Player* SmallBlind;
 
     // round-specific
     vector<Player*> ActivePlayers;
@@ -46,7 +48,7 @@ public:
 
     // larger scope functions to manage/setup game
 
-    void initializeGame(int numPlayers, int startingCash);
+    void initializeGame(Player& player, int numBots, int startingCash);
     void newRound();
 
     // TODO: this should decide winning hand and pay to that player
@@ -77,7 +79,7 @@ public:
     //
     // misc
     //
-    int findPlayerIndex(Player& player);
+    int findPlayerIndex(Player* player);
 
     //
     // accessors

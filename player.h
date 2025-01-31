@@ -20,13 +20,15 @@ class Player {
 
 private:
 
+    string Name;
+
     vector<Card> Cards;
     int Cash;
 
 public:
 
-    Player(int startingCash)
-        : Cash(startingCash)
+    Player(string name, int startingCash)
+        : Name(name), Cash(startingCash)
         {}
 
     void emptyHand();
