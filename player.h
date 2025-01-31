@@ -25,6 +25,11 @@ private:
 
 public:
 
+    Player(int startingCash)
+        : Cash(startingCash)
+        {}
+
+    void emptyHand();
     void addCards(vector<Card> cards);
 
 
