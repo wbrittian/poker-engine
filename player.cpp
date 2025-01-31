@@ -22,3 +22,10 @@ void Player::addCards(vector<Card> cards) {
 void Player::editCash(int amount) {
     this->Cash += amount;
 }
+
+//
+// accessors
+//
+int Player::getCash() {
+    return this->Cash;
+}
