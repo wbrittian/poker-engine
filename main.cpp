@@ -16,6 +16,15 @@ using namespace std;
 
 int main() {
 
-    return 0;
+    int NUM_BOTS = 3;
+    int STARTING_CASH = 500;
+
+    Game game;
+    game.initializeGame(NUM_BOTS, STARTING_CASH);
+
+    //
+    // main game loop
+    //
+
 
 }

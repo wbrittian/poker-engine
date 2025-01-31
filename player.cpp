@@ -26,6 +26,10 @@ void Player::editCash(int amount) {
 //
 // accessors
 //
+vector<Card> Player::getCards() {
+    return this->Cards;
+}
+
 int Player::getCash() {
     return this->Cash;
 }
