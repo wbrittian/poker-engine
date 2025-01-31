@@ -32,6 +32,7 @@ public:
     void emptyHand();
     void addCards(vector<Card> cards);
 
+    void editCash(int amount);
 
     //
     // accessors

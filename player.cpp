@@ -18,3 +18,7 @@ void Player::addCards(vector<Card> cards) {
         this->Cards.push_back(card);
     }
 }
+
+void Player::editCash(int amount) {
+    this->Cash += amount;
+}
