@@ -1,11 +1,9 @@
 build:
 	rm -f ./a.out
-	g++ -std=c++17 -Wall main.cpp game.cpp player.cpp deck.cpp bot.cpp
+	g++ -std=c++17 -Wall src/*.cpp
 
 run:
-	rm -f ./a.out
-	g++ -std=c++17 -Wall main.cpp game.cpp player.cpp deck.cpp bot.cpp
-	./a.out
+	@./a.out
 
 install:
-	conan install . --output-folder=build --build=missing
+	@conan install . --output-folder=conan --build=missing
