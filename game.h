@@ -15,6 +15,7 @@
 #include "player.h"
 #include "bot.h"
 #include "deck.h"
+#include "member.h"
 
 using namespace std;
 
@@ -23,14 +24,14 @@ class Game {
 private:
 
     // general info
-    vector<Player> Players;
+    vector<Member> Members;
     Deck Deck;
 
-    Player* BigBlind;
-    Player* SmallBlind;
+    Member* BigBlind;
+    Member* SmallBlind;
 
     // round-specific
-    vector<Player*> ActivePlayers;
+    int NumPlaying;
 
     int Pot;
     vector<int> PotSplits;
