@@ -3,7 +3,4 @@ build:
 	g++ -std=c++17 -Wall src/*.cpp
 
 run:
-	@./a.out
-
-install:
-	@conan install . --output-folder=conan --build=missing
+	./a.out
