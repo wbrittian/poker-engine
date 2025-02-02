@@ -35,7 +35,7 @@ int main() {
     getline(cin, name);
     cout << endl;
 
-    Player player(name, STARTING_CASH);
+    Player* player = new Player(name, STARTING_CASH);
     game.initializeGame(player, NUM_BOTS, STARTING_CASH);
 
 

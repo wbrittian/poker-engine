@@ -14,49 +14,57 @@
 // general game state functions
 //
 
-void Game::initializeGame(Player& player, int numBots, int startingCash) {
+void Game::initializeGame(Player* player, int numBots, int startingCash) {
     this->Deck.refillCards();
 
-    this->addPlayer(player);
+    this->User = player;
+    this->addPlayer(player, nullptr);
+    player->setNextPlayer(player);
 
     // add bots
     for (int i = 0; i < numBots; i++) {
-        string name = "Bot " + to_string(i + 1);
+        string name = "Bot " + to_string(numBots - i);
 
-        this->addPlayer(Bot(name, startingCash));
+        this->addPlayer(new Bot(name, startingCash), player);
     }
+
+    this->NumPlayers = 1 + numBots;
 }
 
 void Game::newRound() {
     this->Deck.refillCards();
-    this->Pot = 0;
 
+    // TODO: implement main game loop
 }
 
-void Game::addPlayer(Player player) {
-    this->Players.push_back(player);
+void Game::settleRound() {
+    // TODO: implement code for determining winner
+
+    this->Bet = 0;
+    this->Pot = 0;
+}
+
+void Game::addPlayer(Player* player, Player* position) {
+    if (position == nullptr) {
+        this->FirstPlayer = player;
+    } else {
+        Player* temp = position->getNextPlayer();
+        position->setNextPlayer(player);
+        player->setNextPlayer(temp);
+    }
 }
 
 void Game::removePlayer(Player* player) {
-    int idx = this->findPlayerIndex(player);
-    this->Players.erase(this->Players.begin() + idx);
+    Player* previous = this->getPreviousPlayer(player);
+    Player* next = player->getNextPlayer();
+
+    previous->setNextPlayer(next);
 }
 
-// TODO: fix function based on player structure
-// currently findPlayerIndex won't work if player has been 
-// removed from game already
-void Game::moveBlinds() {
-    int bigIdx = this->findPlayerIndex(this->BigBlind);
-
-    if (bigIdx + 1 == this->Players.size()) {
-        this->SmallBlind = &this->Players[bigIdx];
-        this->BigBlind = &this->Players[0];
-    } else if (bigIdx + 1 > this->Players.size()) {
-        
-    } else {
-        this->SmallBlind = &this->Players[bigIdx];
-        this->BigBlind = &this->Players[bigIdx + 1];
-    }
+// rotates the head pointer to the next in the order
+// head by default points to the small blind
+void Game::rotateOrder() {
+    this->FirstPlayer = this->FirstPlayer->getNextPlayer();
 }
 
 
@@ -64,23 +72,23 @@ void Game::moveBlinds() {
 // round active functions
 //
 
-void Game::settlePlayerBet(int amount, Player& player) {
+void Game::settlePlayerBet(int amount, Player* player) {
     if (this->Bet + amount < 0 ||
-        player.getCash() - amount < 0) {
+        player->getCash() - amount < 0) {
         throw range_error("Negative value error");
     }
 
-    player.editCash(-amount);
+    player->editCash(-amount);
     this->Bet += amount;
 }
 
-void Game::settlePlayerPot(int amount, Player& player) {
+void Game::settlePlayerPot(int amount, Player* player) {
     if (this->Pot + amount < 0 || 
-        player.getCash() - amount < 0) {
+        player->getCash() - amount < 0) {
         throw range_error("Negative value error");
     }
 
-    player.editCash(-amount);
+    player->editCash(-amount);
     this->Pot += amount;
 }
 
@@ -89,23 +97,28 @@ void Game::settleBetPot(int amount) {
     this->Pot += amount;
 }
 
-void Game::dealToPlayer(Player& player) {
-    player.emptyHand();
-    player.addCards(this->Deck.drawCards(2));
+void Game::dealToPlayer(Player* player) {
+    player->emptyHand();
+    player->addCards(this->Deck.drawCards(2));
 }
 
 
 //
 // misc
 //
-int Game::findPlayerIndex(Player* player) {
-    auto idx = find(this->Players.begin(), this->Players.end(), *player);
+Player* Game::getNthPlayer(int N) {
 
-    if (idx != this->Players.end()) {
-        return distance(this->Players.begin(), idx);
-    } else {
-        throw range_error("Player not found");
+}
+
+// returns the player behind the given player in the order
+Player* Game::getPreviousPlayer(Player* player) {
+    Player* current = player;
+
+    while (current->getNextPlayer() != player) {
+        current = current->getNextPlayer();
     }
+
+    return current;
 }
 
 
