@@ -44,6 +44,7 @@ public:
     // larger scope functions to manage/setup/finish game
 
     void initializeGame(Player* player, int numBots, int startingCash);
+    void finishGame();
 
     // TODO: this shold begin game functionality
     void newRound();

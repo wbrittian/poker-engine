@@ -31,6 +31,10 @@ void Game::initializeGame(Player* player, int numBots, int startingCash) {
     this->NumPlayers = 1 + numBots;
 }
 
+void Game::finishGame() {
+    // TODO implement for test destructor
+}
+
 void Game::newRound() {
     this->Deck.refillCards();
 
@@ -54,11 +58,14 @@ void Game::addPlayer(Player* player, Player* position) {
     }
 }
 
+// TODO fix so you can remove all players
 void Game::removePlayer(Player* player) {
+
     Player* previous = this->getPreviousPlayer(player);
     Player* next = player->getNextPlayer();
 
     previous->setNextPlayer(next);
+    delete player;
 }
 
 // rotates the head pointer to the next in the order
