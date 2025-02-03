@@ -1,2 +1,4 @@
 *.out
-conan
+build
+CMakeUserPresets.json
+.vscode
