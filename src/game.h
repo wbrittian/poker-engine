@@ -23,22 +23,17 @@ class Game {
 private:
 
     // general info
-    vector<Player> Players;
+    Player* User;
+    Player* FirstPlayer;
     Deck Deck;
 
-    Player* BigBlind;
-    Player* SmallBlind;
+    int NumPlayers;
 
     // round-specific
-    vector<Player*> ActivePlayers;
+    int NumPlaying = 0;
 
-    int Pot;
-    vector<int> PotSplits;
-
-    int Bet;
-    vector<int> BetSplits;
-
-    bool RoundActive;
+    int Pot = 0;
+    int Bet = 0;
 
 public:
 
@@ -46,32 +41,39 @@ public:
     // general game state functions
     //
 
-    // larger scope functions to manage/setup game
+    // larger scope functions to manage/setup/finish game
 
-    void initializeGame(Player& player, int numBots, int startingCash);
+    void initializeGame(Player* player, int numBots, int startingCash);
+    void finishGame();
+
+    // TODO: this shold begin game functionality
     void newRound();
 
     // TODO: this should decide winning hand and pay to that player
     void settleRound();
 
+
     // utility functions for managing game state
 
-    void addPlayer(Player player);
+    void addPlayer(Player* player, Player* position);
     void removePlayer(Player* player);
-    void moveBlinds();
+    void rotateOrder();
 
 
     //
     // round active functions
     //
 
+    // main game loop
+    void runGame();
+
     // utility functions for managing round
 
-    void dealToPlayer(Player& player);
+    void dealToPlayer(Player* player);
     // player -> bet if positive, bet -> player if negative
-    void settlePlayerBet(int amount, Player& player);
+    void settlePlayerBet(int amount, Player* player);
     // player -> pot if positive, pot -> player if negative
-    void settlePlayerPot(int amount, Player& player);
+    void settlePlayerPot(int amount, Player* player);
     // bet -> pot if positive, pot <- bet if negative
     void settleBetPot(int amount);
 
@@ -79,7 +81,8 @@ public:
     //
     // misc
     //
-    int findPlayerIndex(Player* player);
+    Player* getNthPlayer(int N);
+    Player* getPreviousPlayer(Player* player);
 
     //
     // accessors

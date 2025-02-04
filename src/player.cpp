@@ -23,6 +23,10 @@ void Player::editCash(int amount) {
     this->Cash += amount;
 }
 
+void Player::setNextPlayer(Player* player) {
+    this->Next = player;
+}
+
 //
 // accessors
 //
@@ -32,4 +36,8 @@ vector<Card> Player::getCards() {
 
 int Player::getCash() {
     return this->Cash;
+}
+
+Player* Player::getNextPlayer() {
+    return this->Next;
 }

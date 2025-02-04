@@ -12,6 +12,7 @@
 #include "player.h"
 #include "deck.h"
 #include "bot.h"
+#include "chars.h"
 
 using namespace std;
 
@@ -24,18 +25,24 @@ int main() {
     Game game;
 
     cout << endl;
-    cout << "***********************" << endl;
-    cout << "   Welcome to Poker!   " << endl;
+    cout << "----------------------------" << endl;
+    cout << "         Welcome to         " << endl;
     cout << endl;
-    cout << " William Brittian 2025 " << endl;
-    cout << "***********************" << endl;
+    printTitle();
+    cout << endl;
+    cout << "   William Brittian 2025    " << endl;
+    cout << "----------------------------" << endl;
+    cout << endl;
+
+    cout << endl;
+    cout << CARD << endl;
     cout << endl;
 
     cout << "please enter your name:" << endl;
     getline(cin, name);
     cout << endl;
 
-    Player player(name, STARTING_CASH);
+    Player* player = new Player(name, STARTING_CASH);
     game.initializeGame(player, NUM_BOTS, STARTING_CASH);
 
 
