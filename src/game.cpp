@@ -32,7 +32,9 @@ void Game::initializeGame(Player* player, int numBots, int startingCash) {
 }
 
 void Game::finishGame() {
-    // TODO implement for test destructor
+    
+    
+
 }
 
 void Game::newRound() {
@@ -58,13 +60,15 @@ void Game::addPlayer(Player* player, Player* position) {
     }
 }
 
-// TODO fix so you can remove all players
 void Game::removePlayer(Player* player) {
 
-    Player* previous = this->getPreviousPlayer(player);
-    Player* next = player->getNextPlayer();
+    if (player->getNextPlayer() != player) {
+        Player* previous = this->getPreviousPlayer(player);
+        Player* next = player->getNextPlayer();
 
-    previous->setNextPlayer(next);
+        previous->setNextPlayer(next);
+    }
+    
     delete player;
 }
 
