@@ -12,6 +12,7 @@
 #include "player.h"
 #include "deck.h"
 #include "bot.h"
+#include "chars.h"
 
 using namespace std;
 
@@ -24,11 +25,13 @@ int main() {
     Game game;
 
     cout << endl;
-    cout << "***********************" << endl;
-    cout << "   Welcome to Poker!   " << endl;
+    cout << "----------------------------" << endl;
+    cout << "         Welcome to         " << endl;
     cout << endl;
-    cout << " William Brittian 2025 " << endl;
-    cout << "***********************" << endl;
+    printTitle();
+    cout << endl;
+    cout << "   William Brittian 2025    " << endl;
+    cout << "----------------------------" << endl;
     cout << endl;
 
     cout << "please enter your name:" << endl;
