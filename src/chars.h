@@ -15,9 +15,12 @@
 using namespace std;
 
 extern string SPADE;
-extern string CARD;
+extern string HEART;
+extern string CLUB;
+extern string DIAMOND;
+extern string CHIP;
+extern string CHIPS;
 
 void printTitle();
 
-string char16_to_utf8(char16_t ch);
-string char32_to_utf8(char32_t ch);
+string to_utf8(char16_t ch);
