@@ -17,11 +17,15 @@ char16_t club = u'\u2663';
 char16_t diamond = u'\u2666';
 char16_t chip = u'\u26C0';
 
-string SPADE = to_utf8(spade);
-string HEART = to_utf8(heart);
-string CLUB = to_utf8(club);
-string DIAMOND = to_utf8(diamond);
-string CHIP = to_utf8(chip);
+char32_t card = U'\U00010FB5';
+
+string SPADE = char16_to_utf8(spade);
+string HEART = char16_to_utf8(heart);
+string CLUB = char16_to_utf8(club);
+string DIAMOND = char16_to_utf8(diamond);
+string CHIP = char16_to_utf8(chip);
+
+string CARD = char32_to_utf8(card);
 
 void printTitle() {
     
@@ -47,7 +51,7 @@ void printTitle() {
     
 }
 
-string to_utf8(char16_t ch) {
+string char16_to_utf8(char16_t ch) {
     string utf8;
     if (ch <= 0x7F) { // 1-byte UTF-8
         utf8.push_back(static_cast<char>(ch));
@@ -58,6 +62,26 @@ string to_utf8(char16_t ch) {
         utf8.push_back(static_cast<char>(0xE0 | ((ch >> 12) & 0x0F)));
         utf8.push_back(static_cast<char>(0x80 | ((ch >> 6) & 0x3F)));
         utf8.push_back(static_cast<char>(0x80 | (ch & 0x3F)));
+    }
+    return utf8;
+    }
+
+string char32_to_utf8(char32_t ch) {
+    string utf8;
+    if (ch <= 0x7F) {
+        utf8 += static_cast<char>(ch);
+    } else if (ch <= 0x7FF) {
+        utf8 += static_cast<char>(0xC0 | ((ch >> 6) & 0x1F));
+        utf8 += static_cast<char>(0x80 | (ch & 0x3F));
+    } else if (ch <= 0xFFFF) {
+        utf8 += static_cast<char>(0xE0 | ((ch >> 12) & 0x0F));
+        utf8 += static_cast<char>(0x80 | ((ch >> 6) & 0x3F));
+        utf8 += static_cast<char>(0x80 | (ch & 0x3F));
+    } else {  // U+10000 to U+10FFFF (4-byte UTF-8)
+        utf8 += static_cast<char>(0xF0 | ((ch >> 18) & 0x07));
+        utf8 += static_cast<char>(0x80 | ((ch >> 12) & 0x3F));
+        utf8 += static_cast<char>(0x80 | ((ch >> 6) & 0x3F));
+        utf8 += static_cast<char>(0x80 | (ch & 0x3F));
     }
     return utf8;
 }

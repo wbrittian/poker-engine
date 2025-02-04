@@ -15,9 +15,9 @@
 using namespace std;
 
 extern string SPADE;
-
-void initializeSymbols();
+extern string CARD;
 
 void printTitle();
 
-string to_utf8(char16_t ch);
+string char16_to_utf8(char16_t ch);
+string char32_to_utf8(char32_t ch);

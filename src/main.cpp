@@ -34,6 +34,10 @@ int main() {
     cout << "----------------------------" << endl;
     cout << endl;
 
+    cout << endl;
+    cout << CARD << endl;
+    cout << endl;
+
     cout << "please enter your name:" << endl;
     getline(cin, name);
     cout << endl;
