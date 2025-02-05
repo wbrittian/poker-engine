@@ -28,16 +28,13 @@ protected:
 
     void SetUp() override {
         player1 = new Player("Bob", 1000);
+        player2 = new Player("Jim", 1000);
 
         game2.initializeGame(player1, 3, 1000);
     }
 
     void TearDown() override {
-        game1.finishGame();
         game2.finishGame();
-
-        delete player1;
-        delete player2;
     }
 
     Game game1;

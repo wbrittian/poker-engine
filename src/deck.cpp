@@ -33,7 +33,7 @@ void Deck::refillCards() {
 
 Card Deck::drawCard() {
 
-    if (this->Cards.size()) {
+    if (this->Cards.size() == 0) {
         throw length_error("No more cards in deck");
     }
 
