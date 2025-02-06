@@ -8,31 +8,29 @@
 #include <iostream>
 #include <vector>
 
-#include "game.h"
-#include "player.h"
 #include "chars.h"
 #include "functions.h"
+#include "game.h"
+#include "player.h"
 
 using namespace std;
 
 int main() {
 
-    int NUM_BOTS = 3;
-    int STARTING_CASH = 500;
+  int NUM_BOTS = 3;
+  int STARTING_CASH = 500;
 
-    string name;
-    Game game;
+  string name;
+  Game game;
 
-    printTitle();
-    name = getName();
+  printTitle();
+  name = getName();
 
-    Player* player = new Player(name, STARTING_CASH);
-    game.initializeGame(player, NUM_BOTS, STARTING_CASH);
+  Player *player = new Player(name, STARTING_CASH);
+  game.initializeGame(player, NUM_BOTS, STARTING_CASH);
 
-
-    //
-    // main game loop
-    //
-
+  //
+  // main game loop
+  //
 
 }
