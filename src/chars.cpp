@@ -25,6 +25,8 @@ string DIAMOND = to_utf8(diamond);
 string CHIP = to_utf8(chip);
 string CHIPS = to_utf8(chips);
 
+// converts char16_t unicode chars to strings that can be 
+// outputted by the console
 string to_utf8(char16_t ch) {
     string utf8;
     if (ch <= 0x7F) { // 1-byte UTF-8

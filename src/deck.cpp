@@ -9,6 +9,7 @@
 
 #include "deck.h"
 
+// empties deck and adds 52 cards back to it
 void Deck::refillCards() {
 
     this->Cards.clear();
@@ -31,6 +32,7 @@ void Deck::refillCards() {
 
 }
 
+// draws a random card from the deck
 Card Deck::drawCard() {
 
     if (this->Cards.size() == 0) {
@@ -47,6 +49,7 @@ Card Deck::drawCard() {
     return card;
 }
 
+// draws multiple cards from the deck
 vector<Card> Deck::drawCards(int numCards) {
 
     vector<Card> cards;

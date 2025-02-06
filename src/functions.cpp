@@ -11,6 +11,7 @@
 
 using namespace std;
 
+// gets player name from terminal
 string getName() {
     string name;
     bool correct = false;
@@ -34,6 +35,7 @@ string getName() {
     return name;
 }
 
+// prints out the main title screen
 void printTitle() {
     
     cout << endl;
