@@ -48,6 +48,7 @@ public:
     //
     vector<Card> getCards();
     int getCash();
+    string getName();
     Player* getNextPlayer();
 
 };

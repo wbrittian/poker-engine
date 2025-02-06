@@ -28,12 +28,13 @@ void Game::initializeGame(Player* player, int numBots, int startingCash) {
         this->addPlayer(new Bot(name, startingCash), player);
     }
 
-    this->NumPlayers = 1 + numBots;
 }
 
 void Game::finishGame() {
     
-    
+    while (this->NumPlayers > 0) {
+        removePlayer(this->FirstPlayer);
+    }
 
 }
 
@@ -58,17 +59,31 @@ void Game::addPlayer(Player* player, Player* position) {
         position->setNextPlayer(player);
         player->setNextPlayer(temp);
     }
+
+    this->NumPlayers++;
 }
 
 void Game::removePlayer(Player* player) {
 
+    // TODO: what happens to user (and game) if you
+    // remove the player? When will this get called
+    // and will that happen?
+
     if (player->getNextPlayer() != player) {
+        if (this->FirstPlayer == player) {
+            this->FirstPlayer = player->getNextPlayer();
+        }
+
         Player* previous = this->getPreviousPlayer(player);
         Player* next = player->getNextPlayer();
 
         previous->setNextPlayer(next);
+    } else {
+        this->FirstPlayer = nullptr;
+        this->User = nullptr;
     }
     
+    this->NumPlayers--;
     delete player;
 }
 
@@ -142,6 +157,14 @@ int Game::getPot() {
 
 int Game::getBet() {
     return this->Bet;
+}
+
+int Game::getNumPlayers() {
+    return this->NumPlayers;
+}
+
+Player* Game::getFirstPlayer() {
+    return this->FirstPlayer;
 }
 
 Player* Game::getCurrentLeader() {

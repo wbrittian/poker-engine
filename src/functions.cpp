@@ -1,0 +1,68 @@
+/*functions.cpp*/
+
+//
+// helper functions for running game
+//
+// William Brittian
+// 2025
+//
+
+#include "functions.h"
+
+using namespace std;
+
+// gets player name from terminal
+string getName() {
+    string name;
+    bool correct = false;
+
+    while (!correct) {
+        cout << "please enter your name:" << endl;
+        getline(cin, name);
+        cout << endl;
+
+
+        string ans;
+        cout << "does this look right (y/n)? " << name << endl;
+        getline(cin, ans);
+        cout << endl;
+
+        if (ans == "y") {
+            correct = true;
+        }
+    }
+    
+    return name;
+}
+
+// prints out the main title screen
+void printTitle() {
+    
+    cout << endl;
+    cout << "----------------------------" << endl;
+    cout << "         Welcome to         " << endl;
+    cout << endl;
+    cout << "****************************" << endl;
+
+    cout << SPADE << SPADE << SPADE << SPADE << "  " << HEART << HEART << HEART << HEART << "  " << CHIP << "  " 
+    << CHIP << "  " << CLUB << CLUB << CLUB << CLUB << "  " << DIAMOND << DIAMOND << DIAMOND << DIAMOND << endl;
+
+    cout << SPADE << "  " << SPADE << "  " << HEART << "  " << HEART << "  " << CHIP << " " << CHIP << "   " 
+    << CLUB << "     " << DIAMOND << "  " << DIAMOND << endl;
+
+    cout << SPADE << SPADE << SPADE << SPADE << "  " << HEART << "  " << HEART << "  " << CHIP << CHIP << "    " 
+    << CLUB << CLUB << CLUB << CLUB << "  " << DIAMOND << DIAMOND << DIAMOND << DIAMOND << endl;
+
+    cout << SPADE << "     " << HEART << "  " << HEART << "  " << CHIP << " " << CHIP << "   " 
+    << CLUB << "     " << DIAMOND << " " << DIAMOND << " " << endl;
+
+    cout << SPADE << "     " << HEART << HEART << HEART << HEART << "  " << CHIP << "  " << CHIP << "  " 
+    << CLUB << CLUB << CLUB << CLUB << "  " << DIAMOND << "  " << DIAMOND << endl;
+
+    cout << "****************************" << endl;
+    cout << endl;
+    cout << "   William Brittian 2025    " << endl;
+    cout << "----------------------------" << endl;
+    cout << endl;
+    
+}

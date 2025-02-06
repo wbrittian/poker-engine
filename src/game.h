@@ -27,7 +27,7 @@ private:
     Player* FirstPlayer;
     Deck Deck;
 
-    int NumPlayers;
+    int NumPlayers = 0;
 
     // round-specific
     int NumPlaying = 0;
@@ -55,6 +55,7 @@ public:
 
     // utility functions for managing game state
 
+    // adds player after position in the order
     void addPlayer(Player* player, Player* position);
     void removePlayer(Player* player);
     void rotateOrder();
@@ -89,6 +90,9 @@ public:
     //
     int getPot();
     int getBet();
+    int getNumPlayers();
+
+    Player* getFirstPlayer();
 
     // shows which player currently has the most cash
     Player* getCurrentLeader();

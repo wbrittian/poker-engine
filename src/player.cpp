@@ -38,6 +38,10 @@ int Player::getCash() {
     return this->Cash;
 }
 
+string Player::getName() {
+    return this->Name;
+}
+
 Player* Player::getNextPlayer() {
     return this->Next;
 }

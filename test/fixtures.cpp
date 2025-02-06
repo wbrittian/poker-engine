@@ -17,7 +17,7 @@ class PlayerTest : public testing::Test {
 protected:
 
     void SetUp() override {
-        player1 = Player("Bob", 500);
+        player1 = Player("Bob", 1000);
     }
 
     Player player1;
@@ -27,20 +27,24 @@ class GameTest : public testing::Test {
 protected:
 
     void SetUp() override {
-        player1 = new Player("Bob", 500);
+        player1 = new Player("Bob", 1000);
+        player2 = new Player("Jim", 1000);
 
-        game1.initializeGame(player1, 3, 500);
+        game2.initializeGame(player1, 3, 1000);
     }
 
     void TearDown() override {
-        delete player1;
+        game2.finishGame();
     }
 
     Game game1;
+    Game game2;
     Player* player1;
+    Player* player2;
 
 };
 
 class DeckTest : public testing::Test {
-
+protected:
+    Deck deck1;
 };
