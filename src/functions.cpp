@@ -66,3 +66,11 @@ void printTitle() {
     cout << endl;
     
 }
+
+void setColor(string color) {
+    if (color == "red") {
+        cout << "\033[31m";
+    } else if (color == "black") {
+        cout << "\033[0m";
+    }
+}

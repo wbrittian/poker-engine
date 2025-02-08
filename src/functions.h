@@ -19,3 +19,5 @@ using namespace std;
 string getName();
 
 void printTitle();
+
+void setColor(string color);

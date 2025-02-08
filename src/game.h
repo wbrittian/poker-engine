@@ -35,6 +35,8 @@ private:
     int Pot = 0;
     int Bet = 0;
 
+    vector<Card> Cards;
+
 public:
 
     //
@@ -84,6 +86,7 @@ public:
     //
     Player* getNthPlayer(int N);
     Player* getPreviousPlayer(Player* player);
+    void printCards();
 
     //
     // accessors
