@@ -12,6 +12,8 @@
 #include <string>
 #include <iostream>
 
+#include "functions.h"
+
 using namespace std;
 
 struct Card {

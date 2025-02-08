@@ -17,11 +17,6 @@ using namespace std;
 
 int main() {
 
-  setColor("red");
-  cout << "test1" << endl;
-  setColor("black");
-  cout << "test2" << endl;
-
   int NUM_BOTS = 3;
   int STARTING_CASH = 500;
 

@@ -41,3 +41,15 @@ string to_utf8(char16_t ch) {
     }
     return utf8;
 }
+
+string matchToSymbol(string suit) {
+    if (suit == "Spades") {
+        return SPADE;
+    } else if (suit == "Hearts") {
+        return HEART;
+    } else if (suit == "Clubs") {
+        return CLUB;
+    } else if (suit == "Diamonds") {
+        return DIAMOND;
+    }
+}

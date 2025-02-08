@@ -24,3 +24,5 @@ extern string CHIPS;
 void printTitle();
 
 string to_utf8(char16_t ch);
+
+string matchToSymbol(string suit);

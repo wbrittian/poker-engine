@@ -138,6 +138,12 @@ Player *Game::getPreviousPlayer(Player *player) {
   return current;
 }
 
+void Game::printCards() {
+  for (Card card : this-> Cards) {
+    card.printCard(true);
+  }
+ }
+
 //
 // accessors
 //
