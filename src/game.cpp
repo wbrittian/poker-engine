@@ -14,80 +14,80 @@
 //
 
 void Game::initializeGame(Player *player, int numBots, int startingCash) {
-  this->Deck.refillCards();
+    this->Deck.refillCards();
 
-  this->User = player;
-  this->addPlayer(player, nullptr);
-  player->setNextPlayer(player);
+    this->User = player;
+    this->addPlayer(player, nullptr);
+    player->setNextPlayer(player);
 
-  // add bots
-  for (int i = 0; i < numBots; i++) {
-    string name = "Bot " + to_string(numBots - i);
+    // add bots
+    for (int i = 0; i < numBots; i++) {
+        string name = "Bot " + to_string(numBots - i);
 
-    this->addPlayer(new Bot(name, startingCash), player);
-  }
+        this->addPlayer(new Bot(name, startingCash), player);
+    }
 }
 
 void Game::finishGame() {
 
-  while (this->NumPlayers > 0) {
-    removePlayer(this->FirstPlayer);
-  }
+    while (this->NumPlayers > 0) {
+        removePlayer(this->FirstPlayer);
+    }
 }
 
 void Game::newRound() {
-  this->Deck.refillCards();
+    this->Deck.refillCards();
 
-  // TODO: implement main game loop
+    // TODO: implement main game loop
 }
 
 void Game::settleRound() {
-  // TODO: implement code for determining winner
+    // TODO: implement code for determining winner
 
-  this->Bet = 0;
-  this->Pot = 0;
+    this->Bet = 0;
+    this->Pot = 0;
 }
 
 void Game::addPlayer(Player *player, Player *position) {
-  if (position == nullptr) {
-    this->FirstPlayer = player;
-  } else {
-    Player *temp = position->getNextPlayer();
-    position->setNextPlayer(player);
-    player->setNextPlayer(temp);
-  }
+    if (position == nullptr) {
+        this->FirstPlayer = player;
+    } else {
+        Player *temp = position->getNextPlayer();
+        position->setNextPlayer(player);
+        player->setNextPlayer(temp);
+    }
 
-  this->NumPlayers++;
+    this->NumPlayers++;
 }
 
 void Game::removePlayer(Player *player) {
 
-  // TODO: what happens to user (and game) if you
-  // remove the player? When will this get called
-  // and will that happen?
+    // TODO: what happens to user (and game) if you
+    // remove the player? When will this get called
+    // and will that happen?
 
-  if (player->getNextPlayer() != player) {
-    if (this->FirstPlayer == player) {
-      this->FirstPlayer = player->getNextPlayer();
+    if (player->getNextPlayer() != player) {
+        if (this->FirstPlayer == player) {
+            this->FirstPlayer = player->getNextPlayer();
+        }
+
+        Player *previous = this->getPreviousPlayer(player);
+        Player *next = player->getNextPlayer();
+
+        previous->setNextPlayer(next);
+    } else {
+        this->FirstPlayer = nullptr;
+        this->User = nullptr;
     }
 
-    Player *previous = this->getPreviousPlayer(player);
-    Player *next = player->getNextPlayer();
-
-    previous->setNextPlayer(next);
-  } else {
-    this->FirstPlayer = nullptr;
-    this->User = nullptr;
-  }
-
-  this->NumPlayers--;
-  delete player;
+    this->NumPlayers--;
+    delete player;
 }
 
 // rotates the head pointer to the next in the order
 // head by default points to the small blind
 void Game::rotateOrder() {
-  this->FirstPlayer = this->FirstPlayer->getNextPlayer();
+    this->FirstPlayer = this->FirstPlayer->getNextPlayer();
 }
 
 //
@@ -95,78 +95,88 @@ void Game::rotateOrder() {
 //
 
 void Game::settlePlayerBet(int amount, Player *player) {
-  if (this->Bet + amount < 0 || player->getCash() - amount < 0) {
-    throw range_error("Negative value error");
-  }
+    if (this->Bet + amount < 0 || player->getCash() - amount < 0) {
+        throw range_error("Negative value error");
+    }
 
-  player->editCash(-amount);
-  this->Bet += amount;
+    player->editCash(-amount);
+    this->Bet += amount;
 }
 
 void Game::settlePlayerPot(int amount, Player *player) {
-  if (this->Pot + amount < 0 || player->getCash() - amount < 0) {
-    throw range_error("Negative value error");
-  }
+    if (this->Pot + amount < 0 || player->getCash() - amount < 0) {
+        throw range_error("Negative value error");
+    }
 
-  player->editCash(-amount);
-  this->Pot += amount;
+    player->editCash(-amount);
+    this->Pot += amount;
 }
 
 void Game::settleBetPot(int amount) {
-  this->Bet -= amount;
-  this->Pot += amount;
+    this->Bet -= amount;
+    this->Pot += amount;
 }
 
 void Game::dealToPlayer(Player *player) {
-  player->emptyHand();
-  player->addCards(this->Deck.drawCards(2));
+    player->emptyHand();
+    player->addCards(this->Deck.drawCards(2));
 }
 
 //
 // misc
 //
-Player *Game::getNthPlayer(int N) {}
+Player *Game::getNthPlayer(int N) {
+
+}
 
 // returns the player behind the given player in the order
 Player *Game::getPreviousPlayer(Player *player) {
-  Player *current = player;
+    Player *current = player;
 
-  while (current->getNextPlayer() != player) {
-    current = current->getNextPlayer();
-  }
+    while (current->getNextPlayer() != player) {
+        current = current->getNextPlayer();
+    }
 
-  return current;
+    return current;
 }
 
 void Game::printCards() {
-  for (Card card : this-> Cards) {
-    card.printCard(true);
-  }
- }
+    for (Card card : this->Cards) {
+        card.printCard(true);
+    }
+}
 
 //
 // accessors
 //
-int Game::getPot() { return this->Pot; }
+int Game::getPot() {
+    return this->Pot; 
+}
 
-int Game::getBet() { return this->Bet; }
+int Game::getBet() {
+    return this->Bet;
+}
 
-int Game::getNumPlayers() { return this->NumPlayers; }
+int Game::getNumPlayers() {
+    return this->NumPlayers;
+}
 
-Player *Game::getFirstPlayer() { return this->FirstPlayer; }
+Player *Game::getFirstPlayer() {
+    return this->FirstPlayer;
+}
 
 // returns the player with the most cash
 Player *Game::getCurrentLeader() {
-  Player *leader = this->FirstPlayer;
-  Player *current = this->FirstPlayer->getNextPlayer();
+    Player *leader = this->FirstPlayer;
+    Player *current = this->FirstPlayer->getNextPlayer();
 
-  while (current != this->FirstPlayer) {
-    if (current->getCash() > leader->getCash()) {
-      leader = current;
+    while (current != this->FirstPlayer) {
+        if (current->getCash() > leader->getCash()) {
+            leader = current;
+        }
+
+        current = current->getNextPlayer();
     }
 
-    current = current->getNextPlayer();
-  }
-
-  return leader;
+    return leader;
 }
