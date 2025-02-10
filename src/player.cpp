@@ -27,9 +27,30 @@ void Player::setNextPlayer(Player* player) {
     this->Next = player;
 }
 
-Action Player::getAction(Game* game) {
-    int bet = game->getBet();
+Action Player::getAction() {
+    string response;
     
+    while (true) {
+        cout << "Enter your action, type h for help > " << endl;
+        cin >> response;
+
+        if (response == "h") {
+            cout << "Actions:" 
+            << endl << "call -> calls current bet or checks if bet is 0"
+            << endl << "raise -> raises the bet (raise amount must be at least current bet)"
+            << endl << "h -> shows the help menu"
+            << endl;
+        } else if (response == "call") {
+            return {CALL, 0};
+        } else if (response == "raise") {
+            string amt;
+            cin >> amt;
+
+            if (amt == "all") {
+                return {RAISE, this->Cash};
+            }
+        }
+    }
 }
 
 void Player::printCards() {

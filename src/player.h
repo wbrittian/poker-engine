@@ -47,7 +47,7 @@ public:
 
     void setNextPlayer(Player* player);
 
-    Action getAction(Game* game);
+    Action getAction();
 
     void printCards();
 
