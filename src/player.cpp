@@ -59,6 +59,7 @@ Action Player::getAction(int bet) {
             } else {
                 cout << "bet amount must be an integer" << endl;
             }
+            
         }
     }
 }
