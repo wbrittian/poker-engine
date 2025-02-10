@@ -40,10 +40,17 @@ public:
         : Name(name), Cash(startingCash), Bet(0), PotSplit(0), CurrentAction({NONE, 0})
         {}
 
+    virtual ~Player() = default;
+
     void emptyHand();
     void addCards(vector<Card> cards);
 
     void editCash(int amount);
+    void setBet(int amount);
+    void editBet(int amount);
+    void resetBet();
+    void editPotSplit(int amount);
+    void resetPotSplit();
 
     void setNextPlayer(Player* player);
 
@@ -55,9 +62,9 @@ public:
     // accessors
     //
     vector<Card> getCards();
-    int getCash();
     string getName();
     Player* getNextPlayer();
+    int getCash();
     int getBet();
     int getPotSplit();
 

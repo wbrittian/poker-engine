@@ -23,6 +23,26 @@ void Player::editCash(int amount) {
     this->Cash += amount;
 }
 
+void Player::setBet(int amount) {
+    this->Bet = amount;
+}
+
+void Player::editBet(int amount) {
+    this->Bet += amount;
+}
+
+void Player::resetBet() {
+    this->Bet = 0;
+}
+
+void Player::editPotSplit(int amount) {
+    this->PotSplit += amount;
+}
+
+void Player::resetPotSplit() {
+    this->PotSplit = 0;
+}
+
 void Player::setNextPlayer(Player* player) {
     this->Next = player;
 }
@@ -80,16 +100,16 @@ vector<Card> Player::getCards() {
     return this->Cards;
 }
 
-int Player::getCash() {
-    return this->Cash;
-}
-
 string Player::getName() {
     return this->Name;
 }
 
 Player* Player::getNextPlayer() {
     return this->Next;
+}
+
+int Player::getCash() {
+    return this->Cash;
 }
 
 int Player::getBet() {

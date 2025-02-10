@@ -93,6 +93,9 @@ public:
     // bet -> pot if positive, pot <- bet if negative
     void settleBetPot(int amount);
 
+    void settleBet(int amount, Player* player);
+    void clearAllBets();
+
 
     //
     // misc

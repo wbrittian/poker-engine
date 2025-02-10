@@ -104,25 +104,37 @@ void Game::runBetting() {
 
     bool done = false;
 
-    while (!done) {
+    do {
         Action action;
 
         if (current == this->User) {
             this->printRoundInfo();
             action = this->User->getAction(this->Bet);
         } else {
-            action = current->getAction(this->Bet);
+            action = current->getAction(this->Bet); // IMPORTANT: FIX POLYMORPHISM FOR BOTS
         }
-    }
-}
 
-void Game::settlePlayerBet(int amount, Player *player) {
-    if (this->Bet + amount < 0 || player->getCash() - amount < 0) {
-        throw range_error("Negative value error");
-    }
+        // shouldn't be possible, but want to make sure
+        if (action.Type == NONE) {
+            continue;
+        } else if (action.Type == CALL) {
+            int settleAmount = this->Bet - current->getBet();
+            this->settlePlayerPot(settleAmount, current);
+        } else if (action.Type == BET) {
+            int totalBet = this->Bet + action.Amount;
+            this->settleBet(totalBet, current);
 
-    player->editCash(-amount);
-    this->Bet += amount;
+            raiser = current;
+        } else if (action.Type == FOLD) {
+
+        }
+
+        if (current->getNextPlayer() == raiser) {
+            done = true;
+        }
+    } while (current->getNextPlayer() != raiser);
+
+    this->clearAllBets();
 }
 
 void Game::settlePlayerPot(int amount, Player *player) {
@@ -134,9 +146,25 @@ void Game::settlePlayerPot(int amount, Player *player) {
     this->Pot += amount;
 }
 
-void Game::settleBetPot(int amount) {
-    this->Bet -= amount;
-    this->Pot += amount;
+void Game::settleBet(int amount, Player* player) {
+    // amount needed to play - current betted
+    int owed = amount - player->getBet();
+
+    this->Bet = amount;
+    this->Pot += owed;
+
+    player->setBet(amount);
+    player->editPotSplit(owed);
+    player->editCash(-owed);
+}
+
+void Game::clearAllBets() {
+    this->Bet = 0;
+
+    Player* current = this->FirstPlayer;
+    while (current->getNextPlayer() != this->FirstPlayer) {
+        current->resetBet();
+    }
 }
 
 void Game::dealToPlayer(Player *player) {
