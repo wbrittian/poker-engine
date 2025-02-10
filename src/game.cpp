@@ -105,9 +105,13 @@ void Game::runBetting() {
     bool done = false;
 
     while (!done) {
+        Action action;
+
         if (current == this->User) {
             this->printRoundInfo();
-            this->User->getAction(this->Bet);
+            action = this->User->getAction(this->Bet);
+        } else {
+            action = current->getAction(this->Bet);
         }
     }
 }

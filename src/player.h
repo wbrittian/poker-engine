@@ -20,15 +20,15 @@ using namespace std;
 
 class Player {
 
-private:
+protected:
 
     string Name;
 
     vector<Card> Cards;
 
     int Cash;
-    int Bet;
-    int PotSplit;
+    int Bet = 0;
+    int PotSplit = 0;
 
     Action CurrentAction;
 
@@ -47,7 +47,7 @@ public:
 
     void setNextPlayer(Player* player);
 
-    Action getAction(int bet);
+    virtual Action getAction(int bet);
 
     void printCards();
 

@@ -12,6 +12,7 @@
 #include <string>
 
 #include "player.h"
+#include "action.h"
 
 class Bot : public Player {
 
@@ -28,7 +29,8 @@ public:
     Bot(string name, int startingCash, int level)
         : Player(name, startingCash), Level(level)
         {}
-    
 
+    // overloaded
+    Action getAction(int bet, int pot);
 
 };

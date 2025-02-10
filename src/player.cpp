@@ -36,30 +36,32 @@ Action Player::getAction(int bet) {
 
         if (response == "h") {
             cout << "Actions:" 
-            << endl << "call -> calls current bet or checks if bet is 0"
-            << endl << "bet -> raises the bet (raise amount must be at least current bet)"
+            << endl << "c -> calls current bet or checks if bet is 0"
+            << endl << "b/r amount -> raises the bet (raise amount must be at least current bet)"
+            << endl << "f -> folds your hand"
             << endl << "h -> shows the help menu"
             << endl;
-        } else if (response == "call") {
+        } else if (response == "c") {
             return {CALL, 0};
-        } else if (response == "raise") {
+        } else if (response == "b" || response == "r") {
             string amt;
             cin >> amt;
 
             if (amt == "all") {
-                return {RAISE, this->Cash};
+                return {BET, this->Cash};
             } else if (true) { // isInteger(amt)
                 int val = stoi(amt);
 
                 if (val >= bet) {
-                    return {RAISE, val};
+                    return {BET, val};
                 } else {
                     cout << "raise must be >= current bet" << endl;
                 }
             } else {
                 cout << "bet amount must be an integer" << endl;
             }
-            
+        } else if (response == "f") {
+            return {FOLD, 0};
         }
     }
 }

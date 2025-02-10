@@ -8,3 +8,7 @@
 //
 
 #include "bot.h"
+
+Action Bot::getAction(int bet, int pot) {
+    return {CALL, 0};
+}
