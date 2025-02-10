@@ -13,6 +13,7 @@
 #include <vector>
 
 #include "card.h"
+#include "action.h"
 
 using namespace std;
 
@@ -28,12 +29,14 @@ private:
     int Bet;
     int PotSplit;
 
+    Action Action;
+
     Player* Next;
 
 public:
 
     Player(string name, int startingCash)
-        : Name(name), Cash(startingCash), Bet(0), PotSplit(0)
+        : Name(name), Cash(startingCash), Bet(0), PotSplit(0), Action({NONE, 0})
         {}
 
     void emptyHand();

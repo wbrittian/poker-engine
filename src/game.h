@@ -21,16 +21,27 @@ using namespace std;
 class Game {
 
 private:
-
+    //
     // general info
+    //
     Player* User;
     Player* FirstPlayer;
     Deck Deck;
 
     int NumPlayers = 0;
+    int Round = 0;
 
+    //
     // round-specific
+    //
     int NumPlaying = 0;
+
+    // 0 = pre-deal (10 to play)
+    // 1 = pre-flop
+    // 2 = post flop
+    // 3 = river 1
+    // 4 = river 2
+    int Stage = 0;
 
     int Pot = 0;
     int Bet = 0;
@@ -69,6 +80,8 @@ public:
 
     // main game loop
     void runGame();
+
+    void runBetting();
 
     // utility functions for managing round
 

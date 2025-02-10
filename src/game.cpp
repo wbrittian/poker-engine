@@ -94,6 +94,16 @@ void Game::rotateOrder() {
 // round active functions
 //
 
+void Game::runGame() {
+
+}
+
+void Game::runBetting() {
+    Player* raiser = this->FirstPlayer;
+
+    
+}
+
 void Game::settlePlayerBet(int amount, Player *player) {
     if (this->Bet + amount < 0 || player->getCash() - amount < 0) {
         throw range_error("Negative value error");
