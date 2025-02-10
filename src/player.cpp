@@ -31,7 +31,7 @@ Action Player::getAction() {
     string response;
     
     while (true) {
-        cout << "Enter your action, type h for help > " << endl;
+        cout << "Enter your action, type h for help > ";
         cin >> response;
 
         if (response == "h") {
