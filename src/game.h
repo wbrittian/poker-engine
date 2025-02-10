@@ -100,6 +100,7 @@ public:
     Player* getNthPlayer(int N);
     Player* getPreviousPlayer(Player* player);
     void printCards();
+    void printRoundInfo();
 
     //
     // accessors

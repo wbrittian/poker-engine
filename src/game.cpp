@@ -100,8 +100,13 @@ void Game::runGame() {
 
 void Game::runBetting() {
     Player* raiser = this->FirstPlayer;
+    Player* current = this->FirstPlayer;
 
-    
+    bool done = false;
+
+    while (!done) {
+        
+    }
 }
 
 void Game::settlePlayerBet(int amount, Player *player) {
@@ -153,7 +158,28 @@ Player *Game::getPreviousPlayer(Player *player) {
 void Game::printCards() {
     for (Card card : this->Cards) {
         card.printCard(true);
+        cout << " ";
     }
+    cout << endl;
+}
+
+void Game::printRoundInfo() {
+    if (this->Stage > 1) {
+        cout << "Community cards:" << endl;
+        this->printCards();
+        cout << endl;
+    } 
+    
+    if (this->Stage > 0) {
+        cout << "Your cards:" << endl;
+        this->User->printCards();
+        cout << endl;
+
+        cout << "Pot (your share): " << this->Pot <<  " (" << this->User->getPotSplit() << ")" << endl;
+    }
+
+    cout << "Current Bet: " << this->Bet << endl;
+    cout << "To play: " << this->Bet - this->User->getBet() << endl;
 }
 
 //

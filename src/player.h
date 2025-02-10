@@ -14,6 +14,7 @@
 
 #include "card.h"
 #include "action.h"
+#include "game.h"
 
 using namespace std;
 
@@ -29,14 +30,14 @@ private:
     int Bet;
     int PotSplit;
 
-    Action Action;
+    Action CurrentAction;
 
     Player* Next;
 
 public:
 
     Player(string name, int startingCash)
-        : Name(name), Cash(startingCash), Bet(0), PotSplit(0), Action({NONE, 0})
+        : Name(name), Cash(startingCash), Bet(0), PotSplit(0), CurrentAction({NONE, 0})
         {}
 
     void emptyHand();
@@ -46,6 +47,10 @@ public:
 
     void setNextPlayer(Player* player);
 
+    Action getAction(Game* game);
+
+    void printCards();
+
     //
     // accessors
     //
@@ -53,5 +58,7 @@ public:
     int getCash();
     string getName();
     Player* getNextPlayer();
+    int getBet();
+    int getPotSplit();
 
 };

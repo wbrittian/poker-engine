@@ -27,6 +27,18 @@ void Player::setNextPlayer(Player* player) {
     this->Next = player;
 }
 
+Action Player::getAction(Game* game) {
+    int bet = game->getBet();
+    
+}
+
+void Player::printCards() {
+    this->Cards[0].printCard(true);
+    cout << " ";
+    this->Cards[1].printCard(true);
+    cout << endl;
+}
+
 //
 // accessors
 //
@@ -44,4 +56,12 @@ string Player::getName() {
 
 Player* Player::getNextPlayer() {
     return this->Next;
+}
+
+int Player::getBet() {
+    return this->Bet;
+}
+
+int Player::getPotSplit() {
+    return this->PotSplit;
 }
