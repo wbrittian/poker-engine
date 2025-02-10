@@ -74,3 +74,10 @@ void setColor(string color) {
         cout << "\033[0m";
     }
 }
+
+bool isInteger(const string& str) {
+    stringstream ss(str);
+    int i;
+    char c;
+    return (ss >> i) && (ss >> c).eof();
+}

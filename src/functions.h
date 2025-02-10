@@ -11,6 +11,7 @@
 
 #include <iostream>
 #include <string>
+#include <sstream>
 
 #include "chars.h"
 
@@ -21,3 +22,5 @@ string getName();
 void printTitle();
 
 void setColor(string color);
+
+bool isInteger(const string& str);

@@ -14,6 +14,7 @@
 
 #include "card.h"
 #include "action.h"
+#include "functions.h"
 
 using namespace std;
 
@@ -46,7 +47,7 @@ public:
 
     void setNextPlayer(Player* player);
 
-    Action getAction();
+    Action getAction(int bet);
 
     void printCards();
 

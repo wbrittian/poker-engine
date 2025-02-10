@@ -11,7 +11,9 @@
 
 #include "../fixtures.cpp"
 
-TEST_F(GameTest, Basic) { EXPECT_EQ(2, 2); }
+TEST_F(GameTest, Basic) { 
+    EXPECT_EQ(2, 2); 
+}
 
 TEST_F(GameTest, Initialize) {
   game1.initializeGame(player1, 5, 1000);

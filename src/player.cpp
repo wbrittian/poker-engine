@@ -27,7 +27,7 @@ void Player::setNextPlayer(Player* player) {
     this->Next = player;
 }
 
-Action Player::getAction() {
+Action Player::getAction(int bet) {
     string response;
     
     while (true) {
@@ -37,7 +37,7 @@ Action Player::getAction() {
         if (response == "h") {
             cout << "Actions:" 
             << endl << "call -> calls current bet or checks if bet is 0"
-            << endl << "raise -> raises the bet (raise amount must be at least current bet)"
+            << endl << "bet -> raises the bet (raise amount must be at least current bet)"
             << endl << "h -> shows the help menu"
             << endl;
         } else if (response == "call") {
@@ -48,6 +48,16 @@ Action Player::getAction() {
 
             if (amt == "all") {
                 return {RAISE, this->Cash};
+            } else if (true) { // isInteger(amt)
+                int val = stoi(amt);
+
+                if (val >= bet) {
+                    return {RAISE, val};
+                } else {
+                    cout << "raise must be >= current bet" << endl;
+                }
+            } else {
+                cout << "bet amount must be an integer" << endl;
             }
         }
     }
