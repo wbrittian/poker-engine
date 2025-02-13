@@ -24,7 +24,7 @@ void Game::initializeGame(shared_ptr<Player> player, int numBots, int startingCa
     for (int i = 0; i < numBots; i++) {
         string name = "Bot " + to_string(numBots - i);
 
-        this->addPlayer(make_shared<Player>((name, startingCash)), player);
+        this->addPlayer(make_shared<Player>(name, startingCash), player);
     }
 }
 
@@ -175,7 +175,7 @@ void Game::dealToPlayer(shared_ptr<Player> player) {
 // misc
 //
 shared_ptr<Player> Game::getNthPlayer(int N) {
-
+    
 }
 
 // returns the player behind the given player in the order

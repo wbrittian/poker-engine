@@ -44,7 +44,7 @@ TEST_F(GameTest, Initialize) {
 // }
 
 TEST_F(GameTest, getPreviousPlayer) {
-  Player *bot = game2.getPreviousPlayer(player1);
+  shared_ptr<Player> bot = game2.getPreviousPlayer(player1);
 
   EXPECT_EQ(bot->getName(), "Bot 3");
 }
@@ -56,14 +56,14 @@ TEST_F(GameTest, dealToPlayer) {
 }
 
 TEST_F(GameTest, rotateOrder) {
-  Player *nextPlayer = player1->getNextPlayer();
+  shared_ptr<Player> nextPlayer = player1->getNextPlayer();
   game2.rotateOrder();
 
   EXPECT_EQ(game2.getFirstPlayer(), nextPlayer);
 }
 
 TEST_F(GameTest, addPlayer_1) {
-  Player *nextPlayer = player1->getNextPlayer();
+  shared_ptr<Player> nextPlayer = player1->getNextPlayer();
   game2.addPlayer(player2, player1);
 
   EXPECT_EQ(player1->getNextPlayer(), player2);
@@ -72,8 +72,8 @@ TEST_F(GameTest, addPlayer_1) {
 }
 
 TEST_F(GameTest, addPlayer_2) {
-  Player *nextPlayer = player1->getNextPlayer();
-  Player *nextNextPlayer = nextPlayer->getNextPlayer();
+  shared_ptr<Player> nextPlayer = player1->getNextPlayer();
+  shared_ptr<Player> nextNextPlayer = nextPlayer->getNextPlayer();
   game2.addPlayer(player2, nextPlayer);
 
   EXPECT_EQ(nextPlayer->getNextPlayer(), player2);
@@ -82,7 +82,7 @@ TEST_F(GameTest, addPlayer_2) {
 }
 
 TEST_F(GameTest, removePlayer_1) {
-  Player *nextPlayer = player1->getNextPlayer();
+  shared_ptr<Player> nextPlayer = player1->getNextPlayer();
   game2.removePlayer(player1);
 
   EXPECT_EQ(game2.getFirstPlayer(), nextPlayer);
@@ -90,8 +90,8 @@ TEST_F(GameTest, removePlayer_1) {
 }
 
 TEST_F(GameTest, removePlayer_2) {
-  Player *nextPlayer = player1->getNextPlayer();
-  Player *nextNextPlayer = nextPlayer->getNextPlayer();
+  shared_ptr<Player> nextPlayer = player1->getNextPlayer();
+  shared_ptr<Player> nextNextPlayer = nextPlayer->getNextPlayer();
   game2.removePlayer(nextPlayer);
 
   EXPECT_EQ(player1->getNextPlayer(), nextNextPlayer);

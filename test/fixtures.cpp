@@ -27,8 +27,8 @@ class GameTest : public testing::Test {
 protected:
 
     void SetUp() override {
-        player1 = new Player("Bob", 1000);
-        player2 = new Player("Jim", 1000);
+        player1 = make_shared<Player>("Bob", 1000);
+        player2 = make_shared<Player>("Jim", 1000);
 
         game2.initializeGame(player1, 3, 1000);
     }
@@ -39,8 +39,8 @@ protected:
 
     Game game1;
     Game game2;
-    Player* player1;
-    Player* player2;
+    shared_ptr<Player> player1;
+    shared_ptr<Player> player2;
 
 };
 

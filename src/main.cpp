@@ -26,7 +26,7 @@ int main() {
   printTitle();
   name = getName();
 
-  Player *player = new Player(name, STARTING_CASH);
+  shared_ptr<Player> player =  make_shared<Player>(name, STARTING_CASH);
   game.initializeGame(player, NUM_BOTS, STARTING_CASH);
 
   //
