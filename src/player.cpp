@@ -43,7 +43,7 @@ void Player::resetPotSplit() {
     this->PotSplit = 0;
 }
 
-void Player::setNextPlayer(Player* player) {
+void Player::setNextPlayer(shared_ptr<Player> player) {
     this->Next = player;
 }
 
@@ -104,7 +104,7 @@ string Player::getName() {
     return this->Name;
 }
 
-Player* Player::getNextPlayer() {
+shared_ptr<Player> Player::getNextPlayer() {
     return this->Next;
 }
 

@@ -32,7 +32,7 @@ protected:
 
     Action CurrentAction;
 
-    Player* Next;
+    shared_ptr<Player> Next;
 
 public:
 
@@ -52,7 +52,7 @@ public:
     void editPotSplit(int amount);
     void resetPotSplit();
 
-    void setNextPlayer(Player* player);
+    void setNextPlayer(shared_ptr<Player> player);
 
     virtual Action getAction(int bet);
 
@@ -63,7 +63,7 @@ public:
     //
     vector<Card> getCards();
     string getName();
-    Player* getNextPlayer();
+    shared_ptr<Player> getNextPlayer();
     int getCash();
     int getBet();
     int getPotSplit();

@@ -24,8 +24,8 @@ private:
     //
     // general info
     //
-    Player* User;
-    Player* FirstPlayer;
+    shared_ptr<Player> User;
+    shared_ptr<Player> FirstPlayer;
     Deck Deck;
 
     int NumPlayers = 0;
@@ -56,7 +56,7 @@ public:
 
     // larger scope functions to manage/setup/finish game
 
-    void initializeGame(Player* player, int numBots, int startingCash);
+    void initializeGame(shared_ptr<Player> player, int numBots, int startingCash);
     void finishGame();
 
     // TODO: this shold begin game functionality
@@ -69,8 +69,8 @@ public:
     // utility functions for managing game state
 
     // adds player after position in the order
-    void addPlayer(Player* player, Player* position);
-    void removePlayer(Player* player);
+    void addPlayer(shared_ptr<Player> player, shared_ptr<Player> position);
+    void removePlayer(shared_ptr<Player> player);
     void rotateOrder();
 
 
@@ -85,23 +85,24 @@ public:
 
     // utility functions for managing round
 
-    void dealToPlayer(Player* player);
+    // TO-DO: refactor some of these
+    void dealToPlayer(shared_ptr<Player> player);
     // player -> bet if positive, bet -> player if negative
-    void settlePlayerBet(int amount, Player* player);
+    void settlePlayerBet(int amount, shared_ptr<Player> player);
     // player -> pot if positive, pot -> player if negative
-    void settlePlayerPot(int amount, Player* player);
+    void settlePlayerPot(int amount, shared_ptr<Player> player);
     // bet -> pot if positive, pot <- bet if negative
     void settleBetPot(int amount);
 
-    void settleBet(int amount, Player* player);
+    void settleBet(int amount, shared_ptr<Player> player);
     void clearAllBets();
 
 
     //
     // misc
     //
-    Player* getNthPlayer(int N);
-    Player* getPreviousPlayer(Player* player);
+    shared_ptr<Player> getNthPlayer(int N);
+    shared_ptr<Player> getPreviousPlayer(shared_ptr<Player> player);
     void printCards();
     void printRoundInfo();
 
@@ -112,9 +113,9 @@ public:
     int getBet();
     int getNumPlayers();
 
-    Player* getFirstPlayer();
+    shared_ptr<Player> getFirstPlayer();
 
     // shows which player currently has the most cash
-    Player* getCurrentLeader();
+    shared_ptr<Player> getCurrentLeader();
 
 };
