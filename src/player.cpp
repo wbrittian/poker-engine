@@ -54,7 +54,7 @@ Action Player::getAction(int bet) {
         cout << "Enter your action, type h for help > ";
         cin >> cmd;
 
-        if (cmd == "q") {\
+        if (cmd == "q") {
             action.Type = QUIT;
             break;
         } else if (cmd == "h") {
@@ -67,18 +67,21 @@ Action Player::getAction(int bet) {
             << endl << "s -> print scoreboard"
             << endl;
         } else if (cmd == "c") {
-            return {CALL, 0};
+            action.Type = CALL;
+            break;
         } else if (cmd == "b" || cmd == "r") {
             string amt;
             cin >> amt;
 
             if (amt == "all") {
-                return {BET, this->Cash};
+                action = {BET, Cash};
+                break;
             } else if (true) { // isInteger(amt)
                 int val = stoi(amt);
 
                 if (val >= bet) {
-                    return {BET, val};
+                    action = {BET, val};
+                    break;
                 } else {
                     cout << "raise must be >= current bet" << endl;
                 }
@@ -86,7 +89,8 @@ Action Player::getAction(int bet) {
                 cout << "bet amount must be an integer" << endl;
             }
         } else if (cmd == "f") {
-            return {FOLD, 0};
+            action.Type = FOLD;
+            break;
         }
     }
     return action;

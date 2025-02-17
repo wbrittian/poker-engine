@@ -208,6 +208,7 @@ void Game::runBetting() {
             break;
         }
 
+        current = current->getNextPlayer();
     } while (current->getNextPlayer() != raiser);
 
     this->clearAllBets();
