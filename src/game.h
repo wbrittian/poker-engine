@@ -43,6 +43,7 @@ private:
     // 2 = post flop
     // 3 = river 1
     // 4 = river 2
+    // 5 = settling winner
     int Stage = 0;
 
     int Pot = 0;

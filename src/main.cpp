@@ -17,20 +17,20 @@ using namespace std;
 
 int main() {
 
-  int NUM_BOTS = 3;
-  int STARTING_CASH = 500;
+    int NUM_BOTS = 3;
+    int STARTING_CASH = 500;
 
-  string name;
-  Game game;
+    string name;
+    Game game;
 
-  printTitle();
-  name = getName();
+    printTitle();
+    name = getName();
 
-  shared_ptr<Player> player =  make_shared<Player>(name, STARTING_CASH);
-  game.initializeGame(player, NUM_BOTS, STARTING_CASH);
+    shared_ptr<Player> player =  make_shared<Player>(name, STARTING_CASH);
+    game.initializeGame(player, NUM_BOTS, STARTING_CASH);
 
-  //
-  // main game loop
-  //
+    //
+    // main game loop
+    //
 
 }

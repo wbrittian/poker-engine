@@ -40,8 +40,21 @@ void Game::finishGame() {
 
 void Game::startRound() {
     this->Deck.refillCards();
+    this->NumPlaying = this->NumPlayers;
+    this->Round++;
+
+    cout << "ROUND " << this->Round << endl;
 
     // TODO: implement main game loop
+    while (this->Stage < 5) {
+        cout << endl;
+        this->printState();
+
+        string cmd;
+        cout << "Enter a command (h for help) > ";
+        cin >> cmd;
+        cout << endl;
+    }
 }
 
 void Game::settleRound() {

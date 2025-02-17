@@ -70,6 +70,8 @@ void printTitle() {
 void setColor(string color) {
     if (color == "red") {
         cout << "\033[31m";
+    } else if (color == "green") {
+        cout << "\033[32m";
     } else if (color == "black") {
         cout << "\033[0m";
     }
