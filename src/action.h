@@ -10,10 +10,11 @@
 #pragma once
 
 enum ActionTypes {
+    NONE, // placeholder for no action
     CALL, // used for check and call
     BET, // used for bet and raise
     FOLD, // fold hand
-    NONE // placeholder for no action
+    QUIT // quit the game
 };
 
 struct Action {

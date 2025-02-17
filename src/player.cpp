@@ -48,22 +48,27 @@ void Player::setNextPlayer(shared_ptr<Player> player) {
 }
 
 Action Player::getAction(int bet) {
-    string response;
-    
+    Action action;
     while (true) {
+        string cmd;
         cout << "Enter your action, type h for help > ";
-        cin >> response;
+        cin >> cmd;
 
-        if (response == "h") {
-            cout << "Actions:" 
-            << endl << "c -> calls current bet or checks if bet is 0"
-            << endl << "b/r amount -> raises the bet (raise amount must be at least current bet)"
-            << endl << "f -> folds your hand"
-            << endl << "h -> shows the help menu"
+        if (cmd == "q") {\
+            action.Type = QUIT;
+            break;
+        } else if (cmd == "h") {
+           cout << "Available round active commands:"
+            << endl << "h -> get list of available commands"
+            << endl << "q -> quit the game"
+            << endl << "c -> call the current bet or check"
+            << endl << "b/r [AMOUNT] -> bet (or raise) the given amount"
+            << endl << "f -> fold your hand"
+            << endl << "s -> print scoreboard"
             << endl;
-        } else if (response == "c") {
+        } else if (cmd == "c") {
             return {CALL, 0};
-        } else if (response == "b" || response == "r") {
+        } else if (cmd == "b" || cmd == "r") {
             string amt;
             cin >> amt;
 
@@ -80,10 +85,11 @@ Action Player::getAction(int bet) {
             } else {
                 cout << "bet amount must be an integer" << endl;
             }
-        } else if (response == "f") {
+        } else if (cmd == "f") {
             return {FOLD, 0};
         }
     }
+    return action;
 }
 
 void Player::printCards() {

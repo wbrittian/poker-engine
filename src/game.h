@@ -21,11 +21,13 @@ using namespace std;
 class Game {
 
 private:
+    bool Quit;
+
     //
     // general info
     //
     shared_ptr<Player> User;
-    shared_ptr<Player> FirstPlayer;
+    shared_ptr<Player> FirstPlayer; // TO-DO: rename to "head" or similar
     Deck Deck;
 
     int NumPlayers = 0;
@@ -63,7 +65,7 @@ public:
     void finishGame();
 
     // TODO: this shold begin game functionality
-    void startRound();
+    void runRound();
 
     // TODO: this should decide winning hand and pay to that player
     void settleRound();
@@ -90,6 +92,8 @@ public:
 
     // TO-DO: refactor some of these
     void dealToPlayer(shared_ptr<Player> player);
+    void dealCards();
+
     // player -> bet if positive, bet -> player if negative
     void settlePlayerBet(int amount, shared_ptr<Player> player);
     // player -> pot if positive, pot -> player if negative
