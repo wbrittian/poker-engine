@@ -31,6 +31,8 @@ private:
     int NumPlayers = 0;
     int Round = 0;
 
+    bool Active = false;
+
     //
     // round-specific
     //
@@ -60,7 +62,7 @@ public:
     void finishGame();
 
     // TODO: this shold begin game functionality
-    void newRound();
+    void startRound();
 
     // TODO: this should decide winning hand and pay to that player
     void settleRound();
@@ -96,6 +98,9 @@ public:
 
     void settleBet(int amount, shared_ptr<Player> player);
     void clearAllBets();
+
+    void printState();
+    void printScoreboard();
 
 
     //

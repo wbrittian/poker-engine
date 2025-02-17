@@ -26,6 +26,9 @@ void Game::initializeGame(shared_ptr<Player> player, int numBots, int startingCa
 
         this->addPlayer(make_shared<Player>(name, startingCash), player);
     }
+
+    // start main game loop
+    this->runGame();
 }
 
 void Game::finishGame() {
@@ -35,7 +38,7 @@ void Game::finishGame() {
     }
 }
 
-void Game::newRound() {
+void Game::startRound() {
     this->Deck.refillCards();
 
     // TODO: implement main game loop
@@ -95,6 +98,26 @@ void Game::rotateOrder() {
 
 void Game::runGame() {
 
+    while (true) {
+        this->printState();
+
+        string cmd;
+        cout << "Enter a command (h for help) > ";
+        cin >> cmd;
+        cout << endl;
+
+        if (cmd == "h") {
+            cout << "Available preround commands:"
+            << endl << "h -> get a list of available commands"
+            << endl << "r -> start a new round"
+            << endl << "s -> print game scoreboard"
+            << endl;
+        } else if (cmd == "r") {
+            this->startRound();
+        } else if (cmd == "s") {
+            this->printScoreboard();
+        }
+    }
 }
 
 void Game::runBetting() {
@@ -169,6 +192,21 @@ void Game::clearAllBets() {
 void Game::dealToPlayer(shared_ptr<Player> player) {
     player->emptyHand();
     player->addCards(this->Deck.drawCards(2));
+}
+
+void Game::printState() {
+    if (this->Active) {
+        cout << "<<Round Active>>" << endl;
+    } else {
+        cout << "<<Round Inactive>>" << endl;
+    }
+}
+
+void Game::printScoreboard() {
+    shared_ptr<Player> cur = this->User;
+    while (cur->getNextPlayer() != this->User) {
+        cout << cur->getName() << ": " << cur->getCash() << endl;
+    }
 }
 
 //
