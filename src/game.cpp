@@ -99,6 +99,7 @@ void Game::rotateOrder() {
 void Game::runGame() {
 
     while (true) {
+        cout << endl;
         this->printState();
 
         string cmd;
@@ -106,9 +107,12 @@ void Game::runGame() {
         cin >> cmd;
         cout << endl;
 
-        if (cmd == "h") {
+        if (cmd == "q") {
+            break;
+        } else if (cmd == "h") {
             cout << "Available preround commands:"
             << endl << "h -> get a list of available commands"
+            << endl << "q -> quit the game"
             << endl << "r -> start a new round"
             << endl << "s -> print game scoreboard"
             << endl;
@@ -116,6 +120,10 @@ void Game::runGame() {
             this->startRound();
         } else if (cmd == "s") {
             this->printScoreboard();
+        } else if (cmd == "p") {
+            cout << this->NumPlayers << endl;
+        } else {
+            cout << "Unknown comand" << endl;
         }
     }
 }
@@ -204,9 +212,10 @@ void Game::printState() {
 
 void Game::printScoreboard() {
     shared_ptr<Player> cur = this->User;
-    while (cur->getNextPlayer() != this->User) {
+    do {
         cout << cur->getName() << ": " << cur->getCash() << endl;
-    }
+        cur = cur->getNextPlayer();
+    } while (cur->getNextPlayer() != this->User);
 }
 
 //
