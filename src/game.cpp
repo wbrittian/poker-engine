@@ -215,7 +215,7 @@ void Game::printScoreboard() {
     do {
         cout << cur->getName() << ": " << cur->getCash() << endl;
         cur = cur->getNextPlayer();
-    } while (cur->getNextPlayer() != this->User);
+    } while (cur != this->User);
 }
 
 //
