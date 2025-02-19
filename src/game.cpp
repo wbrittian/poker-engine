@@ -66,7 +66,6 @@ void Game::runRound() {
 
         this->runBetting();
 
-
         string cmd;
         cout << "Enter a command (h for help) > ";
         cin >> cmd;
@@ -212,7 +211,8 @@ void Game::runBetting() {
             }
 
         } else {
-            action = current->getAction(this->Bet, this->Pot, this->NumPlayers); // IMPORTANT: FIX POLYMORPHISM FOR BOTS
+            auto bot = dynamic_pointer_cast<Bot>(current);
+            action = bot->getAction(this->Bet, this->Pot, this->NumPlayers); // IMPORTANT: FIX POLYMORPHISM FOR BOTS
         }
 
         // shouldn't be possible, but want to make sure
@@ -278,6 +278,7 @@ void Game::clearAllBets() {
     shared_ptr<Player> current = this->FirstPlayer;
     while (current->getNextPlayer() != this->FirstPlayer) {
         current->resetBet();
+        current = current->getNextPlayer();
     }
 }
 

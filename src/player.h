@@ -72,6 +72,6 @@ public:
     //
     // OVERRIDDEN BOT FUNCTIONS
     //
-    virtual Action getAction(int bet, int pot, int numPlaying);
+    // virtual Action getAction(int bet, int pot, int numPlaying);
 
 };

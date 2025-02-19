@@ -48,39 +48,30 @@ void Player::setNextPlayer(shared_ptr<Player> player) {
 }
 
 Action Player::getAction(string cmd, int bet) {
-    Action action;
-    while (true) {
+    if (cmd == "c") {
+        return {CALL, 0};
+    } else if (cmd == "b" || cmd == "r") {
+        string amt;
+        cin >> amt;
 
-        if (cmd == "c") {
-            action.Type = CALL;
-            break;
-        } else if (cmd == "b" || cmd == "r") {
-            string amt;
-            cin >> amt;
+        if (amt == "all") {
+            return {BET, Cash};
+        } else if (true) { // isInteger(amt)
+            int val = stoi(amt);
 
-            if (amt == "all") {
-                action = {BET, Cash};
-                break;
-            } else if (true) { // isInteger(amt)
-                int val = stoi(amt);
-
-                if (val >= bet) {
-                    action = {BET, val};
-                    break;
-                } else {
-                    cout << "raise must be >= current bet" << endl;
-                }
+            if (val >= bet) {
+                return {BET, val};
             } else {
-                cout << "bet amount must be an integer" << endl;
+                cout << "raise must be >= current bet" << endl;
             }
-        } else if (cmd == "f") {
-            action.Type = FOLD;
-            break;
         } else {
-            action = {NONE, 0};
+            cout << "bet amount must be an integer" << endl;
         }
+    } else if (cmd == "f") {
+        return {FOLD, 0};
     }
-    return action;
+
+    return {NONE, 0};
 }
 
 void Player::printCards() {
@@ -121,6 +112,6 @@ int Player::getPotSplit() {
 //
 // OVERRIDDEN BOT FUNCTIONS
 //
-Action Player::getAction(int bet, int pot, int numPlaying) {
-    throw runtime_error("used overridden function as player");
-}
+// Action Player::getAction(int bet, int pot, int numPlaying) {
+//     throw runtime_error("used overridden function as player");
+// }
