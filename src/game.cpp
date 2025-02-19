@@ -67,6 +67,9 @@ void Game::runRound() {
         this->runBetting();
         this->Stage++;
 
+        this->printCards();
+        this->printPot();
+
         while (!this->Quit) {
             string cmd;
             cout << "Enter a command (h for help) > ";
@@ -225,8 +228,7 @@ void Game::runBetting() {
         if (action.Type == NONE) {
             continue;
         } else if (action.Type == CALL) {
-            int settleAmount = this->Bet - current->getBet();
-            this->settlePlayerPot(settleAmount, current);
+            this->settleBet(this->Bet, current);
         } else if (action.Type == BET) {
             int totalBet = this->Bet + action.Amount;
             this->settleBet(totalBet, current);
@@ -240,11 +242,6 @@ void Game::runBetting() {
     } while (current != raiser && !this->Quit);
 
     cout << endl;
-    cout << this->User->getBet() << endl << endl;
-    cout << this->FirstPlayer->getNextPlayer()->getBet() << endl;
-    cout << this->FirstPlayer->getNextPlayer()->getCash() << endl;
-    this->FirstPlayer->getNextPlayer()->printCards();
-    cout << endl << this->Pot << endl;
     this->clearAllBets();
 }
 
@@ -288,10 +285,10 @@ void Game::clearAllBets() {
     this->Bet = 0;
 
     shared_ptr<Player> current = this->FirstPlayer;
-    while (current->getNextPlayer() != this->FirstPlayer) {
+    do {
         current->resetBet();
         current = current->getNextPlayer();
-    }
+    } while (current != this->FirstPlayer);
 }
 
 void Game::printState() {
@@ -340,9 +337,13 @@ shared_ptr<Player> Game::getPreviousPlayer(shared_ptr<Player> player) {
 }
 
 void Game::printCards() {
-    for (Card card : this->Cards) {
-        card.printCard(true);
-        cout << " ";
+    if (this->Cards.size() > 0) {
+        for (Card card : this->Cards) {
+            card.printCard(true);
+            cout << " ";
+        }
+    } else {
+        cout << "no community cards";
     }
     cout << endl;
 }
@@ -364,6 +365,10 @@ void Game::printRoundInfo() {
 
     cout << "Current Bet: " << this->Bet << endl;
     cout << "To play: " << this->Bet - this->User->getBet() << endl;
+}
+
+void Game::printPot() {
+    cout << "Pot: " << this->Pot << endl << endl;
 }
 
 //

@@ -115,6 +115,7 @@ public:
     shared_ptr<Player> getPreviousPlayer(shared_ptr<Player> player);
     void printCards();
     void printRoundInfo();
+    void printPot();
 
     //
     // accessors
