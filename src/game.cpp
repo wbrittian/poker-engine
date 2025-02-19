@@ -185,29 +185,34 @@ void Game::runBetting() {
 
         if (current == this->User) {
             this->printRoundInfo();
-            string cmd;
-            cout << "Enter your action, type h for help > ";
-            cin >> cmd;
+            
+            action = {NONE, 0};
+            while (action.Type == NONE) {
+                string cmd;
+                cout << "Enter your action, type h for help > ";
+                cin >> cmd;
 
-            if (cmd == "q") {
-            action.Type = QUIT;
-            break;
-            } else if (cmd == "h") {
-                cout << "Available round active commands:"
-                << endl << "h -> get list of available commands"
-                << endl << "q -> quit the game"
-                << endl << "c -> call the current bet or check"
-                << endl << "b/r [AMOUNT] -> bet (or raise) the given amount"
-                << endl << "f -> fold your hand"
-                << endl << "s -> print scoreboard"
-                << endl;
-            } else if (cmd == "s") {
-                this->printScoreboard();
-            } else {
-                action = this->User->getAction(cmd, this->Bet);
+                if (cmd == "q") {
+                    this->Quit = true;
+                    break;
+                } else if (cmd == "h") {
+                    cout << "Available round active commands:"
+                    << endl << "h -> get list of available commands"
+                    << endl << "q -> quit the game"
+                    << endl << "c -> call the current bet or check"
+                    << endl << "b/r [AMOUNT] -> bet (or raise) the given amount"
+                    << endl << "f -> fold your hand"
+                    << endl << "s -> print scoreboard"
+                    << endl;
+                } else if (cmd == "s") {
+                    this->printScoreboard();
+                } else {
+                    action = this->User->getAction(cmd, this->Bet);
+                }
             }
+
         } else {
-            action = current->getAction(this->Bet, this->Pot); // IMPORTANT: FIX POLYMORPHISM FOR BOTS
+            action = current->getAction(this->Bet, this->Pot, this->NumPlayers); // IMPORTANT: FIX POLYMORPHISM FOR BOTS
         }
 
         // shouldn't be possible, but want to make sure
@@ -223,9 +228,6 @@ void Game::runBetting() {
             raiser = current;
         } else if (action.Type == FOLD) {
 
-        } else if (action.Type == QUIT) {
-            this->Quit = true;
-            break;
         }
 
         current = current->getNextPlayer();
@@ -301,8 +303,15 @@ void Game::printScoreboard() {
 //
 // misc
 //
-shared_ptr<Player> Game::getNthPlayer(int N) {
-    
+
+// 0-indexed
+shared_ptr<Player> Game::getNthPlayer(int n) {
+    shared_ptr<Player> cur = this->FirstPlayer;
+    while (n > 0) {
+        cur = cur->getNextPlayer();
+    }
+
+    return cur;
 }
 
 // returns the player behind the given player in the order

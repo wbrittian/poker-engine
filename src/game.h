@@ -111,7 +111,7 @@ public:
     //
     // misc
     //
-    shared_ptr<Player> getNthPlayer(int N);
+    shared_ptr<Player> getNthPlayer(int n);
     shared_ptr<Player> getPreviousPlayer(shared_ptr<Player> player);
     void printCards();
     void printRoundInfo();

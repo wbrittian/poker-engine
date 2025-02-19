@@ -76,6 +76,8 @@ Action Player::getAction(string cmd, int bet) {
         } else if (cmd == "f") {
             action.Type = FOLD;
             break;
+        } else {
+            action = {NONE, 0};
         }
     }
     return action;
@@ -119,6 +121,6 @@ int Player::getPotSplit() {
 //
 // OVERRIDDEN BOT FUNCTIONS
 //
-Action Player::getAction(int bet, int pot) {
+Action Player::getAction(int bet, int pot, int numPlaying) {
     throw runtime_error("used overridden function as player");
 }

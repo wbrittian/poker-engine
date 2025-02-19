@@ -54,7 +54,7 @@ public:
 
     void setNextPlayer(shared_ptr<Player> player);
 
-    Action getAction(string cmd, int bet);
+    virtual Action getAction(string cmd, int bet);
 
     void printCards();
 
@@ -72,6 +72,6 @@ public:
     //
     // OVERRIDDEN BOT FUNCTIONS
     //
-    virtual Action getAction(int bet, int pot);
+    virtual Action getAction(int bet, int pot, int numPlaying);
 
 };
