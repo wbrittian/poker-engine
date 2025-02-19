@@ -185,9 +185,29 @@ void Game::runBetting() {
 
         if (current == this->User) {
             this->printRoundInfo();
-            action = this->User->getAction(this->Bet);
+            string cmd;
+            cout << "Enter your action, type h for help > ";
+            cin >> cmd;
+
+            if (cmd == "q") {
+            action.Type = QUIT;
+            break;
+            } else if (cmd == "h") {
+                cout << "Available round active commands:"
+                << endl << "h -> get list of available commands"
+                << endl << "q -> quit the game"
+                << endl << "c -> call the current bet or check"
+                << endl << "b/r [AMOUNT] -> bet (or raise) the given amount"
+                << endl << "f -> fold your hand"
+                << endl << "s -> print scoreboard"
+                << endl;
+            } else if (cmd == "s") {
+                this->printScoreboard();
+            } else {
+                action = this->User->getAction(cmd, this->Bet);
+            }
         } else {
-            action = current->getAction(this->Bet); // IMPORTANT: FIX POLYMORPHISM FOR BOTS
+            action = current->getAction(this->Bet, this->Pot); // IMPORTANT: FIX POLYMORPHISM FOR BOTS
         }
 
         // shouldn't be possible, but want to make sure

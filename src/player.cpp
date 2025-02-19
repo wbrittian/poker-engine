@@ -47,26 +47,11 @@ void Player::setNextPlayer(shared_ptr<Player> player) {
     this->Next = player;
 }
 
-Action Player::getAction(int bet) {
+Action Player::getAction(string cmd, int bet) {
     Action action;
     while (true) {
-        string cmd;
-        cout << "Enter your action, type h for help > ";
-        cin >> cmd;
 
-        if (cmd == "q") {
-            action.Type = QUIT;
-            break;
-        } else if (cmd == "h") {
-           cout << "Available round active commands:"
-            << endl << "h -> get list of available commands"
-            << endl << "q -> quit the game"
-            << endl << "c -> call the current bet or check"
-            << endl << "b/r [AMOUNT] -> bet (or raise) the given amount"
-            << endl << "f -> fold your hand"
-            << endl << "s -> print scoreboard"
-            << endl;
-        } else if (cmd == "c") {
+        if (cmd == "c") {
             action.Type = CALL;
             break;
         } else if (cmd == "b" || cmd == "r") {
@@ -128,4 +113,12 @@ int Player::getBet() {
 
 int Player::getPotSplit() {
     return this->PotSplit;
+}
+
+
+//
+// OVERRIDDEN BOT FUNCTIONS
+//
+Action Player::getAction(int bet, int pot) {
+    throw runtime_error("used overridden function as player");
 }

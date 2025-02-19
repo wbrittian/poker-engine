@@ -31,6 +31,6 @@ public:
         {}
 
     // overloaded
-    Action getAction(int bet, int pot);
+    Action getAction(int bet, int pot) override;
 
 };
