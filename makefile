@@ -8,7 +8,13 @@ run: build
 	@cd build && ./poker-engine
 
 install:
-	@conan install . --output-folder=build --build=missing
+	@conan install . --output-folder=build --build=missing -s build_type=Release
+	@conan install . --output-folder=build --build=missing -s build_type=Debug
 
 test: build
 	cd build && ctest --output-on-failure
+
+debug: install
+	@cd build && cmake .. -DCMAKE_TOOLCHAIN_FILE=./conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Debug
+	@cd build && cmake --build .
+	lldb build/poker-engine

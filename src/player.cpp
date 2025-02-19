@@ -56,19 +56,28 @@ Action Player::getAction(string cmd, int bet) {
 
         if (amt == "all") {
             return {BET, Cash};
-        } else if (true) { // isInteger(amt)
+            cout << "you go all in for " << Cash << endl;
+        } else if (isInteger(amt)) { // isInteger(amt)
             int val = stoi(amt);
 
-            if (val >= bet) {
+            if (val >= bet && val != 0) {
+                if (bet > 0) {
+                    cout << "you raise ";
+                } else {
+                    cout << "you bet ";
+                }
+                cout << val << endl;
+
                 return {BET, val};
             } else {
                 cout << "raise must be >= current bet" << endl;
             }
         } else {
-            cout << "bet amount must be an integer" << endl;
+            cout << "bet amount must be a nonzero integer" << endl;
         }
     } else if (cmd == "f") {
         return {FOLD, 0};
+        cout << "you fold" << endl;
     }
 
     return {NONE, 0};

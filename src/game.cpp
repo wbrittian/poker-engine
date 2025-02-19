@@ -24,7 +24,7 @@ void Game::initializeGame(shared_ptr<Player> player, int numBots, int startingCa
     for (int i = 0; i < numBots; i++) {
         string name = "Bot " + to_string(numBots - i);
 
-        this->addPlayer(make_shared<Player>(name, startingCash), player);
+        this->addPlayer(make_shared<Bot>(name, startingCash), player);
     }
 
     // start main game loop
@@ -46,10 +46,7 @@ void Game::runRound() {
     cout << "ROUND " << this->Round << endl;
 
     // TODO: implement main game loop
-    while (this->Stage < 5) {
-        if (this->Quit) {
-            break;
-        }
+    while (this->Stage < 5 && !this->Quit) {
 
         cout << endl;
         this->printState();
@@ -62,26 +59,35 @@ void Game::runRound() {
             cout << endl;
 
             this->Bet = 10;
+        } else if (this->Stage == 1) {
+            cout << "hi" << endl;
         }
 
+
         this->runBetting();
+        this->Stage++;
 
-        string cmd;
-        cout << "Enter a command (h for help) > ";
-        cin >> cmd;
-        cout << endl;
+        while (!this->Quit) {
+            string cmd;
+            cout << "Enter a command (h for help) > ";
+            cin >> cmd;
+            cout << endl;
 
-        if (cmd == "q") {
-            this->Quit = true;
-        } else if (cmd == "h") {
-            cout << "Available round active commands:"
-            << endl << "h -> get list of available commands"
-            << endl << "q -> quit the game"
-            << endl << "c -> call the current bet or check"
-            << endl << "b/r [AMOUNT] -> bet (or raise) the given amount"
-            << endl << "f -> fold your hand"
-            << endl << "s -> print scoreboard"
-            << endl;
+            if (cmd == "q") {
+                this->Quit = true;
+                break;
+            } else if (cmd == "h") {
+                cout << "Available round active commands:"
+                << endl << "h -> get list of available commands"
+                << endl << "q -> quit the game"
+                << endl << "c -> continue round"
+                << endl << "s -> print scoreboard"
+                << endl;
+            } else if (cmd == "c") {
+                break;
+            } else if (cmd == "s") {
+                this->printScoreboard();
+            }
         }
     }
 }
@@ -140,7 +146,7 @@ void Game::rotateOrder() {
 
 void Game::runGame() {
 
-    while (true) {
+    while (!this->Quit) {
         if (this->Quit) {
             break;
         }
@@ -186,14 +192,14 @@ void Game::runBetting() {
             this->printRoundInfo();
             
             action = {NONE, 0};
-            while (action.Type == NONE) {
+            while (action.Type == NONE && !this->Quit) {
                 string cmd;
                 cout << "Enter your action, type h for help > ";
                 cin >> cmd;
+                cout << endl;
 
                 if (cmd == "q") {
                     this->Quit = true;
-                    break;
                 } else if (cmd == "h") {
                     cout << "Available round active commands:"
                     << endl << "h -> get list of available commands"
@@ -231,8 +237,14 @@ void Game::runBetting() {
         }
 
         current = current->getNextPlayer();
-    } while (current->getNextPlayer() != raiser);
+    } while (current != raiser && !this->Quit);
 
+    cout << endl;
+    cout << this->User->getBet() << endl << endl;
+    cout << this->FirstPlayer->getNextPlayer()->getBet() << endl;
+    cout << this->FirstPlayer->getNextPlayer()->getCash() << endl;
+    this->FirstPlayer->getNextPlayer()->printCards();
+    cout << endl << this->Pot << endl;
     this->clearAllBets();
 }
 
@@ -299,6 +311,7 @@ void Game::printScoreboard() {
         cout << cur->getName() << ": " << cur->getCash() << endl;
         cur = cur->getNextPlayer();
     } while (cur != this->User);
+    cout << endl;
 }
 
 //
