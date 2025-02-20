@@ -32,7 +32,6 @@ void Game::initializeGame(shared_ptr<Player> player, int numBots, int startingCa
 }
 
 void Game::finishGame() {
-
     while (this->NumPlayers > 0) {
         removePlayer(this->FirstPlayer);
     }
@@ -47,7 +46,6 @@ void Game::runRound() {
 
     // TODO: implement main game loop
     while (this->Stage < 5 && !this->Quit) {
-
         cout << endl;
         this->printState();
 
@@ -62,7 +60,6 @@ void Game::runRound() {
         } else if (this->Stage == 1) {
             cout << "hi" << endl;
         }
-
 
         this->runBetting();
         this->Stage++;
@@ -80,12 +77,11 @@ void Game::runRound() {
                 this->Quit = true;
                 break;
             } else if (cmd == "h") {
-                cout << "Available round active commands:"
-                << endl << "h -> get list of available commands"
-                << endl << "q -> quit the game"
-                << endl << "c -> continue round"
-                << endl << "s -> print scoreboard"
-                << endl;
+                cout << "Available round active commands:" << endl
+                     << "h -> get list of available commands" << endl
+                     << "q -> quit the game" << endl
+                     << "c -> continue round" << endl
+                     << "s -> print scoreboard" << endl;
             } else if (cmd == "c") {
                 break;
             } else if (cmd == "s") {
@@ -115,7 +111,6 @@ void Game::addPlayer(shared_ptr<Player> player, shared_ptr<Player> position) {
 }
 
 void Game::removePlayer(shared_ptr<Player> player) {
-
     // TODO: what happens to user (and game) if you
     // remove the player? When will this get called
     // and will that happen?
@@ -148,7 +143,6 @@ void Game::rotateOrder() {
 //
 
 void Game::runGame() {
-
     while (!this->Quit) {
         if (this->Quit) {
             break;
@@ -165,12 +159,11 @@ void Game::runGame() {
         if (cmd == "q") {
             this->Quit = true;
         } else if (cmd == "h") {
-            cout << "Available preround commands:"
-            << endl << "h -> get a list of available commands"
-            << endl << "q -> quit the game"
-            << endl << "r -> start a new round"
-            << endl << "s -> print game scoreboard"
-            << endl;
+            cout << "Available preround commands:" << endl
+                 << "h -> get a list of available commands" << endl
+                 << "q -> quit the game" << endl
+                 << "r -> start a new round" << endl
+                 << "s -> print game scoreboard" << endl;
         } else if (cmd == "r") {
             this->Active = true;
             this->runRound();
@@ -193,7 +186,7 @@ void Game::runBetting() {
 
         if (current == this->User) {
             this->printRoundInfo();
-            
+
             action = {NONE, 0};
             while (action.Type == NONE && !this->Quit) {
                 string cmd;
@@ -204,14 +197,13 @@ void Game::runBetting() {
                 if (cmd == "q") {
                     this->Quit = true;
                 } else if (cmd == "h") {
-                    cout << "Available round active commands:"
-                    << endl << "h -> get list of available commands"
-                    << endl << "q -> quit the game"
-                    << endl << "c -> call the current bet or check"
-                    << endl << "b/r [AMOUNT] -> bet (or raise) the given amount"
-                    << endl << "f -> fold your hand"
-                    << endl << "s -> print scoreboard"
-                    << endl;
+                    cout << "Available round active commands:" << endl
+                         << "h -> get list of available commands" << endl
+                         << "q -> quit the game" << endl
+                         << "c -> call the current bet or check" << endl
+                         << "b/r [AMOUNT] -> bet (or raise) the given amount" << endl
+                         << "f -> fold your hand" << endl
+                         << "s -> print scoreboard" << endl;
                 } else if (cmd == "s") {
                     this->printScoreboard();
                 } else {
@@ -221,7 +213,8 @@ void Game::runBetting() {
 
         } else {
             auto bot = dynamic_pointer_cast<Bot>(current);
-            action = bot->getAction(this->Bet, this->Pot, this->NumPlayers); // IMPORTANT: FIX POLYMORPHISM FOR BOTS
+            action = bot->getAction(
+                this->Bet, this->Pot, this->NumPlayers); // IMPORTANT: FIX POLYMORPHISM FOR BOTS
         }
 
         // shouldn't be possible, but want to make sure
@@ -235,7 +228,6 @@ void Game::runBetting() {
 
             raiser = current;
         } else if (action.Type == FOLD) {
-
         }
 
         current = current->getNextPlayer();
@@ -244,8 +236,6 @@ void Game::runBetting() {
     cout << endl;
     this->clearAllBets();
 }
-
-
 
 void Game::dealToPlayer(shared_ptr<Player> player) {
     player->emptyHand();
@@ -353,14 +343,15 @@ void Game::printRoundInfo() {
         cout << "Community cards:" << endl;
         this->printCards();
         cout << endl;
-    } 
-    
+    }
+
     if (this->Stage > 0) {
         cout << "Your cards:" << endl;
         this->User->printCards();
         cout << endl;
 
-        cout << "Pot (your share): " << this->Pot <<  " (" << this->User->getPotSplit() << ")" << endl;
+        cout << "Pot (your share): " << this->Pot << " (" << this->User->getPotSplit() << ")"
+             << endl;
     }
 
     cout << "Current Bet: " << this->Bet << endl;
@@ -375,7 +366,7 @@ void Game::printPot() {
 // accessors
 //
 int Game::getPot() {
-    return this->Pot; 
+    return this->Pot;
 }
 
 int Game::getBet() {

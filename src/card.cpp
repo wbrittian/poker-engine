@@ -27,7 +27,8 @@ void Card::printCard(bool shortForm) {
             cout << ranks[idx] << suit;
         }
     } else {
-        string ranks[13] = {"Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King"};
+        string ranks[13] = {
+            "Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King"};
         int idx = this->rank - 1;
 
         cout << ranks[idx] << " of " << this->suit;

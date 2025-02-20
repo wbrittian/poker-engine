@@ -11,7 +11,6 @@
 
 // empties deck and adds 52 cards back to it
 void Deck::refillCards() {
-
     this->Cards.clear();
 
     // 2-10 are as normal
@@ -29,19 +28,17 @@ void Deck::refillCards() {
             this->Cards.push_back(card);
         }
     }
-
 }
 
 // draws a random card from the deck
 Card Deck::drawCard() {
-
     if (this->Cards.size() == 0) {
         throw length_error("No more cards in deck");
     }
 
     srand(time(0));
 
-    int idx = rand() % this->Cards.size();
+    int idx = arc4random() % this->Cards.size();
     Card card = this->Cards[idx];
 
     this->Cards.erase(this->Cards.begin() + idx);
@@ -51,7 +48,6 @@ Card Deck::drawCard() {
 
 // draws multiple cards from the deck
 vector<Card> Deck::drawCards(int numCards) {
-
     vector<Card> cards;
 
     for (int i = 0; i < numCards; i++) {

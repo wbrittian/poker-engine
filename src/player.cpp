@@ -117,7 +117,6 @@ int Player::getPotSplit() {
     return this->PotSplit;
 }
 
-
 //
 // OVERRIDDEN BOT FUNCTIONS
 //

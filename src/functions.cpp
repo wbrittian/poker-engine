@@ -21,7 +21,6 @@ string getName() {
         getline(cin, name);
         cout << endl;
 
-
         string ans;
         cout << "does this look right (y/n)? " << name << endl;
         getline(cin, ans);
@@ -31,40 +30,40 @@ string getName() {
             correct = true;
         }
     }
-    
+
     return name;
 }
 
 // prints out the main title screen
 void printTitle() {
-    
     cout << endl;
     cout << "----------------------------" << endl;
     cout << "         Welcome to         " << endl;
     cout << endl;
     cout << "****************************" << endl;
 
-    cout << SPADE << SPADE << SPADE << SPADE << "  " << HEART << HEART << HEART << HEART << "  " << CHIP << "  " 
-    << CHIP << "  " << CLUB << CLUB << CLUB << CLUB << "  " << DIAMOND << DIAMOND << DIAMOND << DIAMOND << endl;
+    cout << SPADE << SPADE << SPADE << SPADE << "  " << HEART << HEART << HEART << HEART << "  "
+         << CHIP << "  " << CHIP << "  " << CLUB << CLUB << CLUB << CLUB << "  " << DIAMOND
+         << DIAMOND << DIAMOND << DIAMOND << endl;
 
-    cout << SPADE << "  " << SPADE << "  " << HEART << "  " << HEART << "  " << CHIP << " " << CHIP << "   " 
-    << CLUB << "     " << DIAMOND << "  " << DIAMOND << endl;
+    cout << SPADE << "  " << SPADE << "  " << HEART << "  " << HEART << "  " << CHIP << " " << CHIP
+         << "   " << CLUB << "     " << DIAMOND << "  " << DIAMOND << endl;
 
-    cout << SPADE << SPADE << SPADE << SPADE << "  " << HEART << "  " << HEART << "  " << CHIP << CHIP << "    " 
-    << CLUB << CLUB << CLUB << CLUB << "  " << DIAMOND << DIAMOND << DIAMOND << DIAMOND << endl;
+    cout << SPADE << SPADE << SPADE << SPADE << "  " << HEART << "  " << HEART << "  " << CHIP
+         << CHIP << "    " << CLUB << CLUB << CLUB << CLUB << "  " << DIAMOND << DIAMOND << DIAMOND
+         << DIAMOND << endl;
 
-    cout << SPADE << "     " << HEART << "  " << HEART << "  " << CHIP << " " << CHIP << "   " 
-    << CLUB << "     " << DIAMOND << " " << DIAMOND << " " << endl;
+    cout << SPADE << "     " << HEART << "  " << HEART << "  " << CHIP << " " << CHIP << "   "
+         << CLUB << "     " << DIAMOND << " " << DIAMOND << " " << endl;
 
-    cout << SPADE << "     " << HEART << HEART << HEART << HEART << "  " << CHIP << "  " << CHIP << "  " 
-    << CLUB << CLUB << CLUB << CLUB << "  " << DIAMOND << "  " << DIAMOND << endl;
+    cout << SPADE << "     " << HEART << HEART << HEART << HEART << "  " << CHIP << "  " << CHIP
+         << "  " << CLUB << CLUB << CLUB << CLUB << "  " << DIAMOND << "  " << DIAMOND << endl;
 
     cout << "****************************" << endl;
     cout << endl;
     cout << "   William Brittian 2025    " << endl;
     cout << "----------------------------" << endl;
     cout << endl;
-    
 }
 
 void setColor(string color) {
