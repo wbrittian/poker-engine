@@ -9,12 +9,12 @@
 
 #pragma once
 
-#include <vector>
 #include <algorithm>
+#include <vector>
 
-#include "player.hpp"
 #include "bot.hpp"
-#include "deck.hpp"
+#include "player.hpp"
+#include "../deck/deck.hpp"
 
 using namespace std;
 

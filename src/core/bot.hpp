@@ -12,7 +12,7 @@
 #include <string>
 
 #include "player.hpp"
-#include "action.h"
+#include "../utils/action.h"
 
 class Bot : public Player {
 

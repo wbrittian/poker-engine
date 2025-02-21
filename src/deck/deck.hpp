@@ -9,11 +9,11 @@
 
 #pragma once
 
-#include <vector>
-#include <string>
-#include <ctime>
 #include <cstdlib>
+#include <ctime>
 #include <iostream>
+#include <string>
+#include <vector>
 
 #include "card.hpp"
 
