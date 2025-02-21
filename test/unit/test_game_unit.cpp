@@ -59,7 +59,7 @@ TEST_F(GameTest, rotateOrder) {
     std::shared_ptr<Player> nextPlayer = player1->getNextPlayer();
     game2.rotateOrder();
 
-    EXPECT_EQ(game2.getFirstPlayer(), nextPlayer);
+    EXPECT_EQ(game2.getHead(), nextPlayer);
 }
 
 TEST_F(GameTest, addPlayer_1) {
@@ -85,7 +85,7 @@ TEST_F(GameTest, removePlayer_1) {
     std::shared_ptr<Player> nextPlayer = player1->getNextPlayer();
     game2.removePlayer(player1);
 
-    EXPECT_EQ(game2.getFirstPlayer(), nextPlayer);
+    EXPECT_EQ(game2.getHead(), nextPlayer);
     EXPECT_EQ(game2.getNumPlayers(), 3);
 }
 

@@ -33,7 +33,7 @@ void Game::initializeGame(std::shared_ptr<Player> player, int numBots, int start
 
 void Game::finishGame() {
     while (this->NumPlayers > 0) {
-        removePlayer(this->FirstPlayer);
+        removePlayer(this->Head);
     }
 }
 
@@ -100,7 +100,7 @@ void Game::settleRound() {
 
 void Game::addPlayer(std::shared_ptr<Player> player, std::shared_ptr<Player> position) {
     if (position == nullptr) {
-        this->FirstPlayer = player;
+        this->Head = player;
     } else {
         std::shared_ptr<Player> temp = position->getNextPlayer();
         position->setNextPlayer(player);
@@ -116,8 +116,8 @@ void Game::removePlayer(std::shared_ptr<Player> player) {
     // and will that happen?
 
     if (player->getNextPlayer() != player) {
-        if (this->FirstPlayer == player) {
-            this->FirstPlayer = player->getNextPlayer();
+        if (this->Head == player) {
+            this->Head = player->getNextPlayer();
         }
 
         std::shared_ptr<Player> previous = this->getPreviousPlayer(player);
@@ -125,7 +125,7 @@ void Game::removePlayer(std::shared_ptr<Player> player) {
 
         previous->setNextPlayer(next);
     } else {
-        this->FirstPlayer = nullptr;
+        this->Head = nullptr;
         this->User = nullptr;
     }
 
@@ -135,7 +135,7 @@ void Game::removePlayer(std::shared_ptr<Player> player) {
 // rotates the head pointer to the next in the order
 // head by default points to the small blind
 void Game::rotateOrder() {
-    this->FirstPlayer = this->FirstPlayer->getNextPlayer();
+    this->Head = this->Head->getNextPlayer();
 }
 
 //
@@ -178,8 +178,8 @@ void Game::runGame() {
 }
 
 void Game::runBetting() {
-    std::shared_ptr<Player> raiser = this->FirstPlayer;
-    std::shared_ptr<Player> current = this->FirstPlayer;
+    std::shared_ptr<Player> raiser = this->Head;
+    std::shared_ptr<Player> current = this->Head;
 
     do {
         Action action;
@@ -243,11 +243,11 @@ void Game::dealToPlayer(std::shared_ptr<Player> player) {
 }
 
 void Game::dealCards() {
-    std::shared_ptr<Player> cur = this->FirstPlayer;
+    std::shared_ptr<Player> cur = this->Head;
     do {
         this->dealToPlayer(cur);
         cur = cur->getNextPlayer();
-    } while (cur != this->FirstPlayer);
+    } while (cur != this->Head);
 }
 
 void Game::settlePlayerPot(int amount, std::shared_ptr<Player> player) {
@@ -274,11 +274,11 @@ void Game::settleBet(int amount, std::shared_ptr<Player> player) {
 void Game::clearAllBets() {
     this->Bet = 0;
 
-    std::shared_ptr<Player> current = this->FirstPlayer;
+    std::shared_ptr<Player> current = this->Head;
     do {
         current->resetBet();
         current = current->getNextPlayer();
-    } while (current != this->FirstPlayer);
+    } while (current != this->Head);
 }
 
 void Game::printState() {
@@ -307,7 +307,7 @@ void Game::printScoreboard() {
 
 // 0-indexed
 std::shared_ptr<Player> Game::getNthPlayer(int n) {
-    std::shared_ptr<Player> cur = this->FirstPlayer;
+    std::shared_ptr<Player> cur = this->Head;
     while (n > 0) {
         cur = cur->getNextPlayer();
     }
@@ -377,16 +377,16 @@ int Game::getNumPlayers() {
     return this->NumPlayers;
 }
 
-std::shared_ptr<Player> Game::getFirstPlayer() {
-    return this->FirstPlayer;
+std::shared_ptr<Player> Game::getHead() {
+    return this->Head;
 }
 
 // returns the player with the most cash
 std::shared_ptr<Player> Game::getCurrentLeader() {
-    std::shared_ptr<Player> leader = this->FirstPlayer;
-    std::shared_ptr<Player> current = this->FirstPlayer->getNextPlayer();
+    std::shared_ptr<Player> leader = this->Head;
+    std::shared_ptr<Player> current = this->Head->getNextPlayer();
 
-    while (current != this->FirstPlayer) {
+    while (current != this->Head) {
         if (current->getCash() > leader->getCash()) {
             leader = current;
         }

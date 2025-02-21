@@ -24,7 +24,7 @@ class Game {
     // general info
     //
     std::shared_ptr<Player> User;
-    std::shared_ptr<Player> FirstPlayer; // TO-DO: rename to "head" or similar
+    std::shared_ptr<Player> Head; // TO-DO: rename to "head" or similar
     Deck Deck;
 
     int NumPlayers = 0;
@@ -117,7 +117,7 @@ class Game {
     int getBet();
     int getNumPlayers();
 
-    std::shared_ptr<Player> getFirstPlayer();
+    std::shared_ptr<Player> getHead();
 
     // shows which player currently has the most cash
     std::shared_ptr<Player> getCurrentLeader();
