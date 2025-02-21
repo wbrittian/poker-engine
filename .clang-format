@@ -1,0 +1,29 @@
+BasedOnStyle: LLVM
+IndentWidth: 4
+UseTab: Never
+BreakBeforeBraces: Attach
+AllowShortBlocksOnASingleLine: false
+ColumnLimit: 100
+ReflowComments: true
+SpacesBeforeTrailingComments: 1
+BinPackParameters: false
+BinPackArguments: false
+AllowAllParametersOfDeclarationOnNextLine: false
+
+# Improves readability by controlling spacing and line breaks
+PointerAlignment: Left             # Aligns pointers with the type (e.g., `int* ptr;`)
+AlignAfterOpenBracket: DontAlign   # Prevents excessive indentation inside function calls
+AlignConsecutiveAssignments: false # Avoids forced alignment of assignments
+AlignConsecutiveDeclarations: false # Prevents unnecessary declaration alignment
+AllowShortFunctionsOnASingleLine: Inline # Only very short functions will stay inline
+AllowShortIfStatementsOnASingleLine: Never # Forces line breaks for clarity
+AllowShortLoopsOnASingleLine: false # Forces loops to be multi-line
+
+# Improves readability of function signatures
+BreakConstructorInitializers: BeforeComma # Breaks long constructor initializer lists
+BreakBeforeBinaryOperators: NonAssignment # Keeps assignments aligned but breaks other operators
+KeepEmptyLinesAtTheStartOfBlocks: false # Avoids unnecessary blank lines
+
+# Namespace and class readability
+IndentPPDirectives: AfterHash # Keeps preprocessor directives properly aligned
+NamespaceIndentation: All # Fully indents inside namespaces for consistency
