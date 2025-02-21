@@ -9,22 +9,20 @@
 
 #include "functions.hpp"
 
-using namespace std;
-
 // gets player name from terminal
-string getName() {
-    string name;
+std::string getName() {
+    std::string name;
     bool correct = false;
 
     while (!correct) {
-        cout << "please enter your name:" << endl;
-        getline(cin, name);
-        cout << endl;
+        std::cout << "please enter your name:" << std::endl;
+        std::getline(std::cin, name);
+        std::cout << std::endl;
 
-        string ans;
-        cout << "does this look right (y/n)? " << name << endl;
-        getline(cin, ans);
-        cout << endl;
+        std::string ans;
+        std::cout << "does this look right (y/n)? " << name << std::endl;
+        std::getline(std::cin, ans);
+        std::cout << std::endl;
 
         if (ans == "y") {
             correct = true;
@@ -36,48 +34,49 @@ string getName() {
 
 // prints out the main title screen
 void printTitle() {
-    cout << endl;
-    cout << "----------------------------" << endl;
-    cout << "         Welcome to         " << endl;
-    cout << endl;
-    cout << "****************************" << endl;
+    std::cout << std::endl;
+    std::cout << "----------------------------" << std::endl;
+    std::cout << "         Welcome to         " << std::endl;
+    std::cout << std::endl;
+    std::cout << "****************************" << std::endl;
 
-    cout << SPADE << SPADE << SPADE << SPADE << "  " << HEART << HEART << HEART << HEART << "  "
-         << CHIP << "  " << CHIP << "  " << CLUB << CLUB << CLUB << CLUB << "  " << DIAMOND
-         << DIAMOND << DIAMOND << DIAMOND << endl;
+    std::cout << SPADE << SPADE << SPADE << SPADE << "  " << HEART << HEART << HEART << HEART
+              << "  " << CHIP << "  " << CHIP << "  " << CLUB << CLUB << CLUB << CLUB << "  "
+              << DIAMOND << DIAMOND << DIAMOND << DIAMOND << std::endl;
 
-    cout << SPADE << "  " << SPADE << "  " << HEART << "  " << HEART << "  " << CHIP << " " << CHIP
-         << "   " << CLUB << "     " << DIAMOND << "  " << DIAMOND << endl;
+    std::cout << SPADE << "  " << SPADE << "  " << HEART << "  " << HEART << "  " << CHIP << " "
+              << CHIP << "   " << CLUB << "     " << DIAMOND << "  " << DIAMOND << std::endl;
 
-    cout << SPADE << SPADE << SPADE << SPADE << "  " << HEART << "  " << HEART << "  " << CHIP
-         << CHIP << "    " << CLUB << CLUB << CLUB << CLUB << "  " << DIAMOND << DIAMOND << DIAMOND
-         << DIAMOND << endl;
+    std::cout << SPADE << SPADE << SPADE << SPADE << "  " << HEART << "  " << HEART << "  " << CHIP
+              << CHIP << "    " << CLUB << CLUB << CLUB << CLUB << "  " << DIAMOND << DIAMOND
+              << DIAMOND << DIAMOND << std::endl;
 
-    cout << SPADE << "     " << HEART << "  " << HEART << "  " << CHIP << " " << CHIP << "   "
-         << CLUB << "     " << DIAMOND << " " << DIAMOND << " " << endl;
+    std::cout << SPADE << "     " << HEART << "  " << HEART << "  " << CHIP << " " << CHIP << "   "
+              << CLUB << "     " << DIAMOND << " " << DIAMOND << " " << std::endl;
 
-    cout << SPADE << "     " << HEART << HEART << HEART << HEART << "  " << CHIP << "  " << CHIP
-         << "  " << CLUB << CLUB << CLUB << CLUB << "  " << DIAMOND << "  " << DIAMOND << endl;
+    std::cout << SPADE << "     " << HEART << HEART << HEART << HEART << "  " << CHIP << "  "
+              << CHIP << "  " << CLUB << CLUB << CLUB << CLUB << "  " << DIAMOND << "  " << DIAMOND
+              << std::endl;
 
-    cout << "****************************" << endl;
-    cout << endl;
-    cout << "   William Brittian 2025    " << endl;
-    cout << "----------------------------" << endl;
-    cout << endl;
+    std::cout << "****************************" << std::endl;
+    std::cout << std::endl;
+    std::cout << "   William Brittian 2025    " << std::endl;
+    std::cout << "----------------------------" << std::endl;
+    std::cout << std::endl;
 }
 
-void setColor(string color) {
+void setColor(std::string color) {
     if (color == "red") {
-        cout << "\033[31m";
+        std::cout << "\033[31m";
     } else if (color == "green") {
-        cout << "\033[32m";
+        std::cout << "\033[32m";
     } else if (color == "black") {
-        cout << "\033[0m";
+        std::cout << "\033[0m";
     }
 }
 
-bool isInteger(const string& str) {
-    stringstream ss(str);
+bool isInteger(const std::string& str) {
+    std::stringstream ss(str);
     int i;
     char c;
     return (ss >> i) && (ss >> c).eof();

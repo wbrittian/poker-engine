@@ -15,8 +15,8 @@ void Deck::refillCards() {
 
     // 2-10 are as normal
     // 1 = Ace, 11 = Jack, 12 = Queen, 13 = King
-    vector<int> ranks = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
-    vector<string> suits = {"Spades", "Hearts", "Clubs", "Diamonds"};
+    std::vector<int> ranks = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
+    std::vector<std::string> suits = {"Spades", "Hearts", "Clubs", "Diamonds"};
 
     for (int r = 0; r < ranks.size(); r++) {
         for (int s = 0; s < suits.size(); s++) {
@@ -33,7 +33,7 @@ void Deck::refillCards() {
 // draws a random card from the deck
 Card Deck::drawCard() {
     if (this->Cards.size() == 0) {
-        throw length_error("No more cards in deck");
+        throw std::length_error("No more cards in deck");
     }
 
     srand(time(0));
@@ -47,8 +47,8 @@ Card Deck::drawCard() {
 }
 
 // draws multiple cards from the deck
-vector<Card> Deck::drawCards(int numCards) {
-    vector<Card> cards;
+std::vector<Card> Deck::drawCards(int numCards) {
+    std::vector<Card> cards;
 
     for (int i = 0; i < numCards; i++) {
         cards.push_back(this->drawCard());

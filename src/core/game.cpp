@@ -13,7 +13,7 @@
 // general game state functions
 //
 
-void Game::initializeGame(shared_ptr<Player> player, int numBots, int startingCash) {
+void Game::initializeGame(std::shared_ptr<Player> player, int numBots, int startingCash) {
     this->Deck.refillCards();
 
     this->User = player;
@@ -22,9 +22,9 @@ void Game::initializeGame(shared_ptr<Player> player, int numBots, int startingCa
 
     // add bots
     for (int i = 0; i < numBots; i++) {
-        string name = "Bot " + to_string(numBots - i);
+        std::string name = "Bot " + std::to_string(numBots - i);
 
-        this->addPlayer(make_shared<Bot>(name, startingCash), player);
+        this->addPlayer(std::make_shared<Bot>(name, startingCash), player);
     }
 
     // start main game loop
@@ -42,23 +42,23 @@ void Game::runRound() {
     this->NumPlaying = this->NumPlayers;
     this->Round++;
 
-    cout << "ROUND " << this->Round << endl;
+    std::cout << "ROUND " << this->Round << std::endl;
 
     // TODO: implement main game loop
     while (this->Stage < 5 && !this->Quit) {
-        cout << endl;
+        std::cout << std::endl;
         this->printState();
 
         if (this->Stage == 0) {
             this->dealCards();
 
-            cout << "You are dealt:" << endl;
+            std::cout << "You are dealt:" << std::endl;
             this->User->printCards();
-            cout << endl;
+            std::cout << std::endl;
 
             this->Bet = 10;
         } else if (this->Stage == 1) {
-            cout << "hi" << endl;
+            std::cout << "hi" << std::endl;
         }
 
         this->runBetting();
@@ -68,20 +68,20 @@ void Game::runRound() {
         this->printPot();
 
         while (!this->Quit) {
-            string cmd;
-            cout << "Enter a command (h for help) > ";
-            cin >> cmd;
-            cout << endl;
+            std::string cmd;
+            std::cout << "Enter a command (h for help) > ";
+            std::cin >> cmd;
+            std::cout << std::endl;
 
             if (cmd == "q") {
                 this->Quit = true;
                 break;
             } else if (cmd == "h") {
-                cout << "Available round active commands:" << endl
-                     << "h -> get list of available commands" << endl
-                     << "q -> quit the game" << endl
-                     << "c -> continue round" << endl
-                     << "s -> print scoreboard" << endl;
+                std::cout << "Available round active commands:" << std::endl
+                          << "h -> get list of available commands" << std::endl
+                          << "q -> quit the game" << std::endl
+                          << "c -> continue round" << std::endl
+                          << "s -> print scoreboard" << std::endl;
             } else if (cmd == "c") {
                 break;
             } else if (cmd == "s") {
@@ -98,11 +98,11 @@ void Game::settleRound() {
     this->Pot = 0;
 }
 
-void Game::addPlayer(shared_ptr<Player> player, shared_ptr<Player> position) {
+void Game::addPlayer(std::shared_ptr<Player> player, std::shared_ptr<Player> position) {
     if (position == nullptr) {
         this->FirstPlayer = player;
     } else {
-        shared_ptr<Player> temp = position->getNextPlayer();
+        std::shared_ptr<Player> temp = position->getNextPlayer();
         position->setNextPlayer(player);
         player->setNextPlayer(temp);
     }
@@ -110,7 +110,7 @@ void Game::addPlayer(shared_ptr<Player> player, shared_ptr<Player> position) {
     this->NumPlayers++;
 }
 
-void Game::removePlayer(shared_ptr<Player> player) {
+void Game::removePlayer(std::shared_ptr<Player> player) {
     // TODO: what happens to user (and game) if you
     // remove the player? When will this get called
     // and will that happen?
@@ -120,8 +120,8 @@ void Game::removePlayer(shared_ptr<Player> player) {
             this->FirstPlayer = player->getNextPlayer();
         }
 
-        shared_ptr<Player> previous = this->getPreviousPlayer(player);
-        shared_ptr<Player> next = player->getNextPlayer();
+        std::shared_ptr<Player> previous = this->getPreviousPlayer(player);
+        std::shared_ptr<Player> next = player->getNextPlayer();
 
         previous->setNextPlayer(next);
     } else {
@@ -148,38 +148,38 @@ void Game::runGame() {
             break;
         }
 
-        cout << endl;
+        std::cout << std::endl;
         this->printState();
 
-        string cmd;
-        cout << "Enter a command (h for help) > ";
-        cin >> cmd;
-        cout << endl;
+        std::string cmd;
+        std::cout << "Enter a command (h for help) > ";
+        std::cin >> cmd;
+        std::cout << std::endl;
 
         if (cmd == "q") {
             this->Quit = true;
         } else if (cmd == "h") {
-            cout << "Available preround commands:" << endl
-                 << "h -> get a list of available commands" << endl
-                 << "q -> quit the game" << endl
-                 << "r -> start a new round" << endl
-                 << "s -> print game scoreboard" << endl;
+            std::cout << "Available preround commands:" << std::endl
+                      << "h -> get a list of available commands" << std::endl
+                      << "q -> quit the game" << std::endl
+                      << "r -> start a new round" << std::endl
+                      << "s -> print game scoreboard" << std::endl;
         } else if (cmd == "r") {
             this->Active = true;
             this->runRound();
         } else if (cmd == "s") {
             this->printScoreboard();
         } else if (cmd == "p") {
-            cout << this->NumPlayers << endl;
+            std::cout << this->NumPlayers << std::endl;
         } else {
-            cout << "Unknown comand" << endl;
+            std::cout << "Unknown comand" << std::endl;
         }
     }
 }
 
 void Game::runBetting() {
-    shared_ptr<Player> raiser = this->FirstPlayer;
-    shared_ptr<Player> current = this->FirstPlayer;
+    std::shared_ptr<Player> raiser = this->FirstPlayer;
+    std::shared_ptr<Player> current = this->FirstPlayer;
 
     do {
         Action action;
@@ -189,21 +189,21 @@ void Game::runBetting() {
 
             action = {NONE, 0};
             while (action.Type == NONE && !this->Quit) {
-                string cmd;
-                cout << "Enter your action, type h for help > ";
-                cin >> cmd;
-                cout << endl;
+                std::string cmd;
+                std::cout << "Enter your action, type h for help > ";
+                std::cin >> cmd;
+                std::cout << std::endl;
 
                 if (cmd == "q") {
                     this->Quit = true;
                 } else if (cmd == "h") {
-                    cout << "Available round active commands:" << endl
-                         << "h -> get list of available commands" << endl
-                         << "q -> quit the game" << endl
-                         << "c -> call the current bet or check" << endl
-                         << "b/r [AMOUNT] -> bet (or raise) the given amount" << endl
-                         << "f -> fold your hand" << endl
-                         << "s -> print scoreboard" << endl;
+                    std::cout << "Available round active commands:" << std::endl
+                              << "h -> get list of available commands" << std::endl
+                              << "q -> quit the game" << std::endl
+                              << "c -> call the current bet or check" << std::endl
+                              << "b/r [AMOUNT] -> bet (or raise) the given amount" << std::endl
+                              << "f -> fold your hand" << std::endl
+                              << "s -> print scoreboard" << std::endl;
                 } else if (cmd == "s") {
                     this->printScoreboard();
                 } else {
@@ -212,7 +212,7 @@ void Game::runBetting() {
             }
 
         } else {
-            auto bot = dynamic_pointer_cast<Bot>(current);
+            auto bot = std::dynamic_pointer_cast<Bot>(current);
             action = bot->getAction(
                 this->Bet, this->Pot, this->NumPlayers); // IMPORTANT: FIX POLYMORPHISM FOR BOTS
         }
@@ -233,33 +233,33 @@ void Game::runBetting() {
         current = current->getNextPlayer();
     } while (current != raiser && !this->Quit);
 
-    cout << endl;
+    std::cout << std::endl;
     this->clearAllBets();
 }
 
-void Game::dealToPlayer(shared_ptr<Player> player) {
+void Game::dealToPlayer(std::shared_ptr<Player> player) {
     player->emptyHand();
     player->addCards(this->Deck.drawCards(2));
 }
 
 void Game::dealCards() {
-    shared_ptr<Player> cur = this->FirstPlayer;
+    std::shared_ptr<Player> cur = this->FirstPlayer;
     do {
         this->dealToPlayer(cur);
         cur = cur->getNextPlayer();
     } while (cur != this->FirstPlayer);
 }
 
-void Game::settlePlayerPot(int amount, shared_ptr<Player> player) {
+void Game::settlePlayerPot(int amount, std::shared_ptr<Player> player) {
     if (this->Pot + amount < 0 || player->getCash() - amount < 0) {
-        throw range_error("Negative value error");
+        throw std::range_error("Negative value error");
     }
 
     player->editCash(-amount);
     this->Pot += amount;
 }
 
-void Game::settleBet(int amount, shared_ptr<Player> player) {
+void Game::settleBet(int amount, std::shared_ptr<Player> player) {
     // amount needed to play - current betted
     int owed = amount - player->getBet();
 
@@ -274,7 +274,7 @@ void Game::settleBet(int amount, shared_ptr<Player> player) {
 void Game::clearAllBets() {
     this->Bet = 0;
 
-    shared_ptr<Player> current = this->FirstPlayer;
+    std::shared_ptr<Player> current = this->FirstPlayer;
     do {
         current->resetBet();
         current = current->getNextPlayer();
@@ -284,21 +284,21 @@ void Game::clearAllBets() {
 void Game::printState() {
     if (this->Active) {
         setColor("green");
-        cout << "<<Round Active>>" << endl;
+        std::cout << "<<Round Active>>" << std::endl;
     } else {
         setColor("red");
-        cout << "<<Round Inactive>>" << endl;
+        std::cout << "<<Round Inactive>>" << std::endl;
     }
     setColor("black");
 }
 
 void Game::printScoreboard() {
-    shared_ptr<Player> cur = this->User;
+    std::shared_ptr<Player> cur = this->User;
     do {
-        cout << cur->getName() << ": " << cur->getCash() << endl;
+        std::cout << cur->getName() << ": " << cur->getCash() << std::endl;
         cur = cur->getNextPlayer();
     } while (cur != this->User);
-    cout << endl;
+    std::cout << std::endl;
 }
 
 //
@@ -306,8 +306,8 @@ void Game::printScoreboard() {
 //
 
 // 0-indexed
-shared_ptr<Player> Game::getNthPlayer(int n) {
-    shared_ptr<Player> cur = this->FirstPlayer;
+std::shared_ptr<Player> Game::getNthPlayer(int n) {
+    std::shared_ptr<Player> cur = this->FirstPlayer;
     while (n > 0) {
         cur = cur->getNextPlayer();
     }
@@ -316,8 +316,8 @@ shared_ptr<Player> Game::getNthPlayer(int n) {
 }
 
 // returns the player behind the given player in the order
-shared_ptr<Player> Game::getPreviousPlayer(shared_ptr<Player> player) {
-    shared_ptr<Player> current = player;
+std::shared_ptr<Player> Game::getPreviousPlayer(std::shared_ptr<Player> player) {
+    std::shared_ptr<Player> current = player;
 
     while (current->getNextPlayer() != player) {
         current = current->getNextPlayer();
@@ -330,36 +330,36 @@ void Game::printCards() {
     if (this->Cards.size() > 0) {
         for (Card card : this->Cards) {
             card.printCard(true);
-            cout << " ";
+            std::cout << " ";
         }
     } else {
-        cout << "no community cards";
+        std::cout << "no community cards";
     }
-    cout << endl;
+    std::cout << std::endl;
 }
 
 void Game::printRoundInfo() {
     if (this->Stage > 1) {
-        cout << "Community cards:" << endl;
+        std::cout << "Community cards:" << std::endl;
         this->printCards();
-        cout << endl;
+        std::cout << std::endl;
     }
 
     if (this->Stage > 0) {
-        cout << "Your cards:" << endl;
+        std::cout << "Your cards:" << std::endl;
         this->User->printCards();
-        cout << endl;
+        std::cout << std::endl;
 
-        cout << "Pot (your share): " << this->Pot << " (" << this->User->getPotSplit() << ")"
-             << endl;
+        std::cout << "Pot (your share): " << this->Pot << " (" << this->User->getPotSplit() << ")"
+                  << std::endl;
     }
 
-    cout << "Current Bet: " << this->Bet << endl;
-    cout << "To play: " << this->Bet - this->User->getBet() << endl;
+    std::cout << "Current Bet: " << this->Bet << std::endl;
+    std::cout << "To play: " << this->Bet - this->User->getBet() << std::endl;
 }
 
 void Game::printPot() {
-    cout << "Pot: " << this->Pot << endl << endl;
+    std::cout << "Pot: " << this->Pot << std::endl << std::endl;
 }
 
 //
@@ -377,14 +377,14 @@ int Game::getNumPlayers() {
     return this->NumPlayers;
 }
 
-shared_ptr<Player> Game::getFirstPlayer() {
+std::shared_ptr<Player> Game::getFirstPlayer() {
     return this->FirstPlayer;
 }
 
 // returns the player with the most cash
-shared_ptr<Player> Game::getCurrentLeader() {
-    shared_ptr<Player> leader = this->FirstPlayer;
-    shared_ptr<Player> current = this->FirstPlayer->getNextPlayer();
+std::shared_ptr<Player> Game::getCurrentLeader() {
+    std::shared_ptr<Player> leader = this->FirstPlayer;
+    std::shared_ptr<Player> current = this->FirstPlayer->getNextPlayer();
 
     while (current != this->FirstPlayer) {
         if (current->getCash() > leader->getCash()) {

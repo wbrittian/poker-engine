@@ -16,15 +16,11 @@
 #include "../utils/action.h"
 #include "../utils/functions.hpp"
 
-using namespace std;
-
 class Player {
+  protected:
+    std::string Name;
 
-protected:
-
-    string Name;
-
-    vector<Card> Cards;
+    std::vector<Card> Cards;
 
     int Cash;
     int Bet = 0;
@@ -32,18 +28,20 @@ protected:
 
     Action CurrentAction;
 
-    shared_ptr<Player> Next;
+    std::shared_ptr<Player> Next;
 
-public:
-
-    Player(string name, int startingCash)
-        : Name(name), Cash(startingCash), Bet(0), PotSplit(0), CurrentAction({NONE, 0})
-        {}
+  public:
+    Player(std::string name, int startingCash)
+        : Name(name)
+        , Cash(startingCash)
+        , Bet(0)
+        , PotSplit(0)
+        , CurrentAction({NONE, 0}) {}
 
     virtual ~Player() = default;
 
     void emptyHand();
-    void addCards(vector<Card> cards);
+    void addCards(std::vector<Card> cards);
 
     void editCash(int amount);
     void setBet(int amount);
@@ -52,26 +50,24 @@ public:
     void editPotSplit(int amount);
     void resetPotSplit();
 
-    void setNextPlayer(shared_ptr<Player> player);
+    void setNextPlayer(std::shared_ptr<Player> player);
 
-    virtual Action getAction(string cmd, int bet);
+    virtual Action getAction(std::string cmd, int bet);
 
     void printCards();
 
     //
     // accessors
     //
-    vector<Card> getCards();
-    string getName();
-    shared_ptr<Player> getNextPlayer();
+    std::vector<Card> getCards();
+    std::string getName();
+    std::shared_ptr<Player> getNextPlayer();
     int getCash();
     int getBet();
     int getPotSplit();
-
 
     //
     // OVERRIDDEN BOT FUNCTIONS
     //
     // virtual Action getAction(int bet, int pot, int numPlaying);
-
 };

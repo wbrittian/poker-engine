@@ -17,19 +17,13 @@
 
 #include "card.hpp"
 
-using namespace std;
-
 class Deck {
+  private:
+    std::vector<Card> Cards;
 
-private:
-
-    vector<Card> Cards;
-
-public:
-
+  public:
     void refillCards();
 
     Card drawCard();
-    vector<Card> drawCards(int numCards);
-
+    std::vector<Card> drawCards(int numCards);
 };

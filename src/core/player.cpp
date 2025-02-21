@@ -13,7 +13,7 @@ void Player::emptyHand() {
     this->Cards.clear();
 }
 
-void Player::addCards(vector<Card> cards) {
+void Player::addCards(std::vector<Card> cards) {
     for (Card card : cards) {
         this->Cards.push_back(card);
     }
@@ -43,41 +43,41 @@ void Player::resetPotSplit() {
     this->PotSplit = 0;
 }
 
-void Player::setNextPlayer(shared_ptr<Player> player) {
+void Player::setNextPlayer(std::shared_ptr<Player> player) {
     this->Next = player;
 }
 
-Action Player::getAction(string cmd, int bet) {
+Action Player::getAction(std::string cmd, int bet) {
     if (cmd == "c") {
         return {CALL, 0};
     } else if (cmd == "b" || cmd == "r") {
-        string amt;
-        cin >> amt;
+        std::string amt;
+        std::cin >> amt;
 
         if (amt == "all") {
             return {BET, Cash};
-            cout << "you go all in for " << Cash << endl;
+            std::cout << "you go all in for " << Cash << std::endl;
         } else if (isInteger(amt)) { // isInteger(amt)
             int val = stoi(amt);
 
             if (val >= bet && val != 0) {
                 if (bet > 0) {
-                    cout << "you raise ";
+                    std::cout << "you raise ";
                 } else {
-                    cout << "you bet ";
+                    std::cout << "you bet ";
                 }
-                cout << val << endl;
+                std::cout << val << std::endl;
 
                 return {BET, val};
             } else {
-                cout << "raise must be >= current bet" << endl;
+                std::cout << "raise must be >= current bet" << std::endl;
             }
         } else {
-            cout << "bet amount must be a nonzero integer" << endl;
+            std::cout << "bet amount must be a nonzero integer" << std::endl;
         }
     } else if (cmd == "f") {
         return {FOLD, 0};
-        cout << "you fold" << endl;
+        std::cout << "you fold" << std::endl;
     }
 
     return {NONE, 0};
@@ -85,23 +85,23 @@ Action Player::getAction(string cmd, int bet) {
 
 void Player::printCards() {
     this->Cards[0].printCard(true);
-    cout << " ";
+    std::cout << " ";
     this->Cards[1].printCard(true);
-    cout << endl;
+    std::cout << std::endl;
 }
 
 //
 // accessors
 //
-vector<Card> Player::getCards() {
+std::vector<Card> Player::getCards() {
     return this->Cards;
 }
 
-string Player::getName() {
+std::string Player::getName() {
     return this->Name;
 }
 
-shared_ptr<Player> Player::getNextPlayer() {
+std::shared_ptr<Player> Player::getNextPlayer() {
     return this->Next;
 }
 

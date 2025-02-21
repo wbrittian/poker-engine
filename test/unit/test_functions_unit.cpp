@@ -12,7 +12,7 @@
 #include "../../src/utils/functions.hpp"
 
 TEST(FunctionsTest, IsInteger) {
-    EXPECT_EQ(isInteger("5"), true);
-    EXPECT_EQ(isInteger("20 "), true);
-    EXPECT_EQ(isInteger("hello"), false);
+    EXPECT_TRUE(isInteger("5"));
+    EXPECT_TRUE(isInteger("20 "));
+    EXPECT_FALSE(isInteger("hello"));
 }

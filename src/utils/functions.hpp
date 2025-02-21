@@ -15,12 +15,10 @@
 
 #include "chars.hpp"
 
-using namespace std;
-
-string getName();
+std::string getName();
 
 void printTitle();
 
-void setColor(string color);
+void setColor(std::string color);
 
-bool isInteger(const string& str);
+bool isInteger(const std::string& str);

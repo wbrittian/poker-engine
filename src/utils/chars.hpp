@@ -12,17 +12,15 @@
 #include <iostream>
 #include <string>
 
-using namespace std;
-
-extern string SPADE;
-extern string HEART;
-extern string CLUB;
-extern string DIAMOND;
-extern string CHIP;
-extern string CHIPS;
+extern std::string SPADE;
+extern std::string HEART;
+extern std::string CLUB;
+extern std::string DIAMOND;
+extern std::string CHIP;
+extern std::string CHIPS;
 
 void printTitle();
 
-string to_utf8(char16_t ch);
+std::string to_utf8(char16_t ch);
 
-string matchToSymbol(string suit);
+std::string matchToSymbol(std::string suit);

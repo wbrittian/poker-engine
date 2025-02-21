@@ -11,26 +11,21 @@
 
 #include <string>
 
-#include "player.hpp"
 #include "../utils/action.h"
+#include "player.hpp"
 
 class Bot : public Player {
-
-private:
-
+  private:
     int Level;
 
-
-public:
-
-    Bot(string name, int startingCash)
-        : Player(name, startingCash), Level(5)
-        {}
-    Bot(string name, int startingCash, int level)
-        : Player(name, startingCash), Level(level)
-        {}
+  public:
+    Bot(std::string name, int startingCash)
+        : Player(name, startingCash)
+        , Level(5) {}
+    Bot(std::string name, int startingCash, int level)
+        : Player(name, startingCash)
+        , Level(level) {}
 
     // overloaded
     Action getAction(int bet, int pot, int numPlaying);
-
 };

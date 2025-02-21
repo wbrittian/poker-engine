@@ -12,22 +12,19 @@
 #include <algorithm>
 #include <vector>
 
+#include "../deck/deck.hpp"
 #include "bot.hpp"
 #include "player.hpp"
-#include "../deck/deck.hpp"
-
-using namespace std;
 
 class Game {
-
-private:
+  private:
     bool Quit;
 
     //
     // general info
     //
-    shared_ptr<Player> User;
-    shared_ptr<Player> FirstPlayer; // TO-DO: rename to "head" or similar
+    std::shared_ptr<Player> User;
+    std::shared_ptr<Player> FirstPlayer; // TO-DO: rename to "head" or similar
     Deck Deck;
 
     int NumPlayers = 0;
@@ -51,17 +48,16 @@ private:
     int Pot = 0;
     int Bet = 0;
 
-    vector<Card> Cards;
+    std::vector<Card> Cards;
 
-public:
-
+  public:
     //
     // general game state functions
     //
 
     // larger scope functions to manage/setup/finish game
 
-    void initializeGame(shared_ptr<Player> player, int numBots, int startingCash);
+    void initializeGame(std::shared_ptr<Player> player, int numBots, int startingCash);
     void finishGame();
 
     // TODO: this shold begin game functionality
@@ -70,14 +66,12 @@ public:
     // TODO: this should decide winning hand and pay to that player
     void settleRound();
 
-
     // utility functions for managing game state
 
     // adds player after position in the order
-    void addPlayer(shared_ptr<Player> player, shared_ptr<Player> position);
-    void removePlayer(shared_ptr<Player> player);
+    void addPlayer(std::shared_ptr<Player> player, std::shared_ptr<Player> position);
+    void removePlayer(std::shared_ptr<Player> player);
     void rotateOrder();
-
 
     //
     // round active functions
@@ -91,28 +85,27 @@ public:
     // utility functions for managing round
 
     // TO-DO: refactor some of these
-    void dealToPlayer(shared_ptr<Player> player);
+    void dealToPlayer(std::shared_ptr<Player> player);
     void dealCards();
 
     // player -> bet if positive, bet -> player if negative
-    void settlePlayerBet(int amount, shared_ptr<Player> player);
+    void settlePlayerBet(int amount, std::shared_ptr<Player> player);
     // player -> pot if positive, pot -> player if negative
-    void settlePlayerPot(int amount, shared_ptr<Player> player);
+    void settlePlayerPot(int amount, std::shared_ptr<Player> player);
     // bet -> pot if positive, pot <- bet if negative
     void settleBetPot(int amount);
 
-    void settleBet(int amount, shared_ptr<Player> player);
+    void settleBet(int amount, std::shared_ptr<Player> player);
     void clearAllBets();
 
     void printState();
     void printScoreboard();
 
-
     //
     // misc
     //
-    shared_ptr<Player> getNthPlayer(int n);
-    shared_ptr<Player> getPreviousPlayer(shared_ptr<Player> player);
+    std::shared_ptr<Player> getNthPlayer(int n);
+    std::shared_ptr<Player> getPreviousPlayer(std::shared_ptr<Player> player);
     void printCards();
     void printRoundInfo();
     void printPot();
@@ -124,9 +117,8 @@ public:
     int getBet();
     int getNumPlayers();
 
-    shared_ptr<Player> getFirstPlayer();
+    std::shared_ptr<Player> getFirstPlayer();
 
     // shows which player currently has the most cash
-    shared_ptr<Player> getCurrentLeader();
-
+    std::shared_ptr<Player> getCurrentLeader();
 };

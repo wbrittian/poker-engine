@@ -9,16 +9,14 @@
 
 #pragma once
 
-#include <string>
 #include <iostream>
+#include <string>
 
 #include "../utils/functions.hpp"
 
-using namespace std;
-
 struct Card {
     int rank;
-    string suit;
+    std::string suit;
 
     void printCard(bool shortForm);
 };

@@ -20,9 +20,9 @@ debug: install
 	lldb build/poker-engine
 
 lint:
-	find src -name '*.cpp' -o -name '*.hpp' | xargs clang-format --style=file --dry-run -Werror
+	find src test -name '*.cpp' -o -name '*.hpp' | xargs clang-format --style=file --dry-run -Werror
 	run-clang-tidy -j $(shell sysctl -n hw.ncpu) -p build
 
 format:
-	find src -name '*.cpp' -o -name '*.hpp' | xargs clang-format --style=file -i
+	find src test -name '*.cpp' -o -name '*.hpp' | xargs clang-format --style=file -i
 	run-clang-tidy -fix -j $(shell sysctl -n hw.ncpu) -p build
