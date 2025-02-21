@@ -12,7 +12,7 @@
 #include <string>
 #include <iostream>
 
-#include "functions.h"
+#include "functions.hpp"
 
 using namespace std;
 

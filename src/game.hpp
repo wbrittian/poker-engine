@@ -12,9 +12,9 @@
 #include <vector>
 #include <algorithm>
 
-#include "player.h"
-#include "bot.h"
-#include "deck.h"
+#include "player.hpp"
+#include "bot.hpp"
+#include "deck.hpp"
 
 using namespace std;
 

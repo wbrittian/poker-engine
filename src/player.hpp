@@ -12,9 +12,9 @@
 #include <string>
 #include <vector>
 
-#include "card.h"
 #include "action.h"
-#include "functions.h"
+#include "card.hpp"
+#include "functions.hpp"
 
 using namespace std;
 

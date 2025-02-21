@@ -7,7 +7,7 @@
 // 2025
 //
 
-#include "deck.h"
+#include "deck.hpp"
 
 // empties deck and adds 52 cards back to it
 void Deck::refillCards() {

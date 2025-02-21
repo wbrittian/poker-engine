@@ -11,7 +11,7 @@
 
 #include <string>
 
-#include "player.h"
+#include "player.hpp"
 #include "action.h"
 
 class Bot : public Player {

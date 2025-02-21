@@ -8,10 +8,10 @@
 #include <iostream>
 #include <vector>
 
-#include "chars.h"
-#include "functions.h"
-#include "game.h"
-#include "player.h"
+#include "chars.hpp"
+#include "functions.hpp"
+#include "game.hpp"
+#include "player.hpp"
 
 using namespace std;
 

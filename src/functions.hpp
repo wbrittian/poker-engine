@@ -13,7 +13,7 @@
 #include <string>
 #include <sstream>
 
-#include "chars.h"
+#include "chars.hpp"
 
 using namespace std;
 

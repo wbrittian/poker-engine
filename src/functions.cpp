@@ -7,7 +7,7 @@
 // 2025
 //
 
-#include "functions.h"
+#include "functions.hpp"
 
 using namespace std;
 

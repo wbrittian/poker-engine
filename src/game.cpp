@@ -7,7 +7,7 @@
 // 2025
 //
 
-#include "game.h"
+#include "game.hpp"
 
 //
 // general game state functions

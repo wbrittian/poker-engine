@@ -9,7 +9,7 @@
 
 #include <gtest/gtest.h>
 
-#include "../../src/functions.h"
+#include "../../src/functions.hpp"
 
 TEST(FunctionsTest, IsInteger) {
     EXPECT_EQ(isInteger("5"), true);

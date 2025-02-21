@@ -7,7 +7,7 @@
 // 2025
 //
 
-#include "bot.h"
+#include "bot.hpp"
 
 Action Bot::getAction(int bet, int pot, int numPlaying) {
     cout << this->Name << " calls for " << (bet - this->Bet) << endl;
