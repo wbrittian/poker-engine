@@ -9,9 +9,9 @@
 
 #include <gtest/gtest.h>
 
-#include "../src/deck.hpp"
-#include "../src/game.hpp"
-#include "../src/player.hpp"
+#include "../src/core/game.hpp"
+#include "../src/core/player.hpp"
+#include "../src/deck/deck.hpp"
 
 class PlayerTest : public testing::Test {
 protected:
