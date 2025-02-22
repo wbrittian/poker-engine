@@ -9,13 +9,13 @@
 
 #include "player.hpp"
 
-void Player::emptyHand() {
-    this->Cards.clear();
+void Player::resetHand() {
+    this->Hand.PlayerCards.clear();
 }
 
 void Player::addCards(std::vector<Card> cards) {
     for (Card card : cards) {
-        this->Cards.push_back(card);
+        this->Hand.PlayerCards.push_back(card);
     }
 }
 
@@ -84,9 +84,9 @@ Action Player::getAction(std::string cmd, int bet) {
 }
 
 void Player::printCards() {
-    this->Cards[0].printCard(true);
+    this->Hand.PlayerCards[0].printCard(true);
     std::cout << " ";
-    this->Cards[1].printCard(true);
+    this->Hand.PlayerCards[1].printCard(true);
     std::cout << std::endl;
 }
 
@@ -94,7 +94,7 @@ void Player::printCards() {
 // accessors
 //
 std::vector<Card> Player::getCards() {
-    return this->Cards;
+    return this->Hand.PlayerCards;
 }
 
 std::string Player::getName() {

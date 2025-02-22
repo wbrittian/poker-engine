@@ -238,7 +238,7 @@ void Game::runBetting() {
 }
 
 void Game::dealToPlayer(std::shared_ptr<Player> player) {
-    player->emptyHand();
+    player->resetHand();
     player->addCards(this->Deck.drawCards(2));
 }
 

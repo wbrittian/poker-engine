@@ -13,6 +13,7 @@
 #include <vector>
 
 #include "../deck/card.hpp"
+#include "../deck/hand.hpp"
 #include "../utils/action.h"
 #include "../utils/functions.hpp"
 
@@ -20,7 +21,7 @@ class Player {
   protected:
     std::string Name;
 
-    std::vector<Card> Cards;
+    Hand Hand;
 
     int Cash;
     int Bet = 0;
@@ -40,17 +41,20 @@ class Player {
 
     virtual ~Player() = default;
 
-    void emptyHand();
     void addCards(std::vector<Card> cards);
 
     void editCash(int amount);
     void setBet(int amount);
     void editBet(int amount);
-    void resetBet();
+    
     void editPotSplit(int amount);
-    void resetPotSplit();
+    
 
     void setNextPlayer(std::shared_ptr<Player> player);
+
+    void resetHand();
+    void resetBet();
+    void resetPotSplit();
 
     virtual Action getAction(std::string cmd, int bet);
 

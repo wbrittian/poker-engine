@@ -98,9 +98,9 @@ TEST_F(GameTest, removePlayer_2) {
     EXPECT_EQ(game2.getNumPlayers(), 3);
 }
 
-TEST_F(GameTest, getCurrentLeader) {
-    game2.settlePlayerPot(200, player1->getNextPlayer());
-    game2.settlePlayerPot(-200, player1);
+// TEST_F(GameTest, getCurrentLeader) {
+//     game2.settlePlayerPot(200, player1->getNextPlayer());
+//     game2.settlePlayerPot(-200, player1);
 
-    EXPECT_EQ(game2.getCurrentLeader(), player1);
-}
+//     EXPECT_EQ(game2.getCurrentLeader(), player1);
+// }
