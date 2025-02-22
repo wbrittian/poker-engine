@@ -27,8 +27,7 @@ enum HandTypes {
 };
 
 struct Hand {
+    std::vector<Card> Cards;
     enum HandTypes Type = HIGH_CARD;
     Card HighCard;
-
-    std::vector<Card> Cards;
 };
