@@ -60,9 +60,6 @@ class Game {
     void initializeGame(std::shared_ptr<Player> player, int numBots, int startingCash);
     void finishGame();
 
-    // TODO: this shold begin game functionality
-    void runRound();
-
     // TODO: this should decide winning hand and pay to that player
     void settleRound();
 
@@ -80,6 +77,10 @@ class Game {
     // main game loop
     void runGame();
 
+    // round gameplay
+    void runRound();
+
+    // loop of betting
     void runBetting();
 
     // utility functions for managing round
