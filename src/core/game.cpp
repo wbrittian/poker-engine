@@ -250,15 +250,6 @@ void Game::dealCards() {
     } while (cur != this->Head);
 }
 
-void Game::settlePlayerPot(int amount, std::shared_ptr<Player> player) {
-    if (this->Pot + amount < 0 || player->getCash() - amount < 0) {
-        throw std::range_error("Negative value error");
-    }
-
-    player->editCash(-amount);
-    this->Pot += amount;
-}
-
 void Game::settleBet(int amount, std::shared_ptr<Player> player) {
     // amount needed to play - current betted
     int owed = amount - player->getBet();
@@ -379,20 +370,4 @@ int Game::getNumPlayers() {
 
 std::shared_ptr<Player> Game::getHead() {
     return this->Head;
-}
-
-// returns the player with the most cash
-std::shared_ptr<Player> Game::getCurrentLeader() {
-    std::shared_ptr<Player> leader = this->Head;
-    std::shared_ptr<Player> current = this->Head->getNextPlayer();
-
-    while (current != this->Head) {
-        if (current->getCash() > leader->getCash()) {
-            leader = current;
-        }
-
-        current = current->getNextPlayer();
-    }
-
-    return leader;
 }

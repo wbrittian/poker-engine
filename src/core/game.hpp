@@ -85,28 +85,19 @@ class Game {
 
     // utility functions for managing round
 
-    // TO-DO: refactor some of these
     void dealToPlayer(std::shared_ptr<Player> player);
     void dealCards();
-
-    // player -> bet if positive, bet -> player if negative
-    void settlePlayerBet(int amount, std::shared_ptr<Player> player);
-    // player -> pot if positive, pot -> player if negative
-    void settlePlayerPot(int amount, std::shared_ptr<Player> player);
-    // bet -> pot if positive, pot <- bet if negative
-    void settleBetPot(int amount);
 
     void settleBet(int amount, std::shared_ptr<Player> player);
     void clearAllBets();
 
-    void printState();
-    void printScoreboard();
-
     //
     // misc
     //
-    std::shared_ptr<Player> getNthPlayer(int n);
-    std::shared_ptr<Player> getPreviousPlayer(std::shared_ptr<Player> player);
+
+    // print statements
+    void printState();
+    void printScoreboard();
     void printCards();
     void printRoundInfo();
     void printPot();
@@ -114,12 +105,13 @@ class Game {
     //
     // accessors
     //
+
+    std::shared_ptr<Player> getNthPlayer(int n);
+    std::shared_ptr<Player> getPreviousPlayer(std::shared_ptr<Player> player);
+
     int getPot();
     int getBet();
     int getNumPlayers();
 
     std::shared_ptr<Player> getHead();
-
-    // shows which player currently has the most cash
-    std::shared_ptr<Player> getCurrentLeader();
 };
