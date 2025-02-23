@@ -10,13 +10,19 @@
 #pragma once
 
 #include <iostream>
-#include <string>
 
 #include "../utils/functions.hpp"
 
+enum Suit {
+    SPADE,
+    HEART,
+    CLUB,
+    DIAMOND
+};
+
 struct Card {
     int rank;
-    std::string suit;
+    enum Suit suit;
 
     void printCard(bool shortForm);
 };
