@@ -27,9 +27,7 @@ enum HandTypes {
 };
 
 struct Hand {
-  public:
-    std::vector<Card> PlayerCards;
-    std::vector<Card> CommunityCards;
+    std::vector<Card> Cards;
     enum HandTypes Type;
     Card HighCard;
 

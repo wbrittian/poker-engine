@@ -12,6 +12,8 @@
 #include <iostream>
 #include <string>
 
+#include "../deck/card.hpp"
+
 extern std::string SPADE;
 extern std::string HEART;
 extern std::string CLUB;
@@ -23,4 +25,4 @@ void printTitle();
 
 std::string to_utf8(char16_t ch);
 
-std::string matchToSymbol(std::string suit);
+std::string matchToSymbol(enum Suit suit);

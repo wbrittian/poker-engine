@@ -13,16 +13,16 @@
 
 #include "../utils/functions.hpp"
 
-enum Suit {
-    SPADE,
-    HEART,
-    CLUB,
-    DIAMOND
+enum class Suit {
+    SPADES,
+    HEARTS,
+    CLUBS,
+    DIAMONDS
 };
 
 struct Card {
-    int rank;
-    enum Suit suit;
+    int Rank;
+    enum Suit Suit;
 
-    void printCard(bool shortForm);
+    void printCard();
 };

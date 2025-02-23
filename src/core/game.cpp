@@ -320,7 +320,7 @@ std::shared_ptr<Player> Game::getPreviousPlayer(std::shared_ptr<Player> player) 
 void Game::printCards() {
     if (this->Cards.size() > 0) {
         for (Card card : this->Cards) {
-            card.printCard(true);
+            card.printCard();
             std::cout << " ";
         }
     } else {

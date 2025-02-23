@@ -40,14 +40,14 @@ std::string to_utf8(char16_t ch) {
     return utf8;
 }
 
-std::string matchToSymbol(std::string suit) {
-    if (suit == "Spades") {
+std::string matchToSymbol(enum Suit suit) {
+    if (suit == Suit::SPADES) {
         return SPADE;
-    } else if (suit == "Hearts") {
+    } else if (suit == Suit::HEARTS) {
         return HEART;
-    } else if (suit == "Clubs") {
+    } else if (suit == Suit::CLUBS) {
         return CLUB;
-    } else if (suit == "Diamonds") {
+    } else if (suit == Suit::DIAMONDS) {
         return DIAMOND;
     } else {
         return "";
