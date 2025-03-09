@@ -26,9 +26,6 @@ void Game::initializeGame(std::shared_ptr<Player> player, int numBots, int start
 
         this->addPlayer(std::make_shared<Bot>(name, startingCash), player);
     }
-
-    // start main game loop
-    this->runGame();
 }
 
 void Game::finishGame() {

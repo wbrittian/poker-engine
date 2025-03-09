@@ -26,7 +26,5 @@ int main() {
     std::shared_ptr<Player> player = std::make_shared<Player>(name, STARTING_CASH);
     game.initializeGame(player, NUM_BOTS, STARTING_CASH);
 
-    //
-    // main game loop
-    //
+    game.runGame();
 }
