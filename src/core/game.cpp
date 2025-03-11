@@ -55,7 +55,14 @@ void Game::runRound() {
 
             this->Bet = 10;
         } else if (this->Stage == 1) {
-            std::cout << "hi" << std::endl;
+            this->Cards = this->Deck.drawCards(3);
+        } else if (this->Stage == 2) {
+            this->Cards.push_back(this->Deck.drawCard());
+        } else if (this->Stage == 3) {
+            this->Cards.push_back(this->Deck.drawCard());
+        } else if (this->Stage == 4) {
+            this->settleRound();
+            break;
         }
 
         this->runBetting();
@@ -327,20 +334,19 @@ void Game::printCards() {
 }
 
 void Game::printRoundInfo() {
-    if (this->Stage > 1) {
+    if (this->Stage > 0) {
         std::cout << "Community cards:" << std::endl;
         this->printCards();
         std::cout << std::endl;
     }
 
-    if (this->Stage > 0) {
-        std::cout << "Your cards:" << std::endl;
-        this->User->printCards();
-        std::cout << std::endl;
+    
+    std::cout << "Your cards:" << std::endl;
+    this->User->printCards();
+    std::cout << std::endl;
 
-        std::cout << "Pot (your share): " << this->Pot << " (" << this->User->getPotSplit() << ")"
-                  << std::endl;
-    }
+    std::cout << "Pot (your share): " << this->Pot << " (" << this->User->getPotSplit() << ")"
+        << std::endl;
 
     std::cout << "Current Bet: " << this->Bet << std::endl;
     std::cout << "To play: " << this->Bet - this->User->getBet() << std::endl;

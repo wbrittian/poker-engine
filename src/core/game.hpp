@@ -37,12 +37,11 @@ class Game {
     //
     int NumPlaying = 0;
 
-    // 0 = pre-deal (10 to play)
-    // 1 = pre-flop
-    // 2 = post flop
-    // 3 = river 1
-    // 4 = river 2
-    // 5 = settling winner
+    // 0 = pre-flop (10 to play)
+    // 1 = flop
+    // 2 = river 1
+    // 3 = turn
+    // 4 = showdown
     int Stage = 0;
 
     int Pot = 0;
