@@ -48,15 +48,24 @@ void Player::setNextPlayer(std::shared_ptr<Player> player) {
 }
 
 Action Player::getAction(std::string cmd, int bet) {
+    Action action = {NONE, 0};
+    setColor("blue");
+
     if (cmd == "c") {
-        return {CALL, 0};
+        int amt = bet - this->Bet;
+        if (amt == 0) {
+            std::cout << "you check" << std::endl;
+        } else {
+            std::cout << "you call for " << amt << std::endl;
+        }
+        action = {BET, 0};
     } else if (cmd == "b" || cmd == "r") {
         std::string amt;
         std::cin >> amt;
 
         if (amt == "all") {
-            return {BET, Cash};
             std::cout << "you go all in for " << Cash << std::endl;
+            action = {BET, Cash};
         } else if (isInteger(amt)) { // isInteger(amt)
             int val = stoi(amt);
 
@@ -68,7 +77,7 @@ Action Player::getAction(std::string cmd, int bet) {
                 }
                 std::cout << val << std::endl;
 
-                return {BET, val};
+                action = {BET, val};
             } else {
                 std::cout << "raise must be >= current bet" << std::endl;
             }
@@ -76,11 +85,12 @@ Action Player::getAction(std::string cmd, int bet) {
             std::cout << "bet amount must be a nonzero integer" << std::endl;
         }
     } else if (cmd == "f") {
-        return {FOLD, 0};
         std::cout << "you fold" << std::endl;
+        action.Type = FOLD;
     }
 
-    return {NONE, 0};
+    setColor("black");
+    return action;
 }
 
 void Player::printCards() {

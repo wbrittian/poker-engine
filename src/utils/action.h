@@ -11,8 +11,7 @@
 
 enum ActionTypes {
     NONE = 0, // placeholder for no action
-    CALL, // used for check and call
-    BET, // used for bet and raise
+    BET, // used for bet, raise, check, and call
     FOLD // fold hand
 };
 

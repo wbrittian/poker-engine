@@ -224,8 +224,6 @@ void Game::runBetting() {
         // shouldn't be possible, but want to make sure
         if (action.Type == NONE) {
             continue;
-        } else if (action.Type == CALL) {
-            this->settleBet(this->Bet, current);
         } else if (action.Type == BET) {
             int totalBet = this->Bet + action.Amount;
             this->settleBet(totalBet, current);

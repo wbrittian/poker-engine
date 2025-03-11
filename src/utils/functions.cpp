@@ -70,6 +70,10 @@ void setColor(std::string color) {
         std::cout << "\033[31m";
     } else if (color == "green") {
         std::cout << "\033[32m";
+    } else if (color == "blue") {
+        std::cout << "\033[34m";
+    } else if (color == "purple") {
+        std::cout << "\033[35m";
     } else if (color == "black") {
         std::cout << "\033[0m";
     }

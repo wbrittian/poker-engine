@@ -12,6 +12,7 @@
 #include <string>
 
 #include "../utils/action.h"
+#include "../utils/functions.hpp"
 #include "player.hpp"
 
 class Bot : public Player {
