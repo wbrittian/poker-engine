@@ -234,6 +234,7 @@ void Game::runBetting() {
                 raiser = current;
             }
         } else if (action.Type == FOLD) {
+            // TODO: FOLD
         }
 
         current = current->getNextPlayer();
