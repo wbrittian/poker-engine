@@ -126,10 +126,3 @@ int Player::getBet() {
 int Player::getPotSplit() {
     return this->PotSplit;
 }
-
-//
-// OVERRIDDEN BOT FUNCTIONS
-//
-// Action Player::getAction(int bet, int pot, int numPlaying) {
-//     throw runtime_error("used overridden function as player");
-// }

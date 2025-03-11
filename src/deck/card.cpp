@@ -16,7 +16,7 @@ void Card::printCard() {
     int idx = Rank - 1;
     std::string suit = matchToSymbol(Suit);
 
-    if (Suit == Suit::HEARTS || Suit == Suit::DIAMONDS) {
+    if (Suit == HEARTS || Suit == DIAMONDS) {
         setColor("red");
         std::cout << ranks[idx] << suit;
         setColor("black");

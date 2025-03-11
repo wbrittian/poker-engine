@@ -9,19 +9,19 @@
 
 #include "chars.hpp"
 
-char16_t spade = u'\u2660';
-char16_t heart = u'\u2665';
-char16_t club = u'\u2663';
-char16_t diamond = u'\u2666';
-char16_t chip = u'\u26C0';
-char16_t chips = u'\u26C1';
+char16_t _spade = u'\u2660';
+char16_t _heart = u'\u2665';
+char16_t _club = u'\u2663';
+char16_t _diamond = u'\u2666';
+char16_t _chip = u'\u26C0';
+char16_t _chips = u'\u26C1';
 
-std::string SPADE = to_utf8(spade);
-std::string HEART = to_utf8(heart);
-std::string CLUB = to_utf8(club);
-std::string DIAMOND = to_utf8(diamond);
-std::string CHIP = to_utf8(chip);
-std::string CHIPS = to_utf8(chips);
+std::string spade = to_utf8(_spade);
+std::string heart = to_utf8(_heart);
+std::string club = to_utf8(_club);
+std::string diamond = to_utf8(_diamond);
+std::string chip = to_utf8(_chip);
+std::string chips = to_utf8(_chips);
 
 // converts char16_t unicode chars to strings that can be
 // outputted by the console
@@ -41,14 +41,14 @@ std::string to_utf8(char16_t ch) {
 }
 
 std::string matchToSymbol(Suit suit) {
-    if (suit == Suit::SPADES) {
-        return SPADE;
-    } else if (suit == Suit::HEARTS) {
-        return HEART;
-    } else if (suit == Suit::CLUBS) {
-        return CLUB;
-    } else if (suit == Suit::DIAMONDS) {
-        return DIAMOND;
+    if (suit == SPADES) {
+        return spade;
+    } else if (suit == HEARTS) {
+        return heart;
+    } else if (suit == CLUBS) {
+        return club;
+    } else if (suit == DIAMONDS) {
+        return diamond;
     } else {
         return "";
     }

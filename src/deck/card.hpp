@@ -13,7 +13,7 @@
 
 #include "../utils/functions.hpp"
 
-enum class Suit {
+enum Suit {
     SPADES,
     HEARTS,
     CLUBS,
