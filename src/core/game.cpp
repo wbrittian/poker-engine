@@ -194,6 +194,8 @@ void Game::runBetting() {
             action = {NONE, 0};
             while (action.Type == NONE && !this->Quit) {
                 std::string cmd;
+                std::cout << std::endl;
+                this->printState();
                 std::cout << "Enter your action, type h for help > ";
                 std::cin >> cmd;
                 std::cout << std::endl;
@@ -228,7 +230,9 @@ void Game::runBetting() {
             int totalBet = this->Bet + action.Amount;
             this->settleBet(totalBet, current);
 
-            raiser = current;
+            if (action.Amount > 0) {
+                raiser = current;
+            }
         } else if (action.Type == FOLD) {
         }
 
@@ -291,7 +295,6 @@ void Game::printScoreboard() {
         std::cout << cur->getName() << ": " << cur->getCash() << std::endl;
         cur = cur->getNextPlayer();
     } while (cur != this->User);
-    std::cout << std::endl;
 }
 
 //

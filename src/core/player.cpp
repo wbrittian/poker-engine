@@ -58,7 +58,7 @@ Action Player::getAction(std::string cmd, int bet) {
         } else {
             std::cout << "you call for " << amt << std::endl;
         }
-        action = {BET, 0};
+        action.Type = BET;
     } else if (cmd == "b" || cmd == "r") {
         std::string amt;
         std::cin >> amt;
