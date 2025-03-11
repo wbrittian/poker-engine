@@ -40,22 +40,22 @@ void printTitle() {
     std::cout << std::endl;
     std::cout << "****************************" << std::endl;
 
-    std::cout << SPADE << SPADE << SPADE << SPADE << "  " << HEART << HEART << HEART << HEART
-              << "  " << CHIP << "  " << CHIP << "  " << CLUB << CLUB << CLUB << CLUB << "  "
-              << DIAMOND << DIAMOND << DIAMOND << DIAMOND << std::endl;
+    std::cout << spade << spade << spade << spade << "  " << heart << heart << heart << heart
+              << "  " << chip << "  " << chip << "  " << club << club << club << club << "  "
+              << diamond << diamond << diamond << diamond << std::endl;
 
-    std::cout << SPADE << "  " << SPADE << "  " << HEART << "  " << HEART << "  " << CHIP << " "
-              << CHIP << "   " << CLUB << "     " << DIAMOND << "  " << DIAMOND << std::endl;
+    std::cout << spade << "  " << spade << "  " << heart << "  " << heart << "  " << chip << " "
+              << chip << "   " << club << "     " << diamond << "  " << diamond << std::endl;
 
-    std::cout << SPADE << SPADE << SPADE << SPADE << "  " << HEART << "  " << HEART << "  " << CHIP
-              << CHIP << "    " << CLUB << CLUB << CLUB << CLUB << "  " << DIAMOND << DIAMOND
-              << DIAMOND << DIAMOND << std::endl;
+    std::cout << spade << spade << spade << spade << "  " << heart << "  " << heart << "  " << chip
+              << chip << "    " << club << club << club << club << "  " << diamond << diamond
+              << diamond << diamond << std::endl;
 
-    std::cout << SPADE << "     " << HEART << "  " << HEART << "  " << CHIP << " " << CHIP << "   "
-              << CLUB << "     " << DIAMOND << " " << DIAMOND << " " << std::endl;
+    std::cout << spade << "     " << heart << "  " << heart << "  " << chip << " " << chip << "   "
+              << club << "     " << diamond << " " << diamond << " " << std::endl;
 
-    std::cout << SPADE << "     " << HEART << HEART << HEART << HEART << "  " << CHIP << "  "
-              << CHIP << "  " << CLUB << CLUB << CLUB << CLUB << "  " << DIAMOND << "  " << DIAMOND
+    std::cout << spade << "     " << heart << heart << heart << heart << "  " << chip << "  "
+              << chip << "  " << club << club << club << club << "  " << diamond << "  " << diamond
               << std::endl;
 
     std::cout << "****************************" << std::endl;

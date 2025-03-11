@@ -39,17 +39,3 @@ std::string to_utf8(char16_t ch) {
     }
     return utf8;
 }
-
-std::string matchToSymbol(Suit suit) {
-    if (suit == SPADES) {
-        return spade;
-    } else if (suit == HEARTS) {
-        return heart;
-    } else if (suit == CLUBS) {
-        return club;
-    } else if (suit == DIAMONDS) {
-        return diamond;
-    } else {
-        return "";
-    }
-}

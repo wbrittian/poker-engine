@@ -14,8 +14,6 @@
 
 #include "../deck/card.hpp"
 
-enum Suit;
-
 extern std::string spade;
 extern std::string heart;
 extern std::string club;
@@ -25,4 +23,3 @@ extern std::string chips;
 
 void printTitle();
 std::string to_utf8(char16_t ch);
-std::string matchToSymbol(Suit suit);

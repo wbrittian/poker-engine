@@ -15,8 +15,8 @@ void Deck::refillCards() {
 
     // 2-10 are as normal
     // 1 = Ace, 11 = Jack, 12 = Queen, 13 = King
-    std::vector<int> ranks = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
-    std::vector<Suit> suits = {Suit::SPADES, Suit::HEARTS, Suit::CLUBS, Suit::DIAMONDS};
+    std::vector<Rank> ranks = {ACE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING};
+    std::vector<Suit> suits = {SPADES, HEARTS, CLUBS, DIAMONDS};
 
     for (int r = 0; r < ranks.size(); r++) {
         for (int s = 0; s < suits.size(); s++) {

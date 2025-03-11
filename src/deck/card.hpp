@@ -12,6 +12,23 @@
 #include <iostream>
 
 #include "../utils/functions.hpp"
+#include "../utils/chars.hpp"
+
+enum Rank {
+    ACE,
+    TWO,
+    THREE,
+    FOUR,
+    FIVE,
+    SIX,
+    SEVEN,
+    EIGHT,
+    NINE,
+    TEN,
+    JACK,
+    QUEEN,
+    KING
+};
 
 enum Suit {
     SPADES,
@@ -21,8 +38,10 @@ enum Suit {
 };
 
 struct Card {
-    int Rank;
+    Rank Rank;
     Suit Suit;
 
     void printCard();
 };
+
+std::string matchToSymbol(Suit suit);
