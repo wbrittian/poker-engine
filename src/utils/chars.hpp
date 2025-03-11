@@ -25,4 +25,4 @@ void printTitle();
 
 std::string to_utf8(char16_t ch);
 
-std::string matchToSymbol(enum Suit suit);
+std::string matchToSymbol(Suit suit);

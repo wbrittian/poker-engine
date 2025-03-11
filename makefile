@@ -7,6 +7,9 @@ build: install
 run: build
 	@cd build && ./poker-engine
 
+clean:
+	rm -rf build
+
 install:
 	@conan install . --output-folder=build --build=missing -s build_type=Release
 	@conan install . --output-folder=build --build=missing -s build_type=Debug

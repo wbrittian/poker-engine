@@ -10,8 +10,6 @@
 
 #include "core/game.hpp"
 #include "core/player.hpp"
-#include "utils/chars.hpp"
-#include "utils/functions.hpp"
 
 int main() {
     int NUM_BOTS = 3;

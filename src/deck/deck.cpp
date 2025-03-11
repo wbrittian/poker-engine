@@ -16,14 +16,14 @@ void Deck::refillCards() {
     // 2-10 are as normal
     // 1 = Ace, 11 = Jack, 12 = Queen, 13 = King
     std::vector<int> ranks = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
-    std::vector<std::string> suits = {"Spades", "Hearts", "Clubs", "Diamonds"};
+    std::vector<Suit> suits = {Suit::SPADES, Suit::HEARTS, Suit::CLUBS, Suit::DIAMONDS};
 
     for (int r = 0; r < ranks.size(); r++) {
         for (int s = 0; s < suits.size(); s++) {
             Card card;
 
-            card.rank = ranks[r];
-            card.suit = suits[s];
+            card.Rank = ranks[r];
+            card.Suit = suits[s];
 
             this->Cards.push_back(card);
         }

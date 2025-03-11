@@ -40,7 +40,7 @@ std::string to_utf8(char16_t ch) {
     return utf8;
 }
 
-std::string matchToSymbol(enum Suit suit) {
+std::string matchToSymbol(Suit suit) {
     if (suit == Suit::SPADES) {
         return SPADE;
     } else if (suit == Suit::HEARTS) {
