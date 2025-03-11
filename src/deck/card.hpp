@@ -22,7 +22,7 @@ enum class Suit {
 
 struct Card {
     int Rank;
-    enum Suit Suit;
+    Suit Suit;
 
     void printCard();
 };
