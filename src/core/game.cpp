@@ -148,10 +148,6 @@ void Game::rotateOrder() {
 
 void Game::runGame() {
     while (!this->Quit) {
-        if (this->Quit) {
-            break;
-        }
-
         std::cout << std::endl;
         this->printState();
 
@@ -176,7 +172,7 @@ void Game::runGame() {
         } else if (cmd == "p") {
             std::cout << this->NumPlayers << std::endl;
         } else {
-            std::cout << "Unknown comand" << std::endl;
+            std::cout << "Unknown command" << std::endl;
         }
     }
 }

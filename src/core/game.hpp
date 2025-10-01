@@ -18,7 +18,7 @@
 
 class Game {
   private:
-    bool Quit;
+    bool Quit = false;
 
     //
     // general info
