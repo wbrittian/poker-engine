@@ -30,7 +30,8 @@ enum HandTypes {
 struct Hand {
     std::vector<Card> Cards;
     enum HandTypes Type;
-    Card HighCard;
+    std::vector<int> HandHigh;
+    std::vector<int> OtherHigh;
 
     void evaluateHand();
 };

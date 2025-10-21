@@ -15,7 +15,6 @@
 #include "../utils/chars.hpp"
 
 enum Rank {
-    ACE,
     TWO,
     THREE,
     FOUR,
@@ -27,7 +26,8 @@ enum Rank {
     TEN,
     JACK,
     QUEEN,
-    KING
+    KING,
+    ACE
 };
 
 enum Suit {
