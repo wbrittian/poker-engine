@@ -12,6 +12,8 @@
 #include "../src/core/game.hpp"
 #include "../src/core/player.hpp"
 #include "../src/deck/deck.hpp"
+#include "../src/deck/card.hpp"
+#include "../src/deck/hand.hpp"
 
 class PlayerTest : public testing::Test {
   protected:
@@ -40,4 +42,23 @@ class GameTest : public testing::Test {
 class DeckTest : public testing::Test {
   protected:
     Deck deck1;
+};
+
+class HandTest : public testing::Test {
+  protected:
+    struct Hand hand;
+
+    void SetUp() override {
+        hand.Cards.clear();
+        hand.HandHigh.clear();
+        hand.OtherHigh.clear();
+        hand.Type = HIGH_CARD;
+    }
+
+    Card makeCard(Rank rank, Suit suit) {
+        Card c;
+        c.Rank = rank;
+        c.Suit = suit;
+        return c;
+    } 
 };

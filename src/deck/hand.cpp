@@ -131,12 +131,15 @@ void Hand::evaluateHand() {
         if (count == 4) {
             quads = rank;
             it = counts.erase(it);
+            continue;
         } else if (count == 3) {
             trips.push_back(rank);
             it = counts.erase(it);
+            continue;
         } else if (count == 2) {
             pairs.push_back(rank);
             it = counts.erase(it);
+            continue;
         }
         ++it;
     }
@@ -159,6 +162,8 @@ void Hand::evaluateHand() {
 
         if (trip >= pair)
             OtherHigh = {trip};
+        else
+            OtherHigh = {pair};
     } else if (!trips.empty()) {
         Type = THREE_OF_A_KIND;
         HandHigh = {trips[0]};

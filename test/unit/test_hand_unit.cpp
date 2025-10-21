@@ -9,10 +9,22 @@
 
 #include <gtest/gtest.h>
 
-#include "../../src/utils/functions.hpp"
+#include "../fixtures.cpp"
 
-TEST(FunctionsTest, IsInteger) {
-    EXPECT_TRUE(isInteger("5"));
-    EXPECT_TRUE(isInteger("20 "));
-    EXPECT_FALSE(isInteger("hello"));
+TEST_F(HandTest, FullHouse) {
+    hand.Cards = {
+        makeCard(THREE, SPADES),
+        makeCard(THREE, DIAMONDS),
+        makeCard(FOUR, DIAMONDS),
+        makeCard(QUEEN, SPADES),
+        makeCard(QUEEN, DIAMONDS),
+        makeCard(QUEEN, CLUBS),
+        makeCard(SEVEN, HEARTS)
+    };
+
+    hand.evaluateHand();
+
+    EXPECT_EQ(hand.Type, FULL_HOUSE);
+    EXPECT_EQ(hand.HandHigh, std::vector<int>{QUEEN});
+    EXPECT_EQ(hand.OtherHigh, std::vector<int>{THREE});
 }
