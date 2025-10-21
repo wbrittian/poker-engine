@@ -1,4 +1,4 @@
-/*hands.h*/
+/*hand.h*/
 
 //
 // enum for hand types
