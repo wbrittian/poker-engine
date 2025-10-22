@@ -12,7 +12,7 @@
 #include <map>
 #include <vector>
 
-#include "card.hpp"
+#include "deck.hpp"
 
 enum HandType {
     HIGH_CARD = 0, // high card

@@ -12,47 +12,37 @@
 #include <algorithm>
 #include <vector>
 
-enum Stage {
-    INACTIVE = 0,
-    PREFLOP,
-    FLOP,
-    TURN,
-    RIVER,
-    SHOWDOWN,
-    EVAL
-};
+#include "structs.hpp"
 
 class Game {
   private:
-    bool Quit = false;
+    bool On = false;
 
     //
     // general info
     //
-    std::vector<Player> players;
-    std::vector<Player> playing;
-
-    int SmallBlind = 0;
-
+    std::vector<Seat> Players;
     Deck Deck;
-
-    int Round = 0;
-    bool Active = false;
 
     //
     // round-specific
     //
+    Stage GameStage = INACTIVE;
 
-    Stage stage = INACTIVE;
+    int Current = 0;
+    int SmallBlind = 0;
 
     int Pot = 0;
-    int Bet = 0;
+    int CurrentBet = 0;
 
-    std::vector<Card> Cards;
+    std::vector<Card> Community;
 
   public:
     //
     // general game state functions
     //
-    
+    struct PublicState getPublicState();
+    bool submitAction(const Action& action);
+
+    void initializeGame(const struct EngineSettings& settings, std::vector<int> PlayerIds);
 };
