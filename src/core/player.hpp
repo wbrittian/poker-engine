@@ -69,6 +69,7 @@ class Player {
     int getCash();
     int getBet();
     int getPotSplit();
+    struct Hand getHand();
 
     //
     // OVERRIDDEN BOT FUNCTIONS

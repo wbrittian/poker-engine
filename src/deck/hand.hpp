@@ -14,7 +14,7 @@
 
 #include "card.hpp"
 
-enum HandTypes {
+enum HandType {
     HIGH_CARD = 0, // high card
     PAIR,
     TWO_PAIR,
@@ -29,7 +29,7 @@ enum HandTypes {
 
 struct Hand {
     std::vector<Card> Cards;
-    enum HandTypes Type;
+    enum HandType Type;
     std::vector<int> HandHigh;
     std::vector<int> OtherHigh;
 

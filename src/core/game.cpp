@@ -96,7 +96,10 @@ void Game::runRound() {
 }
 
 void Game::settleRound() {
-    // TODO: implement code for determining winner
+    HandType bestHand = HIGH_CARD;
+    std::vector<std::shared_ptr<Player>> winners;
+
+    
 
     this->Bet = 0;
     this->Pot = 0;

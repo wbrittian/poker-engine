@@ -24,7 +24,7 @@ class Game {
     // general info
     //
     std::shared_ptr<Player> User;
-    std::shared_ptr<Player> Head; // TO-DO: rename to "head" or similar
+    std::shared_ptr<Player> Head;
     Deck Deck;
 
     int NumPlayers = 0;

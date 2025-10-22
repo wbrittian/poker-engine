@@ -126,3 +126,7 @@ int Player::getBet() {
 int Player::getPotSplit() {
     return this->PotSplit;
 }
+
+struct Hand Player::getHand() {
+    return this->Hand;
+}
