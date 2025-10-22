@@ -43,10 +43,6 @@ void Player::resetPotSplit() {
     this->PotSplit = 0;
 }
 
-void Player::setNextPlayer(std::shared_ptr<Player> player) {
-    this->Next = player;
-}
-
 Action Player::getAction(std::string cmd, int bet) {
     Action action = {NONE, 0};
     setColor("blue");
@@ -109,10 +105,6 @@ std::vector<Card> Player::getCards() {
 
 std::string Player::getName() {
     return this->Name;
-}
-
-std::shared_ptr<Player> Player::getNextPlayer() {
-    return this->Next;
 }
 
 int Player::getCash() {

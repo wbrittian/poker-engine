@@ -20,6 +20,7 @@
 class Player {
   protected:
     std::string Name;
+    int id;
 
     Hand Hand;
 
@@ -27,17 +28,12 @@ class Player {
     int Bet = 0;
     int PotSplit = 0;
 
-    Action CurrentAction;
-
-    std::shared_ptr<Player> Next;
-
   public:
     Player(std::string name, int startingCash)
         : Name(name)
         , Cash(startingCash)
         , Bet(0)
-        , PotSplit(0)
-        , CurrentAction({NONE, 0}) {}
+        , PotSplit(0) {}
 
     virtual ~Player() = default;
 
@@ -48,9 +44,6 @@ class Player {
     void editBet(int amount);
     
     void editPotSplit(int amount);
-    
-
-    void setNextPlayer(std::shared_ptr<Player> player);
 
     void resetHand();
     void resetBet();
@@ -65,7 +58,6 @@ class Player {
     //
     std::vector<Card> getCards();
     std::string getName();
-    std::shared_ptr<Player> getNextPlayer();
     int getCash();
     int getBet();
     int getPotSplit();
