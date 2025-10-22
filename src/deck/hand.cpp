@@ -11,7 +11,7 @@
 
 int getHighCard(const uint16_t& mask) {
     if (!mask) return -1;
-    return 15 - __builtin_clz(mask);
+    return 31 - __builtin_clz(mask);
 }
 
 std::vector<int> getNHighCards(uint16_t mask, const int& N, const int& offset = 0) {
@@ -56,7 +56,7 @@ int checkStraight(const uint16_t &mask) {
     straight &= 0x1FFF;
     
     if (straight != 0) {
-        straightHigh = 4 + getHighCard(straight);
+        straightHigh = getHighCard(straight);
     }
 
     return straightHigh;
