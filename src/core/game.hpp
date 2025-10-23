@@ -24,6 +24,9 @@ class Game {
     std::vector<Seat> Players;
     Deck Deck;
 
+    int Round = 0;
+    int MaxSeats;
+
     //
     // round-specific
     //
@@ -32,17 +35,33 @@ class Game {
     int Current = 0;
     int SmallBlind = 0;
 
+    int SmallSize;
+    int BigSize;
+
     int Pot = 0;
     int CurrentBet = 0;
 
     std::vector<Card> Community;
 
+    // game helpers
+    void takeBlinds();
+    void advanceGame();
+    void resolveHand();
+
+    // small helpers
+    int getPlayer(const int& n);
+    int getPlayer(const int& n, const int& pointer);
+    void moveCurrent();
+    void getBet(const int& pid, const int& amount);
+    void resolveBet(const int& pid);
+    void resolveBet(const int& pid, const int& amount);
+
+    struct Seat getSeat(const int& pid);
+
   public:
-    //
-    // general game state functions
-    //
+    void initializeGame(const struct EngineSettings& settings, std::vector<int> PlayerIds);
+
     struct PublicState getPublicState();
     bool submitAction(const Action& action);
 
-    void initializeGame(const struct EngineSettings& settings, std::vector<int> PlayerIds);
 };

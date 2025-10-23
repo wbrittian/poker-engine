@@ -19,8 +19,7 @@ enum Stage {
     FLOP,
     TURN,
     RIVER,
-    SHOWDOWN,
-    EVAL
+    SHOWDOWN
 };
 
 enum ActionTypes {
