@@ -13,6 +13,7 @@
 #include <vector>
 
 #include "structs.hpp"
+#include "hand.hpp"
 
 class Game {
   private:
@@ -22,7 +23,8 @@ class Game {
     // general info
     //
     std::vector<Seat> Players;
-    Deck Deck;
+    std::vector<Hand> Hands;
+    Deck TheDeck;
 
     int Round = 0;
     int MaxSeats;
@@ -35,6 +37,8 @@ class Game {
     int Current = 0;
     int SmallBlind = 0;
 
+    int Playing;
+
     int SmallSize;
     int BigSize;
 
@@ -44,14 +48,12 @@ class Game {
     std::vector<Card> Community;
 
     // game helpers
-    void takeBlinds();
     void advanceGame();
-    void resolveHand();
 
     // small helpers
-    int getPlayer(const int& n);
     int getPlayer(const int& n, const int& pointer);
-    void moveCurrent();
+    void getCurrent();
+    void incCurrent();
     void getBet(const int& pid, const int& amount);
     void resolveBet(const int& pid);
     void resolveBet(const int& pid, const int& amount);
