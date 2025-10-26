@@ -1,7 +1,7 @@
-/*test_game_unit.cpp*/
+/*test_engine_unit.cpp*/
 
 //
-// poker-engine unit tests for game objects
+// poker-engine unit tests for engine objects
 //
 // William Brittian
 // 2025
@@ -11,96 +11,96 @@
 
 #include "../fixtures.cpp"
 
-TEST_F(GameTest, Basic) {
+TEST_F(EngineTest, Basic) {
     EXPECT_EQ(2, 2);
 }
 
-TEST_F(GameTest, Initialize) {
-    game1.initializeGame(player1, 5, 1000);
+TEST_F(EngineTest, Initialize) {
+    engine1.initializeEngine(player1, 5, 1000);
 
-    EXPECT_EQ(game1.getNumPlayers(), 6);
+    EXPECT_EQ(engine1.getNumPlayers(), 6);
 }
 
 // TODO: refactor when new function finished
 //
-// TEST_F(GameTest, Betting) {
-//   game2.settlePlayerPot(300, player1);
-//   game2.settlePlayerPot(-100, player1);
+// TEST_F(EngineTest, Betting) {
+//   engine2.settlePlayerPot(300, player1);
+//   engine2.settlePlayerPot(-100, player1);
 
-//   EXPECT_EQ(game2.getPot(), 200);
+//   EXPECT_EQ(engine2.getPot(), 200);
 //   EXPECT_EQ(player1->getCash(), 800);
 
-//   game2.settlePlayerBet(300, player1);
-//   game2.settlePlayerBet(-100, player1);
+//   engine2.settlePlayerBet(300, player1);
+//   engine2.settlePlayerBet(-100, player1);
 
-//   EXPECT_EQ(game2.getBet(), 200);
+//   EXPECT_EQ(engine2.getBet(), 200);
 //   EXPECT_EQ(player1->getCash(), 600);
 
-//   game2.settleBetPot(100);
-//   game2.settleBetPot(-50);
+//   engine2.settleBetPot(100);
+//   engine2.settleBetPot(-50);
 
-//   EXPECT_EQ(game2.getBet(), 150);
-//   EXPECT_EQ(game2.getPot(), 250);
+//   EXPECT_EQ(engine2.getBet(), 150);
+//   EXPECT_EQ(engine2.getPot(), 250);
 // }
 
-TEST_F(GameTest, getPreviousPlayer) {
-    std::shared_ptr<Player> bot = game2.getPreviousPlayer(player1);
+TEST_F(EngineTest, getPreviousPlayer) {
+    std::shared_ptr<Player> bot = engine2.getPreviousPlayer(player1);
 
     EXPECT_EQ(bot->getName(), "Bot 3");
 }
 
-TEST_F(GameTest, dealToPlayer) {
-    game2.dealToPlayer(player1);
+TEST_F(EngineTest, dealToPlayer) {
+    engine2.dealToPlayer(player1);
 
     EXPECT_EQ(size(player1->getCards()), 2);
 }
 
-TEST_F(GameTest, rotateOrder) {
+TEST_F(EngineTest, rotateOrder) {
     std::shared_ptr<Player> nextPlayer = player1->getNextPlayer();
-    game2.rotateOrder();
+    engine2.rotateOrder();
 
-    EXPECT_EQ(game2.getHead(), nextPlayer);
+    EXPECT_EQ(engine2.getHead(), nextPlayer);
 }
 
-TEST_F(GameTest, addPlayer_1) {
+TEST_F(EngineTest, addPlayer_1) {
     std::shared_ptr<Player> nextPlayer = player1->getNextPlayer();
-    game2.addPlayer(player2, player1);
+    engine2.addPlayer(player2, player1);
 
     EXPECT_EQ(player1->getNextPlayer(), player2);
     EXPECT_EQ(player2->getNextPlayer(), nextPlayer);
-    EXPECT_EQ(game2.getNumPlayers(), 5);
+    EXPECT_EQ(engine2.getNumPlayers(), 5);
 }
 
-TEST_F(GameTest, addPlayer_2) {
+TEST_F(EngineTest, addPlayer_2) {
     std::shared_ptr<Player> nextPlayer = player1->getNextPlayer();
     std::shared_ptr<Player> nextNextPlayer = nextPlayer->getNextPlayer();
-    game2.addPlayer(player2, nextPlayer);
+    engine2.addPlayer(player2, nextPlayer);
 
     EXPECT_EQ(nextPlayer->getNextPlayer(), player2);
     EXPECT_EQ(player2->getNextPlayer(), nextNextPlayer);
-    EXPECT_EQ(game2.getNumPlayers(), 5);
+    EXPECT_EQ(engine2.getNumPlayers(), 5);
 }
 
-TEST_F(GameTest, removePlayer_1) {
+TEST_F(EngineTest, removePlayer_1) {
     std::shared_ptr<Player> nextPlayer = player1->getNextPlayer();
-    game2.removePlayer(player1);
+    engine2.removePlayer(player1);
 
-    EXPECT_EQ(game2.getHead(), nextPlayer);
-    EXPECT_EQ(game2.getNumPlayers(), 3);
+    EXPECT_EQ(engine2.getHead(), nextPlayer);
+    EXPECT_EQ(engine2.getNumPlayers(), 3);
 }
 
-TEST_F(GameTest, removePlayer_2) {
+TEST_F(EngineTest, removePlayer_2) {
     std::shared_ptr<Player> nextPlayer = player1->getNextPlayer();
     std::shared_ptr<Player> nextNextPlayer = nextPlayer->getNextPlayer();
-    game2.removePlayer(nextPlayer);
+    engine2.removePlayer(nextPlayer);
 
     EXPECT_EQ(player1->getNextPlayer(), nextNextPlayer);
-    EXPECT_EQ(game2.getNumPlayers(), 3);
+    EXPECT_EQ(engine2.getNumPlayers(), 3);
 }
 
-// TEST_F(GameTest, getCurrentLeader) {
-//     game2.settlePlayerPot(200, player1->getNextPlayer());
-//     game2.settlePlayerPot(-200, player1);
+// TEST_F(EngineTest, getCurrentLeader) {
+//     engine2.settlePlayerPot(200, player1->getNextPlayer());
+//     engine2.settlePlayerPot(-200, player1);
 
-//     EXPECT_EQ(game2.getCurrentLeader(), player1);
+//     EXPECT_EQ(engine2.getCurrentLeader(), player1);
 // }

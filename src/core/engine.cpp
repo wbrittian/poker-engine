@@ -1,21 +1,21 @@
-/*game.cpp*/
+/*engine.cpp*/
 
 //
-// a poker game
+// a poker engine
 //
 // William Brittian
 // 2025
 //
 
-#include "game.hpp"
+#include "engine.hpp"
 
 //
 // private functions
 //
 
-void Game::advanceGame() {
-    GameStage = static_cast<Stage>(GameStage + 1);
-    Stage stage = GameStage;
+void PokerEngine::advanceEngine() {
+    EngineStage = static_cast<Stage>(EngineStage + 1);
+    Stage stage = EngineStage;
 
     if (stage == PREFLOP) {
         beginRound();
@@ -31,7 +31,7 @@ void Game::advanceGame() {
         Community.push_back(TheDeck.drawCard());
     } else if (stage == SHOWDOWN) {
         resolveShowdown();
-        advanceGame();
+        advanceEngine();
         return;
     }
 
@@ -40,7 +40,7 @@ void Game::advanceGame() {
     }
 }
 
-void Game::beginRound() {
+void PokerEngine::beginRound() {
     for (Seat& player : Players) {
         player.Bet = 0;
     }
@@ -58,7 +58,7 @@ void Game::beginRound() {
     Current = getPlayer(2, small);
 }
 
-void Game::resolveBetting() {
+void PokerEngine::resolveBetting() {
     for (Seat& player : Players) {
         resolveBet(player);
     }
@@ -66,7 +66,7 @@ void Game::resolveBetting() {
     CurrentBet = 0;
 }
 
-void Game::resolveShowdown() {
+void PokerEngine::resolveShowdown() {
     // figure out best hand
     std::vector<int> bestHands;
     for (int i = 0; i < Players.size(); i++) {
@@ -116,12 +116,12 @@ void Game::resolveShowdown() {
     resetRound();
 }
 
-void Game::resolveFold() {
+void PokerEngine::resolveFold() {
 
 }
 
-void Game::resetRound() {
-    // move blinds, reset game state
+void PokerEngine::resetRound() {
+    // move blinds, reset engine state
     Pot = 0;
     TheDeck.refillCards();
     SmallBlind = getPlayer(SmallBlind, 1);
@@ -133,16 +133,16 @@ void Game::resetRound() {
     }
 
     AllIn = false;
-    GameStage = INACTIVE;
+    EngineStage = INACTIVE;
 }
 
 
 // helper functions
-int Game::getPlayer(const int& point, const int& n) {
+int PokerEngine::getPlayer(const int& point, const int& n) {
     return (point + n) % Players.size();
 }
 
-void Game::getCurrent() {
+void PokerEngine::getCurrent() {
     int current;
     Seat currentPlayer = Players[SmallBlind];
     while (!currentPlayer.Active) {
@@ -152,7 +152,7 @@ void Game::getCurrent() {
     Current = current;
 }
 
-void Game::incCurrent() {
+void PokerEngine::incCurrent() {
     int current;
     Seat currentPlayer;
     do {
@@ -162,7 +162,7 @@ void Game::incCurrent() {
     Current = current;
 }
 
-void Game::resolveBet(Seat& player) {
+void PokerEngine::resolveBet(Seat& player) {
     int bet = player.Bet;
     
     player.Bet = 0;
@@ -170,7 +170,7 @@ void Game::resolveBet(Seat& player) {
     Pot += bet;
 }
 
-void Game::resolveBet(const int& pid, const int& amount) {
+void PokerEngine::resolveBet(const int& pid, const int& amount) {
     Seat player = getSeat(pid);
 
     player.Cash -= amount;
@@ -179,7 +179,7 @@ void Game::resolveBet(const int& pid, const int& amount) {
 }
 
 // returns -1 if h1 is better, 0 if tie, 1 if h2
-int Game::compareHands(const Hand& h1, const Hand& h2) {
+int PokerEngine::compareHands(const Hand& h1, const Hand& h2) {
     if (h1.Type > h2.Type) {
         return -1;
     } else if (h1.Type < h2.Type) {
@@ -189,7 +189,7 @@ int Game::compareHands(const Hand& h1, const Hand& h2) {
     }
 }
 
-Seat& Game::getSeat(const int& pid) {
+Seat& PokerEngine::getSeat(const int& pid) {
     // quick jailbreak in case pid = seat number in vector
     int numPlayers = Players.size();
     if (pid < numPlayers && Players[pid].PlayerId == pid) {
@@ -204,7 +204,7 @@ Seat& Game::getSeat(const int& pid) {
     }
 }
 
-int Game::getIdx(const int& pid) {
+int PokerEngine::getIdx(const int& pid) {
     for (int i = 0; i < Players.size(); i++) {
         if (Players[i].PlayerId == pid) {
             return i;
@@ -216,7 +216,7 @@ int Game::getIdx(const int& pid) {
 // public functions
 //
 
-void Game::initializeGame(const  EngineSettings& settings, std::vector<int> PlayerIds) {
+void PokerEngine::initializeEngine(const  EngineSettings& settings, std::vector<int> PlayerIds) {
     TheDeck.refillCards();
 
     SmallSize = settings.SmallBlind;
@@ -237,13 +237,13 @@ void Game::initializeGame(const  EngineSettings& settings, std::vector<int> Play
         Players.push_back(seat);
     }
 
-    advanceGame();
+    advanceEngine();
 }
 
-PublicState Game::getPublicState() {
+PublicState PokerEngine::getPublicState() {
     PublicState state = {
         Players,
-        GameStage,
+        EngineStage,
         Current,
         SmallBlind,
         Pot,
@@ -254,10 +254,10 @@ PublicState Game::getPublicState() {
     return state;
 }
 
-bool Game::submitAction(const Action& action) {
+bool PokerEngine::submitAction(const Action& action) {
     int pid = action.PlayerId;
     int idx = getIdx(pid);
-    Stage stage = GameStage;
+    Stage stage = EngineStage;
 
     if (pid != Current || stage == INACTIVE) {
         return false;
@@ -297,7 +297,7 @@ bool Game::submitAction(const Action& action) {
     incCurrent();
     if (Current == Raiser) {
         resolveBetting();
-        advanceGame();
+        advanceEngine();
     }
 
     return true;

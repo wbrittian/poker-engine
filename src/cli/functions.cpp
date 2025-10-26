@@ -1,0 +1,103 @@
+/*functions.cpp*/
+
+//
+// helper functions for running game
+//
+// William Brittian
+// 2025
+//
+
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <vector>
+
+#include "../core/deck/hand.hpp"
+
+
+void setColor(std::string color) {
+    if (color == "red") {
+        std::cout << "\033[31m";
+    } else if (color == "green") {
+        std::cout << "\033[32m";
+    } else if (color == "blue") {
+        std::cout << "\033[34m";
+    } else if (color == "purple") {
+        std::cout << "\033[35m";
+    } else if (color == "black") {
+        std::cout << "\033[0m";
+    } else if (color == "grey") {
+        std::cout << "\033[90m";
+    }
+}
+
+bool isInteger(const std::string& str) {
+    std::stringstream ss(str);
+    int i;
+    char c;
+    return (ss >> i) && (ss >> c).eof();
+}
+
+//
+// card printing
+//
+char16_t _spade = u'\u2660';
+char16_t _heart = u'\u2665';
+char16_t _club = u'\u2663';
+char16_t _diamond = u'\u2666';
+char16_t _chip = u'\u26C0';
+char16_t _chips = u'\u26C1';
+
+std::string spade = to_utf8(_spade);
+std::string heart = to_utf8(_heart);
+std::string club = to_utf8(_club);
+std::string diamond = to_utf8(_diamond);
+std::string chip = to_utf8(_chip);
+std::string chips = to_utf8(_chips);
+
+// converts char16_t unicode chars to strings that can be
+// outputted by the console
+std::string to_utf8(char16_t ch) {
+    std::string utf8;
+    if (ch <= 0x7F) { // 1-byte UTF-8
+        utf8.push_back(static_cast<char>(ch));
+    } else if (ch <= 0x7FF) { // 2-byte UTF-8
+        utf8.push_back(static_cast<char>(0xC0 | ((ch >> 6) & 0x1F)));
+        utf8.push_back(static_cast<char>(0x80 | (ch & 0x3F)));
+    } else { // 3-byte UTF-8
+        utf8.push_back(static_cast<char>(0xE0 | ((ch >> 12) & 0x0F)));
+        utf8.push_back(static_cast<char>(0x80 | ((ch >> 6) & 0x3F)));
+        utf8.push_back(static_cast<char>(0x80 | (ch & 0x3F)));
+    }
+    return utf8;
+}
+
+std::string ranks[13] = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"};
+void printCard(Card card) {
+    Suit suit = card.Suit;
+    Rank rank = card.Rank;
+
+    std::string suitSymbol = matchToSymbol(suit);
+
+    if (suit == HEARTS || suit == DIAMONDS) {
+        setColor("red");
+        std::cout << ranks[rank] << suitSymbol;
+        setColor("black");
+    } else {
+        std::cout << ranks[rank] << suitSymbol;
+    }  
+}
+
+std::string matchToSymbol(Suit suit) {
+    if (suit == SPADES) {
+        return spade;
+    } else if (suit == HEARTS) {
+        return heart;
+    } else if (suit == CLUBS) {
+        return club;
+    } else if (suit == DIAMONDS) {
+        return diamond;
+    } else {
+        return "";
+    }
+}

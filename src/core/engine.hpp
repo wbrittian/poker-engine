@@ -1,7 +1,7 @@
-/*game.h*/
+/*engine.h*/
 
 //
-// a poker game
+// a poker engine
 //
 // William Brittian
 // 2025
@@ -15,7 +15,7 @@
 #include "structs.hpp"
 #include "hand.hpp"
 
-class Game {
+class PokerEngine {
   private:
     bool On = false;
 
@@ -31,7 +31,7 @@ class Game {
     //
     // round-specific
     //
-    Stage GameStage = INACTIVE;
+    Stage EngineStage = INACTIVE;
 
     int Current = 0;
     int SmallBlind = 0;
@@ -48,8 +48,8 @@ class Game {
 
     std::vector<Card> Community;
 
-    // game helpers
-    void advanceGame();
+    // engine helpers
+    void advanceEngine();
     void beginRound();
     void resolveBetting();
     void resolveFold();
@@ -68,7 +68,7 @@ class Game {
     int getIdx(const int& pid);
 
   public:
-    void initializeGame(const EngineSettings& settings, std::vector<int> PlayerIds);
+    void initializeEngine(const EngineSettings& settings, std::vector<int> PlayerIds);
 
     PublicState getPublicState();
     bool submitAction(const Action& action);

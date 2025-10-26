@@ -1,7 +1,7 @@
-/*game.h*/
+/*engine.h*/
 
 //
-// a poker game
+// a poker engine
 //
 // William Brittian
 // 2025
@@ -31,7 +31,7 @@ struct PublicState {
     
 };
 
-class Game {
+class Engine {
   private:
     bool Quit = false;
 
@@ -66,18 +66,18 @@ class Game {
 
   public:
     //
-    // general game state functions
+    // general engine state functions
     //
 
-    // larger scope functions to manage/setup/finish game
+    // larger scope functions to manage/setup/finish engine
 
-    void initializeGame(std::shared_ptr<Player> player, int numBots, int startingCash);
-    void finishGame();
+    void initializeEngine(std::shared_ptr<Player> player, int numBots, int startingCash);
+    void finishEngine();
 
     // TODO: this should decide winning hand and pay to that player
     void settleRound();
 
-    // utility functions for managing game state
+    // utility functions for managing engine state
 
     // adds player after position in the order
     void addPlayer(std::shared_ptr<Player> player, std::shared_ptr<Player> position);
@@ -88,10 +88,10 @@ class Game {
     // round active functions
     //
 
-    // main game loop
-    void runGame();
+    // main engine loop
+    void runEngine();
 
-    // round gameplay
+    // round engineplay
     void runRound();
 
     // loop of betting

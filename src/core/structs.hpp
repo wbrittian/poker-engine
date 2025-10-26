@@ -1,7 +1,7 @@
 /*structs.hpp*/
 
 //
-// all the relevant enums and structs for game
+// all the relevant enums and structs for engine
 //
 // William Brittian
 // 2025
@@ -45,7 +45,7 @@ struct Seat {
 
 struct PublicState {
     std::vector<Seat> Players;
-    Stage GameStage;
+    Stage EngineStage;
     int Current;
     int SmallBlind;
     int Pot;

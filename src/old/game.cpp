@@ -1,19 +1,19 @@
-/*game.cpp*/
+/*engine.cpp*/
 
 //
-// a poker game
+// a poker engine
 //
 // William Brittian
 // 2025
 //
 
-#include "game.hpp"
+#include "engine.hpp"
 
 //
-// general game state functions
+// general engine state functions
 //
 
-void Game::initializeGame(std::shared_ptr<Player> player, int numBots, int startingCash) {
+void Engine::initializeEngine(std::shared_ptr<Player> player, int numBots, int startingCash) {
     this->Deck.refillCards();
 
     this->addPlayer(player, nullptr);
@@ -27,20 +27,20 @@ void Game::initializeGame(std::shared_ptr<Player> player, int numBots, int start
     }
 }
 
-void Game::finishGame() {
+void Engine::finishEngine() {
     while (this->NumPlayers > 0) {
         removePlayer(this->Head);
     }
 }
 
-void Game::runRound() {
+void Engine::runRound() {
     this->Deck.refillCards();
     this->NumPlaying = this->NumPlayers;
     this->Round++;
 
     std::cout << "ROUND " << this->Round << std::endl;
 
-    // TODO: implement main game loop
+    // TODO: implement main engine loop
     while (this->Stage < 5 && !this->Quit) {
         std::cout << std::endl;
         this->printState();
@@ -82,7 +82,7 @@ void Game::runRound() {
             } else if (cmd == "h") {
                 std::cout << "Available round active commands:" << std::endl
                           << "h -> get list of available commands" << std::endl
-                          << "q -> quit the game" << std::endl
+                          << "q -> quit the engine" << std::endl
                           << "c -> continue round" << std::endl
                           << "s -> print scoreboard" << std::endl;
             } else if (cmd == "c") {
@@ -94,7 +94,7 @@ void Game::runRound() {
     }
 }
 
-void Game::settleRound() {
+void Engine::settleRound() {
     HandType bestHand = HIGH_CARD;
     std::vector<std::shared_ptr<Player>> winners;
 
@@ -104,7 +104,7 @@ void Game::settleRound() {
     this->Pot = 0;
 }
 
-void Game::addPlayer(std::shared_ptr<Player> player, std::shared_ptr<Player> position) {
+void Engine::addPlayer(std::shared_ptr<Player> player, std::shared_ptr<Player> position) {
     if (position == nullptr) {
         this->Head = player;
     } else {
@@ -116,8 +116,8 @@ void Game::addPlayer(std::shared_ptr<Player> player, std::shared_ptr<Player> pos
     this->NumPlayers++;
 }
 
-void Game::removePlayer(std::shared_ptr<Player> player) {
-    // TODO: what happens to user (and game) if you
+void Engine::removePlayer(std::shared_ptr<Player> player) {
+    // TODO: what happens to user (and engine) if you
     // remove the player? When will this get called
     // and will that happen?
 
@@ -140,7 +140,7 @@ void Game::removePlayer(std::shared_ptr<Player> player) {
 
 // rotates the head pointer to the next in the order
 // head by default points to the small blind
-void Game::rotateOrder() {
+void Engine::rotateOrder() {
     this->Head = this->Head->getNextPlayer();
 }
 
@@ -148,7 +148,7 @@ void Game::rotateOrder() {
 // round active functions
 //
 
-void Game::runGame() {
+void Engine::runEngine() {
     while (!this->Quit) {
         std::cout << std::endl;
         this->printState();
@@ -163,9 +163,9 @@ void Game::runGame() {
         } else if (cmd == "h") {
             std::cout << "Available preround commands:" << std::endl
                       << "h -> get a list of available commands" << std::endl
-                      << "q -> quit the game" << std::endl
+                      << "q -> quit the engine" << std::endl
                       << "r -> start a new round" << std::endl
-                      << "s -> print game scoreboard" << std::endl;
+                      << "s -> print engine scoreboard" << std::endl;
         } else if (cmd == "r") {
             this->Active = true;
             this->runRound();
@@ -179,7 +179,7 @@ void Game::runGame() {
     }
 }
 
-void Game::runBetting() {
+void Engine::runBetting() {
     std::shared_ptr<Player> raiser = this->Head;
     std::shared_ptr<Player> current = this->Head;
 
@@ -203,7 +203,7 @@ void Game::runBetting() {
                 } else if (cmd == "h") {
                     std::cout << "Available round active commands:" << std::endl
                               << "h -> get list of available commands" << std::endl
-                              << "q -> quit the game" << std::endl
+                              << "q -> quit the engine" << std::endl
                               << "c -> call the current bet or check" << std::endl
                               << "b/r [AMOUNT] -> bet (or raise) the given amount" << std::endl
                               << "f -> fold your hand" << std::endl
@@ -242,12 +242,12 @@ void Game::runBetting() {
     this->clearAllBets();
 }
 
-void Game::dealToPlayer(std::shared_ptr<Player> player) {
+void Engine::dealToPlayer(std::shared_ptr<Player> player) {
     player->resetHand();
     player->addCards(this->Deck.drawCards(2));
 }
 
-void Game::dealCards() {
+void Engine::dealCards() {
     std::shared_ptr<Player> cur = this->Head;
     do {
         this->dealToPlayer(cur);
@@ -255,7 +255,7 @@ void Game::dealCards() {
     } while (cur != this->Head);
 }
 
-void Game::settleBet(int amount, std::shared_ptr<Player> player) {
+void Engine::settleBet(int amount, std::shared_ptr<Player> player) {
     // amount needed to play - current betted
     int owed = amount - player->getBet();
 
@@ -267,7 +267,7 @@ void Game::settleBet(int amount, std::shared_ptr<Player> player) {
     player->editCash(-owed);
 }
 
-void Game::clearAllBets() {
+void Engine::clearAllBets() {
     this->Bet = 0;
 
     std::shared_ptr<Player> current = this->Head;
@@ -277,7 +277,7 @@ void Game::clearAllBets() {
     } while (current != this->Head);
 }
 
-void Game::printState() {
+void Engine::printState() {
     if (this->Active) {
         setColor("green");
         std::cout << "<<Round Active>>" << std::endl;
@@ -288,7 +288,7 @@ void Game::printState() {
     setColor("black");
 }
 
-void Game::printScoreboard() {
+void Engine::printScoreboard() {
     std::shared_ptr<Player> cur = this->User;
     do {
         std::cout << cur->getName() << ": " << cur->getCash() << std::endl;
@@ -301,7 +301,7 @@ void Game::printScoreboard() {
 //
 
 // 0-indexed
-std::shared_ptr<Player> Game::getNthPlayer(int n) {
+std::shared_ptr<Player> Engine::getNthPlayer(int n) {
     std::shared_ptr<Player> cur = this->Head;
     while (n > 0) {
         cur = cur->getNextPlayer();
@@ -311,7 +311,7 @@ std::shared_ptr<Player> Game::getNthPlayer(int n) {
 }
 
 // returns the player behind the given player in the order
-std::shared_ptr<Player> Game::getPreviousPlayer(std::shared_ptr<Player> player) {
+std::shared_ptr<Player> Engine::getPreviousPlayer(std::shared_ptr<Player> player) {
     std::shared_ptr<Player> current = player;
 
     while (current->getNextPlayer() != player) {
@@ -321,7 +321,7 @@ std::shared_ptr<Player> Game::getPreviousPlayer(std::shared_ptr<Player> player) 
     return current;
 }
 
-void Game::printCards() {
+void Engine::printCards() {
     if (this->Cards.size() > 0) {
         for (Card card : this->Cards) {
             card.printCard();
@@ -333,7 +333,7 @@ void Game::printCards() {
     std::cout << std::endl;
 }
 
-void Game::printRoundInfo() {
+void Engine::printRoundInfo() {
     if (this->Stage > 0) {
         std::cout << "Community cards:" << std::endl;
         this->printCards();
@@ -352,25 +352,25 @@ void Game::printRoundInfo() {
     std::cout << "To play: " << this->Bet - this->User->getBet() << std::endl;
 }
 
-void Game::printPot() {
+void Engine::printPot() {
     std::cout << "Pot: " << this->Pot << std::endl << std::endl;
 }
 
 //
 // accessors
 //
-int Game::getPot() {
+int Engine::getPot() {
     return this->Pot;
 }
 
-int Game::getBet() {
+int Engine::getBet() {
     return this->Bet;
 }
 
-int Game::getNumPlayers() {
+int Engine::getNumPlayers() {
     return this->NumPlayers;
 }
 
-std::shared_ptr<Player> Game::getHead() {
+std::shared_ptr<Player> Engine::getHead() {
     return this->Head;
 }
