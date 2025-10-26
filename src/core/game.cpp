@@ -58,6 +58,14 @@ void Game::beginRound() {
     Current = getPlayer(2, small);
 }
 
+void Game::resolveBetting() {
+    for (Seat& player : Players) {
+        resolveBet(player);
+    }
+
+    CurrentBet = 0;
+}
+
 void Game::resolveShowdown() {
     // figure out best hand
     std::vector<int> bestHands;
@@ -91,6 +99,7 @@ void Game::resolveShowdown() {
     }
 
     // pay out winner(s)
+    // TODO: add sidepot management
     float split = ((float) Pot) / Playing;
 
     for (int i = 0; i < bestHands.size(); i++) {
@@ -104,6 +113,14 @@ void Game::resolveShowdown() {
         Players[bestHands[i]].Cash += payout;
     }
 
+    resetRound();
+}
+
+void Game::resolveFold() {
+
+}
+
+void Game::resetRound() {
     // move blinds, reset game state
     Pot = 0;
     TheDeck.refillCards();
@@ -115,12 +132,8 @@ void Game::resolveShowdown() {
         Hands[i].Cards.clear();
     }
 
-    // start next round
+    AllIn = false;
     GameStage = INACTIVE;
-}
-
-void Game::resolveFold() {
-
 }
 
 
@@ -149,14 +162,7 @@ void Game::incCurrent() {
     Current = current;
 }
 
-// necessary??
-void Game::getBet(const int& pid, const int& amount) {
-    
-}
-
-void Game::resolveBet(const int& pid) {
-    Seat player = getSeat(pid);
-    
+void Game::resolveBet(Seat& player) {
     int bet = player.Bet;
     
     player.Bet = 0;
@@ -183,7 +189,7 @@ int Game::compareHands(const Hand& h1, const Hand& h2) {
     }
 }
 
-struct Seat& Game::getSeat(const int& pid) {
+Seat& Game::getSeat(const int& pid) {
     // quick jailbreak in case pid = seat number in vector
     int numPlayers = Players.size();
     if (pid < numPlayers && Players[pid].PlayerId == pid) {
@@ -198,19 +204,26 @@ struct Seat& Game::getSeat(const int& pid) {
     }
 }
 
+int Game::getIdx(const int& pid) {
+    for (int i = 0; i < Players.size(); i++) {
+        if (Players[i].PlayerId == pid) {
+            return i;
+        }
+    }
+}
+
 //
 // public functions
 //
 
-void Game::initializeGame(const struct EngineSettings& settings, std::vector<int> PlayerIds) {
+void Game::initializeGame(const  EngineSettings& settings, std::vector<int> PlayerIds) {
     TheDeck.refillCards();
 
-    MaxSeats = settings.MaxSeats;
     SmallSize = settings.SmallBlind;
     BigSize = settings.BigBlind;
 
     for (int id : PlayerIds) {
-        struct Seat seat = {
+        Seat seat = {
             id,
             true,
             settings.StartingCash,
@@ -227,7 +240,7 @@ void Game::initializeGame(const struct EngineSettings& settings, std::vector<int
     advanceGame();
 }
 
-struct PublicState Game::getPublicState() {
+PublicState Game::getPublicState() {
     PublicState state = {
         Players,
         GameStage,
@@ -243,6 +256,7 @@ struct PublicState Game::getPublicState() {
 
 bool Game::submitAction(const Action& action) {
     int pid = action.PlayerId;
+    int idx = getIdx(pid);
     Stage stage = GameStage;
 
     if (pid != Current || stage == INACTIVE) {
@@ -250,21 +264,41 @@ bool Game::submitAction(const Action& action) {
     }
 
     ActionTypes type = action.Type;
-    int amount = action.Amount;
     Seat seat = getSeat(pid);
 
-    // todo: add stages
     if (type == BET) {
+        int amount = action.Amount;
+        int bet;
 
+        if (amount == 0) {
+            bet = CurrentBet;
+        } else if (bet >= seat.Cash) {
+            bet = seat.Cash;
+            Raiser = idx;
+            AllIn = true;
+        } else if (bet < 2 * CurrentBet) {
+            return false;
+        } else {
+            bet = amount;
+            Raiser = idx;
+        }
+
+        seat.Bet = bet;
+        CurrentBet = bet;
     } else if (type == FOLD) {
         Playing--;
         seat.Active = false;
 
         if (Playing == 1) {
-
+            resolveFold();
         }
     }
 
+    incCurrent();
+    if (Current == Raiser) {
+        resolveBetting();
+        advanceGame();
+    }
 
     return true;
 }

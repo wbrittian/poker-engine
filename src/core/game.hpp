@@ -27,7 +27,6 @@ class Game {
     Deck TheDeck;
 
     int Round = 0;
-    int MaxSeats;
 
     //
     // round-specific
@@ -36,6 +35,8 @@ class Game {
 
     int Current = 0;
     int SmallBlind = 0;
+    int Raiser;
+    bool AllIn = false;
 
     int Playing;
 
@@ -50,23 +51,26 @@ class Game {
     // game helpers
     void advanceGame();
     void beginRound();
+    void resolveBetting();
     void resolveFold();
     void resolveShowdown();
+    void resetRound();
 
     // other helpers
     int getPlayer(const int& n, const int& pointer);
     void getCurrent();
     void incCurrent();
     void getBet(const int& pid, const int& amount);
-    void resolveBet(const int& pid);
+    void resolveBet(Seat& player);
     void resolveBet(const int& pid, const int& amount);
     int compareHands(const Hand& h1, const Hand& h2);
-    struct Seat& getSeat(const int& pid);
+    Seat& getSeat(const int& pid);
+    int getIdx(const int& pid);
 
   public:
-    void initializeGame(const struct EngineSettings& settings, std::vector<int> PlayerIds);
+    void initializeGame(const EngineSettings& settings, std::vector<int> PlayerIds);
 
-    struct PublicState getPublicState();
+    PublicState getPublicState();
     bool submitAction(const Action& action);
 
 };

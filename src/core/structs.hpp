@@ -61,5 +61,4 @@ struct EngineSettings {
     int BigBlind = 20;
     int SmallBlind = 10;
     int StartingCash = 1000;
-    int MaxSeats = 6;
 };
