@@ -26,8 +26,11 @@ class CLI {
     void printTitle();
     void getName();
     EngineSettings getSettings();
+    void createBots(std::vector<int>& botIds);
+    void printState(const PublicState& state);
+    Action getAction();
 
   public:
-    EngineSettings startup(int pid);
+    EngineSettings startup(std::vector<int>& pids);
     void runGame(PokerEngine engine);
 };

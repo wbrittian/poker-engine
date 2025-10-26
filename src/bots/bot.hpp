@@ -11,6 +11,14 @@
 
 #include <string>
 
+#include "../core/structs.hpp"
+
 class Bot {
-    // TODO: implement bots
+private:
+    int Id;
+
+public:
+    Bot(int pid) : Id(pid) {}
+
+    Action getAction(const PublicState& gameState);
 };

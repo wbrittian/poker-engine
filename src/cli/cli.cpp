@@ -63,12 +63,40 @@ void CLI::getName() {
 }
 
 EngineSettings CLI::getSettings() {
-    // TODO: get settings from user
+    EngineSettings settings;
+
+    // TODO: add command line options for settings
+
+    return settings;
 }
 
-EngineSettings CLI::startup(int pid) {
+void CLI::createBots(std::vector<int>& ids) {
+    for (int id : ids) {
+        Bots.push_back(Bot(id));
+    }
+}
+
+void CLI::printState(const PublicState& state) {
+
+}
+
+Action CLI::getAction() {
+
+}
+
+//
+// public functions
+//
+
+EngineSettings CLI::startup(std::vector<int>& pids) {
+    // TODO: change to constructor?
     printTitle();
     getName();
+
+    Id = pids [0];
+    pids.erase(pids.begin());
+    createBots(pids);
+
     return getSettings();
 }
 
@@ -76,6 +104,16 @@ void CLI::runGame(PokerEngine engine) {
     Engine = engine;
 
     while (true) {
-        // TODO: main game loop
+        const PublicState state = Engine.getPublicState();
+        printState(state);
+        
+        Action action;
+        if (state.Current == Id) {
+            action = getAction();
+        } else {
+            action = Bots[state.Current].getAction(state);
+        }
+
+        Engine.submitAction(action);
     }
 }

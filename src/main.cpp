@@ -21,7 +21,7 @@ int main() {
         ids.push_back(i);
     }
 
-    EngineSettings settings = cli.startup(ids[0]);
+    EngineSettings settings = cli.startup(ids);
 
     engine.initializeEngine(settings, ids);
     cli.runGame(engine);

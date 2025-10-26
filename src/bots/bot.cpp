@@ -8,3 +8,7 @@
 //
 
 #include "bot.hpp"
+
+Action Bot::getAction(const PublicState& gameState) {
+    return Action{Id, BET, 0};
+}

@@ -1,4 +1,4 @@
-/*engine.h*/
+/*engine.hpp*/
 
 //
 // a poker engine
@@ -70,7 +70,7 @@ class PokerEngine {
   public:
     void initializeEngine(const EngineSettings& settings, std::vector<int> PlayerIds);
 
-    PublicState getPublicState();
+    const PublicState& getPublicState();
     bool submitAction(const Action& action);
 
 };

@@ -26,7 +26,7 @@ TEST_F(HandTest, FullHouse_TripPlusPair) {
         makeCard(QUEEN, CLUBS),
         makeCard(SEVEN, HEARTS)
     };
-    hand.evaluateHand();
+    hand.evaluateHand({});
 
     EXPECT_EQ(hand.Type, FULL_HOUSE);
     EXPECT_THAT(hand.HandHigh, ElementsAre(QUEEN));  // trips
@@ -44,7 +44,7 @@ TEST_F(HandTest, FullHouse_TwoTrips) {
         makeCard(NINE, CLUBS),
         makeCard(TWO, HEARTS)
     };
-    hand.evaluateHand();
+    hand.evaluateHand({});
 
     EXPECT_EQ(hand.Type, FULL_HOUSE);
     EXPECT_THAT(hand.HandHigh, ElementsAre(KING));
@@ -62,7 +62,7 @@ TEST_F(HandTest, FourOfAKind_WithKicker) {
         makeCard(THREE, CLUBS),
         makeCard(SEVEN, DIAMONDS)
     };
-    hand.evaluateHand();
+    hand.evaluateHand({});
 
     EXPECT_EQ(hand.Type, FOUR_OF_A_KIND);
     EXPECT_THAT(hand.HandHigh, ElementsAre(FIVE));
@@ -80,7 +80,7 @@ TEST_F(HandTest, Trips_WithKickers) {
         makeCard(FOUR, CLUBS),
         makeCard(THREE, HEARTS)
     };
-    hand.evaluateHand();
+    hand.evaluateHand({});
 
     EXPECT_EQ(hand.Type, THREE_OF_A_KIND);
     EXPECT_THAT(hand.HandHigh, ElementsAre(SEVEN));
@@ -99,7 +99,7 @@ TEST_F(HandTest, TwoPair_WithKicker) {
         makeCard(FOUR, CLUBS),
         makeCard(THREE, DIAMONDS)
     };
-    hand.evaluateHand();
+    hand.evaluateHand({});
 
     EXPECT_EQ(hand.Type, TWO_PAIR);
     EXPECT_THAT(hand.HandHigh, ElementsAre(ACE, TEN));
@@ -116,7 +116,7 @@ TEST_F(HandTest, OnePair_WithKickers) {
         makeCard(THREE, CLUBS),
         makeCard(FOUR, DIAMONDS)
     };
-    hand.evaluateHand();
+    hand.evaluateHand({});
 
     EXPECT_EQ(hand.Type, PAIR);
     EXPECT_THAT(hand.HandHigh, ElementsAre(NINE));
@@ -134,7 +134,7 @@ TEST_F(HandTest, HighCard_TopFive) {
         makeCard(THREE, CLUBS),
         makeCard(EIGHT, DIAMONDS)
     };
-    hand.evaluateHand();
+    hand.evaluateHand({});
 
     EXPECT_EQ(hand.Type, HIGH_CARD);
     // Expect A, Q, 9, 8, 7 (assuming descending selection)
@@ -153,7 +153,7 @@ TEST_F(HandTest, Straight_AceHigh) {
         makeCard(TWO, CLUBS),   // junk
         makeCard(FOUR, DIAMONDS)// junk
     };
-    hand.evaluateHand();
+    hand.evaluateHand({});
 
     EXPECT_EQ(hand.Type, STRAIGHT);
     EXPECT_THAT(hand.HandHigh, ElementsAre(ACE)); // top rank of straight
@@ -170,7 +170,7 @@ TEST_F(HandTest, Straight_Wheel) {
         makeCard(TEN, CLUBS),  // junk
         makeCard(QUEEN, SPADES)// junk
     };
-    hand.evaluateHand();
+    hand.evaluateHand({});
 
     EXPECT_EQ(hand.Type, STRAIGHT);
     EXPECT_THAT(hand.HandHigh, ElementsAre(FIVE)); // 5-high straight
@@ -188,7 +188,7 @@ TEST_F(HandTest, Straight_PicksHighestRun) {
         makeCard(TEN, CLUBS),
         makeCard(TWO, DIAMONDS)
     };
-    hand.evaluateHand();
+    hand.evaluateHand({});
 
     EXPECT_EQ(hand.Type, STRAIGHT);
     EXPECT_THAT(hand.HandHigh, ElementsAre(TEN));
@@ -207,7 +207,7 @@ TEST_F(HandTest, Flush_WinsOverSeparateStraight) {
         makeCard(FIVE, CLUBS),  // helps a potential straight
         makeCard(TEN, DIAMONDS) // helps a potential straight
     };
-    hand.evaluateHand();
+    hand.evaluateHand({});
 
     EXPECT_EQ(hand.Type, FLUSH);
     ASSERT_EQ(hand.HandHigh.size(), 5u);
@@ -225,7 +225,7 @@ TEST_F(HandTest, StraightFlush) {
         makeCard(TWO, DIAMONDS),
         makeCard(THREE, CLUBS)
     };
-    hand.evaluateHand();
+    hand.evaluateHand({});
 
     EXPECT_EQ(hand.Type, STRAIGHT_FLUSH);
     // HandHigh content can vary by implementation (top rank vs 5 ranks). Don’t over-assert here.
@@ -242,7 +242,7 @@ TEST_F(HandTest, RoyalFlush) {
         makeCard(TWO, CLUBS),
         makeCard(THREE, DIAMONDS)
     };
-    hand.evaluateHand();
+    hand.evaluateHand({});
 
     EXPECT_EQ(hand.Type, ROYAL_FLUSH);
 }
