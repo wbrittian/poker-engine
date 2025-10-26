@@ -28,10 +28,11 @@ enum HandType {
 };
 
 struct Hand {
+    int PlayerId;
     std::vector<Card> Cards;
     enum HandType Type;
     std::vector<int> HandHigh;
     std::vector<int> OtherHigh;
 
-    void evaluateHand();
+    void evaluateHand(const std::vector<Card>& community);
 };

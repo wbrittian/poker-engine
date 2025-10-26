@@ -84,7 +84,11 @@ std::vector<int> checkFlush(const uint16_t (&mask)[4]) {
 }
 
 
-void Hand::evaluateHand() {
+void Hand::evaluateHand(const std::vector<Card>& community) {
+    for (Card card : community) {
+        Cards.push_back(card);
+    }
+
     std::map<int, int, std::greater<int>> counts;
     uint16_t mask[4] = {0, 0, 0, 0};
 

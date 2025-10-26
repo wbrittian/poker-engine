@@ -14,41 +14,68 @@
 //
 
 void Game::advanceGame() {
-    this->GameStage = static_cast<Stage>(this->GameStage + 1);
-    Stage stage = this->GameStage;
+    GameStage = static_cast<Stage>(GameStage + 1);
+    Stage stage = GameStage;
 
     if (stage == PREFLOP) {
-        this->Round += 1;
-        this->Playing = this->Players.size();
+        Round += 1;
+        Playing = Players.size();
 
-        int small = this->SmallBlind;
+        int small = SmallBlind;
         int big = getPlayer(1, small);
 
-        this->resolveBet(small, this->SmallSize);
-        this->resolveBet(big, this->BigSize);
+        resolveBet(small, SmallSize);
+        resolveBet(big, BigSize);
 
-        this->CurrentBet = this->BigSize;
-        this->Current = this->getPlayer(2, small);
+        CurrentBet = BigSize;
+        Current = getPlayer(2, small);
 
         return;
     } else if (stage == FLOP) {
-        this->getCurrent();
-        this->Community = this->TheDeck.drawCards(3);
+        getCurrent();
+        Community = TheDeck.drawCards(3);
     } else if (stage == TURN) {
-        this->getCurrent();
-        this->Community.push_back(this->TheDeck.drawCard());
+        getCurrent();
+        Community.push_back(TheDeck.drawCard());
     } else if (stage == RIVER) {
-        this->getCurrent();
-        this->Community.push_back(this->TheDeck.drawCard());
+        getCurrent();
+        Community.push_back(TheDeck.drawCard());
     } else if (stage == SHOWDOWN) {
         // figure out best hand
-        
+        std::vector<int> bestHands;
+        for (int i = 0; i < Players.size(); i++) {
+            Seat player = Players[i];
+
+            if (!player.Active) continue;
+
+            Hands[i].evaluateHand(Community);
+            if (bestHands.size() == 0) {
+                bestHands.push_back(i);
+            } else {
+                bool better = false;
+                Hand myHand = Hands[i];
+                for (int j = bestHands.size() - 1; j >= 0; j--) {
+                    Hand theirHand = Hands[bestHands[j]];
+                    int res = compareHands(myHand, theirHand);
+
+                    if (res == 1) {
+                        break;
+                    }
+
+                    better = true;
+                    if (res == -1) {
+                        bestHands.erase(bestHands.begin() + j);
+                    }
+                }
+
+                if (better) bestHands.push_back(i);
+            }
+        }
 
         // pay out winner(s)
-        std::vector<int> winners;
-        float split = ((float) this->Pot) / this->Playing;
+        float split = ((float) Pot) / Playing;
 
-        for (int i = 0; i < winners.size(); i++) {
+        for (int i = 0; i < bestHands.size(); i++) {
             int payout;
             if (i == 0) {
                 payout = ceil(split);
@@ -56,26 +83,26 @@ void Game::advanceGame() {
                 payout = floor(split);
             }
 
-            this->Players[winners[i]].Cash += payout;
+            Players[bestHands[i]].Cash += payout;
         }
 
         // move blinds, reset game state
-        this->Pot = 0;
-        this->TheDeck.refillCards();
-        this->SmallBlind = this->getPlayer(this->SmallBlind, 1);
+        Pot = 0;
+        TheDeck.refillCards();
+        SmallBlind = getPlayer(SmallBlind, 1);
 
-        for (int i = 0; i < this->Players.size(); i++) {
-            this->Players[i].Active = true;
-            this->Players[i].PotSplit = 0;
-            this->Hands[i].Cards.clear();
+        for (int i = 0; i < Players.size(); i++) {
+            Players[i].Active = true;
+            Players[i].PotSplit = 0;
+            Hands[i].Cards.clear();
         }
 
         // start next round
-        this->GameStage = INACTIVE;
-        this->advanceGame();
+        GameStage = INACTIVE;
+        advanceGame();
     }
 
-    for (Seat &player : this->Players) {
+    for (Seat &player : Players) {
         player.Bet = 0;
     }
 }
@@ -83,60 +110,71 @@ void Game::advanceGame() {
 
 // helper functions
 int Game::getPlayer(const int& point, const int& n) {
-    return (point + n) % this->Players.size();
+    return (point + n) % Players.size();
 }
 
 void Game::getCurrent() {
     int current;
-    Seat currentPlayer = this->Players[this->SmallBlind];
+    Seat currentPlayer = Players[SmallBlind];
     while (!currentPlayer.Active) {
-        current = this->getPlayer(this->Current, 1);
-        currentPlayer = this->Players[current];
+        current = getPlayer(Current, 1);
+        currentPlayer = Players[current];
     }
-    this->Current = current;
+    Current = current;
 }
 
 void Game::incCurrent() {
     int current;
     Seat currentPlayer;
     do {
-        current = this->getPlayer(this->Current, 1);
-        currentPlayer = this->Players[current];
+        current = getPlayer(Current, 1);
+        currentPlayer = Players[current];
     } while (!currentPlayer.Active);
-    this->Current = current;
+    Current = current;
 }
 
 // necessary??
 void Game::getBet(const int& pid, const int& amount) {
-
+    
 }
 
 void Game::resolveBet(const int& pid) {
-    Seat player = this->getSeat(pid);
+    Seat player = getSeat(pid);
     
     int bet = player.Bet;
     
     player.Bet = 0;
     player.PotSplit += bet;
-    this->Pot += bet;
+    Pot += bet;
 }
 
 void Game::resolveBet(const int& pid, const int& amount) {
-    Seat player = this->getSeat(pid);
+    Seat player = getSeat(pid);
 
     player.Cash -= amount;
     player.PotSplit += amount;
-    this->Pot += amount;
+    Pot += amount;
 }
 
-struct Seat Game::getSeat(const int& pid) {
+// returns -1 if h1 is better, 0 if tie, 1 if h2
+int Game::compareHands(const Hand& h1, const Hand& h2) {
+    if (h1.Type > h2.Type) {
+        return -1;
+    } else if (h1.Type < h2.Type) {
+        return 1;
+    } else {
+        
+    }
+}
+
+struct Seat& Game::getSeat(const int& pid) {
     // quick jailbreak in case pid = seat number in vector
-    int numPlayers = this->Players.size();
-    if (pid < numPlayers && this->Players[pid].PlayerId == pid) {
-        return this->Players[pid];
+    int numPlayers = Players.size();
+    if (pid < numPlayers && Players[pid].PlayerId == pid) {
+        return Players[pid];
     } else {
         for (int i = 0; i < numPlayers; i++) {
-            Seat player = this->Players[i];
+            Seat player = Players[i];
             if (player.PlayerId == pid) {
                 return player;
             }
@@ -149,11 +187,11 @@ struct Seat Game::getSeat(const int& pid) {
 //
 
 void Game::initializeGame(const struct EngineSettings& settings, std::vector<int> PlayerIds) {
-    this->TheDeck.refillCards();
+    TheDeck.refillCards();
 
-    this->MaxSeats = settings.MaxSeats;
-    this->SmallSize = settings.SmallBlind;
-    this->BigSize = settings.BigBlind;
+    MaxSeats = settings.MaxSeats;
+    SmallSize = settings.SmallBlind;
+    BigSize = settings.BigBlind;
 
     for (int id : PlayerIds) {
         struct Seat seat = {
@@ -164,22 +202,24 @@ void Game::initializeGame(const struct EngineSettings& settings, std::vector<int
             0
         };
 
-        this->Players.push_back(seat);
-        this->Hands.push_back(Hand{});
+        Hand hand;
+        hand.PlayerId = id;
+        Hands.push_back(hand);
+        Players.push_back(seat);
     }
 
-    this->advanceGame();
+    advanceGame();
 }
 
 struct PublicState Game::getPublicState() {
     PublicState state = {
-        this->Players,
-        this->GameStage,
-        this->Current,
-        this->SmallBlind,
-        this->Pot,
-        this->CurrentBet,
-        this->Community
+        Players,
+        GameStage,
+        Current,
+        SmallBlind,
+        Pot,
+        CurrentBet,
+        Community
     };
 
     return state;
@@ -187,16 +227,27 @@ struct PublicState Game::getPublicState() {
 
 bool Game::submitAction(const Action& action) {
     int pid = action.PlayerId;
-    Stage stage = this->GameStage;
+    Stage stage = GameStage;
 
-    if (pid != this->Current || stage == INACTIVE) {
+    if (pid != Current || stage == INACTIVE) {
         return false;
     }
 
     ActionTypes type = action.Type;
     int amount = action.Amount;
+    Seat seat = getSeat(pid);
 
     // todo: add stages
+    if (type == BET) {
+
+    } else if (type == FOLD) {
+        Playing--;
+        seat.Active = false;
+
+        if (Playing == 1) {
+
+        }
+    }
 
 
     return true;

@@ -50,15 +50,15 @@ class Game {
     // game helpers
     void advanceGame();
 
-    // small helpers
+    // other helpers
     int getPlayer(const int& n, const int& pointer);
     void getCurrent();
     void incCurrent();
     void getBet(const int& pid, const int& amount);
     void resolveBet(const int& pid);
     void resolveBet(const int& pid, const int& amount);
-
-    struct Seat getSeat(const int& pid);
+    int compareHands(const Hand& h1, const Hand& h2);
+    struct Seat& getSeat(const int& pid);
 
   public:
     void initializeGame(const struct EngineSettings& settings, std::vector<int> PlayerIds);
