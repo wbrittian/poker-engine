@@ -7,13 +7,10 @@
 // 2025
 //
 
-#include <iostream>
-#include <string>
-
-#include "functions.cpp"
+#include "cli.hpp"
 
 // prints out the main title screen
-void printTitle() {
+void CLI::printTitle() {
     std::cout << std::endl;
     std::cout << "----------------------------" << std::endl;
     std::cout << "         Welcome to         " << std::endl;
@@ -46,17 +43,16 @@ void printTitle() {
 }
 
 // gets player name from terminal
-std::string getName() {
-    std::string name;
+void CLI::getName() {
     bool correct = false;
 
     while (!correct) {
         std::cout << "please enter your name:" << std::endl;
-        std::getline(std::cin, name);
+        std::getline(std::cin, Name);
         std::cout << std::endl;
 
         std::string ans;
-        std::cout << "does this look right (y/n)? " << name << std::endl;
+        std::cout << "does this look right (y/n)? " << Name << std::endl;
         std::getline(std::cin, ans);
         std::cout << std::endl;
 
@@ -64,14 +60,22 @@ std::string getName() {
             correct = true;
         }
     }
-
-    return name;
 }
 
-void startup() {
-
+EngineSettings CLI::getSettings() {
+    // TODO: get settings from user
 }
 
-void runGame() {
-    
+EngineSettings CLI::startup(int pid) {
+    printTitle();
+    getName();
+    return getSettings();
+}
+
+void CLI::runGame(PokerEngine engine) {
+    Engine = engine;
+
+    while (true) {
+        // TODO: main game loop
+    }
 }

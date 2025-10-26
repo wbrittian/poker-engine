@@ -8,18 +8,21 @@
 #include <iostream>
 #include <vector>
 
-#include "cli/cli.cpp"
+#include "cli/cli.hpp"
 #include "core/engine.hpp"
 
 
 int main() {
-    int NUM_BOTS = 3;
-    int STARTING_CASH = 500;
-
-    std::string name;
+    CLI cli;
     PokerEngine engine;
 
-    printTitle();
-    name = getName();
+    std::vector<int> ids;
+    for (int i = 0; i < 6; i++) {
+        ids.push_back(i);
+    }
 
+    EngineSettings settings = cli.startup(ids[0]);
+
+    engine.initializeEngine(settings, ids);
+    cli.runGame(engine);
 }
