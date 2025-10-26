@@ -12,7 +12,7 @@
 #include <iostream>
 #include <string>
 
-#include "../deck/card.hpp"
+#include "card.hpp"
 
 extern std::string spade;
 extern std::string heart;
