@@ -18,18 +18,7 @@ void Game::advanceGame() {
     Stage stage = GameStage;
 
     if (stage == PREFLOP) {
-        Round += 1;
-        Playing = Players.size();
-
-        int small = SmallBlind;
-        int big = getPlayer(1, small);
-
-        resolveBet(small, SmallSize);
-        resolveBet(big, BigSize);
-
-        CurrentBet = BigSize;
-        Current = getPlayer(2, small);
-
+        beginRound();
         return;
     } else if (stage == FLOP) {
         getCurrent();
@@ -41,70 +30,97 @@ void Game::advanceGame() {
         getCurrent();
         Community.push_back(TheDeck.drawCard());
     } else if (stage == SHOWDOWN) {
-        // figure out best hand
-        std::vector<int> bestHands;
-        for (int i = 0; i < Players.size(); i++) {
-            Seat player = Players[i];
-
-            if (!player.Active) continue;
-
-            Hands[i].evaluateHand(Community);
-            if (bestHands.size() == 0) {
-                bestHands.push_back(i);
-            } else {
-                bool better = false;
-                Hand myHand = Hands[i];
-                for (int j = bestHands.size() - 1; j >= 0; j--) {
-                    Hand theirHand = Hands[bestHands[j]];
-                    int res = compareHands(myHand, theirHand);
-
-                    if (res == 1) {
-                        break;
-                    }
-
-                    better = true;
-                    if (res == -1) {
-                        bestHands.erase(bestHands.begin() + j);
-                    }
-                }
-
-                if (better) bestHands.push_back(i);
-            }
-        }
-
-        // pay out winner(s)
-        float split = ((float) Pot) / Playing;
-
-        for (int i = 0; i < bestHands.size(); i++) {
-            int payout;
-            if (i == 0) {
-                payout = ceil(split);
-            } else {
-                payout = floor(split);
-            }
-
-            Players[bestHands[i]].Cash += payout;
-        }
-
-        // move blinds, reset game state
-        Pot = 0;
-        TheDeck.refillCards();
-        SmallBlind = getPlayer(SmallBlind, 1);
-
-        for (int i = 0; i < Players.size(); i++) {
-            Players[i].Active = true;
-            Players[i].PotSplit = 0;
-            Hands[i].Cards.clear();
-        }
-
-        // start next round
-        GameStage = INACTIVE;
+        resolveShowdown();
         advanceGame();
+        return;
     }
 
-    for (Seat &player : Players) {
+    for (Seat& player : Players) {
         player.Bet = 0;
     }
+}
+
+void Game::beginRound() {
+    for (Seat& player : Players) {
+        player.Bet = 0;
+    }
+
+    Round += 1;
+    Playing = Players.size();
+
+    int small = SmallBlind;
+    int big = getPlayer(1, small);
+
+    resolveBet(small, SmallSize);
+    resolveBet(big, BigSize);
+
+    CurrentBet = BigSize;
+    Current = getPlayer(2, small);
+}
+
+void Game::resolveShowdown() {
+    // figure out best hand
+    std::vector<int> bestHands;
+    for (int i = 0; i < Players.size(); i++) {
+        Seat player = Players[i];
+
+        if (!player.Active) continue;
+
+        Hands[i].evaluateHand(Community);
+        if (bestHands.size() == 0) {
+            bestHands.push_back(i);
+        } else {
+            bool better = false;
+            Hand myHand = Hands[i];
+            for (int j = bestHands.size() - 1; j >= 0; j--) {
+                Hand theirHand = Hands[bestHands[j]];
+                int res = compareHands(myHand, theirHand);
+
+                if (res == 1) {
+                    break;
+                }
+
+                better = true;
+                if (res == -1) {
+                    bestHands.erase(bestHands.begin() + j);
+                }
+            }
+
+            if (better) bestHands.push_back(i);
+        }
+    }
+
+    // pay out winner(s)
+    float split = ((float) Pot) / Playing;
+
+    for (int i = 0; i < bestHands.size(); i++) {
+        int payout;
+        if (i == 0) {
+            payout = ceil(split);
+        } else {
+            payout = floor(split);
+        }
+
+        Players[bestHands[i]].Cash += payout;
+    }
+
+    // move blinds, reset game state
+    Pot = 0;
+    TheDeck.refillCards();
+    SmallBlind = getPlayer(SmallBlind, 1);
+
+    for (int i = 0; i < Players.size(); i++) {
+        Players[i].Active = true;
+        Players[i].PotSplit = 0;
+        Hands[i].Cards.clear();
+    }
+
+    // start next round
+    GameStage = INACTIVE;
+}
+
+void Game::resolveFold() {
+
 }
 
 

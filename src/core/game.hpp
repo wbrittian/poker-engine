@@ -49,6 +49,9 @@ class Game {
 
     // game helpers
     void advanceGame();
+    void beginRound();
+    void resolveFold();
+    void resolveShowdown();
 
     // other helpers
     int getPlayer(const int& n, const int& pointer);
