@@ -13,7 +13,7 @@
 
 #include "../core/engine.hpp"
 #include "../bots/bot.hpp"
-#include "functions.cpp"
+#include "functions.hpp"
 
 class CLI {
   private:

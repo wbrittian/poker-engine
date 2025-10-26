@@ -7,15 +7,10 @@
 // 2025
 //
 
-#include <iostream>
-#include <sstream>
-#include <string>
-#include <vector>
-
-#include "../core/deck/hand.hpp"
+#include "functions.hpp"
 
 
-void setColor(std::string color) {
+void setColor(const std::string& color) {
     if (color == "red") {
         std::cout << "\033[31m";
     } else if (color == "green") {
@@ -41,19 +36,6 @@ bool isInteger(const std::string& str) {
 //
 // card printing
 //
-char16_t _spade = u'\u2660';
-char16_t _heart = u'\u2665';
-char16_t _club = u'\u2663';
-char16_t _diamond = u'\u2666';
-char16_t _chip = u'\u26C0';
-char16_t _chips = u'\u26C1';
-
-std::string spade = to_utf8(_spade);
-std::string heart = to_utf8(_heart);
-std::string club = to_utf8(_club);
-std::string diamond = to_utf8(_diamond);
-std::string chip = to_utf8(_chip);
-std::string chips = to_utf8(_chips);
 
 // converts char16_t unicode chars to strings that can be
 // outputted by the console
@@ -72,6 +54,39 @@ std::string to_utf8(char16_t ch) {
     return utf8;
 }
 
+std::string _spade() {
+    return to_utf8(u'\u2660');
+}
+std::string _heart() {
+    return to_utf8(u'\u2665');
+}
+std::string _club() {
+    return to_utf8(u'\u2663');
+}
+std::string _diamond() {
+    return to_utf8(u'\u2666');
+}
+std::string _chip() {
+    return to_utf8(u'\u26C0');
+}
+std::string _chips() {
+    return to_utf8(u'\u26C1');
+}
+
+std::string matchToSymbol(Suit suit) {
+    if (suit == SPADES) {
+        return _spade();
+    } else if (suit == HEARTS) {
+        return _heart();
+    } else if (suit == CLUBS) {
+        return _club();
+    } else if (suit == DIAMONDS) {
+        return _diamond();
+    } else {
+        return "";
+    }
+}
+
 std::string ranks[13] = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"};
 void printCard(Card card) {
     Suit suit = card.Suit;
@@ -86,18 +101,4 @@ void printCard(Card card) {
     } else {
         std::cout << ranks[rank] << suitSymbol;
     }  
-}
-
-std::string matchToSymbol(Suit suit) {
-    if (suit == SPADES) {
-        return spade;
-    } else if (suit == HEARTS) {
-        return heart;
-    } else if (suit == CLUBS) {
-        return club;
-    } else if (suit == DIAMONDS) {
-        return diamond;
-    } else {
-        return "";
-    }
 }

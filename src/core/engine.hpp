@@ -13,7 +13,7 @@
 #include <vector>
 
 #include "structs.hpp"
-#include "hand.hpp"
+#include "deck/hand.hpp"
 
 class PokerEngine {
   private:
@@ -70,7 +70,7 @@ class PokerEngine {
   public:
     void initializeEngine(const EngineSettings& settings, std::vector<int> PlayerIds);
 
-    const PublicState& getPublicState();
+    PublicState getPublicState();
     bool submitAction(const Action& action);
 
 };

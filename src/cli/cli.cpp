@@ -11,6 +11,12 @@
 
 // prints out the main title screen
 void CLI::printTitle() {
+    std::string spade = _spade();
+    std::string heart = _heart();
+    std::string club = _club();
+    std::string diamond = _diamond();
+    std::string chip = _chip();
+
     std::cout << std::endl;
     std::cout << "----------------------------" << std::endl;
     std::cout << "         Welcome to         " << std::endl;

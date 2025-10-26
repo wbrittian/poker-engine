@@ -240,7 +240,7 @@ void PokerEngine::initializeEngine(const  EngineSettings& settings, std::vector<
     advanceEngine();
 }
 
-const PublicState& PokerEngine::getPublicState() {
+PublicState PokerEngine::getPublicState() {
     PublicState state = {
         Players,
         EngineStage,
