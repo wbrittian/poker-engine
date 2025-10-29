@@ -19,6 +19,7 @@ class CLI {
   private:
     PokerEngine Engine;
     std::vector<Bot> Bots;
+    std::vector<std::string> Names;
 
     std::string Name;
     int Id = 0;
@@ -26,11 +27,14 @@ class CLI {
     void printTitle();
     void getName();
     EngineSettings getSettings();
-    void createBots(std::vector<int>& botIds);
-    void printState(const PublicState& state);
+    void createBots(const int& numBots);
+    // void printState(const PublicState& state);
+    void printCards(const std::vector<Card>& cards);
     Action getAction();
 
   public:
-    EngineSettings startup(std::vector<int>& pids);
+    EngineSettings startup(const int& numPlayers);
     void runGame(PokerEngine engine);
+
+    void printState(const PublicState& state, const PlayerState& pstate);
 };

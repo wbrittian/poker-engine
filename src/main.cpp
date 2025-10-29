@@ -13,16 +13,42 @@
 
 
 int main() {
+    int NUM_PLAYERS = 6;
+
     CLI cli;
     PokerEngine engine;
 
-    std::vector<int> ids;
+    EngineSettings settings = cli.startup(NUM_PLAYERS);
+
+    engine.initializeEngine(settings, NUM_PLAYERS);
+    // cli.runGame(engine);
+
+    std::vector<Seat> players;
     for (int i = 0; i < 6; i++) {
-        ids.push_back(i);
+        players.push_back(Seat{
+            i,
+            true,
+            1000,
+            0,
+            0
+        });
     }
 
-    EngineSettings settings = cli.startup(ids);
 
-    engine.initializeEngine(settings, ids);
-    cli.runGame(engine);
+    PublicState test = {
+        1,
+        players,
+        PREFLOP,
+        0,
+        0,
+        0,
+        0,
+        {Card{ACE, SPADES}, Card{TWO, DIAMONDS}, Card{KING, CLUBS}}
+    };
+
+    PlayerState ptest = {
+        std::vector{Card{JACK, HEARTS}, Card{ACE, CLUBS}}
+    };
+
+    cli.printState(test, ptest);
 }

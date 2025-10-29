@@ -76,14 +76,87 @@ EngineSettings CLI::getSettings() {
     return settings;
 }
 
-void CLI::createBots(std::vector<int>& ids) {
-    for (int id : ids) {
+void CLI::createBots(const int& numBots) {
+    for (int id = 1; id < numBots + 1; id++) {
         Bots.push_back(Bot(id));
+        Names.push_back("Bot " + std::to_string(id));
     }
 }
 
-void CLI::printState(const PublicState& state) {
+void CLI::printState(const PublicState& state, const PlayerState& pstate) {
+    std::cout << "----------------------------" << std::endl;
+    std::cout << "Hand " << state.HandNum << " ";
+    switch (state.EngineStage) {
+        case PREFLOP:
+            std::cout << "Preflop";
+            break;
+        case FLOP:
+            std::cout << "Flop";
+            break;
+        case TURN:
+            std::cout << "Turn";
+            break;
+        case RIVER:
+            std::cout << "River";
+            break;
+        case SHOWDOWN:
+            std::cout << "Showdown";
+            break;
+    }
+    std::cout << std::endl << std::endl;
 
+    std::cout << "Pot: " << state.Pot << std::endl;
+    std::cout << "Bet: " << state.CurrentBet << std::endl;
+    std::cout << std::endl;
+    
+    for (int i = 0; i < state.Players.size(); i++) {
+        Seat cur = state.Players[i];
+        if (i == state.Current) {
+            std::cout << "> ";
+        } else {
+            std::cout << "  ";
+        }
+
+        if (!cur.Active) {
+            setColor("grey");
+        }
+
+        std::cout << Names[i] << " (";
+        
+        if (cur.Active) {
+            setColor("green");
+        }
+
+        std::cout << cur.Cash << _chip();
+
+        if (cur.Active) {
+            setColor("black");
+        }
+
+        std::cout << "): ";
+
+        if (cur.Active) {
+            setColor("purple");
+        }
+
+        std::cout << cur.Bet << _chip();
+
+        setColor("black");
+        std::cout << std::endl;
+    }
+
+    std::cout << std::endl << "Community cards: ";
+    printCards(state.Community);
+    std::cout << std::endl << "Your cards: ";
+    printCards(pstate.Hand);
+    std::cout << std::endl;
+}
+
+void CLI::printCards(const std::vector<Card>& cards) {
+    for (const Card& card : cards) {
+        printCard(card);
+        std::cout << " ";
+    }
 }
 
 Action CLI::getAction() {
@@ -94,14 +167,14 @@ Action CLI::getAction() {
 // public functions
 //
 
-EngineSettings CLI::startup(std::vector<int>& pids) {
+EngineSettings CLI::startup(const int& numPlayers) {
     // TODO: change to constructor?
     printTitle();
     getName();
 
-    Id = pids [0];
-    pids.erase(pids.begin());
-    createBots(pids);
+    Id = 0;
+    Names.push_back(Name);
+    createBots(numPlayers - 1);
 
     return getSettings();
 }
@@ -111,7 +184,8 @@ void CLI::runGame(PokerEngine engine) {
 
     while (true) {
         const PublicState state = Engine.getPublicState();
-        printState(state);
+        const PlayerState pstate = Engine.getPlayerState(Id);
+        printState(state, pstate);
         
         Action action;
         if (state.Current == Id) {

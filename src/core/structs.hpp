@@ -44,6 +44,7 @@ struct Seat {
 };
 
 struct PublicState {
+    int HandNum;
     std::vector<Seat> Players;
     Stage EngineStage;
     int Current;
@@ -55,6 +56,13 @@ struct PublicState {
 
 struct PlayerState {
     std::vector<Card> Hand;
+};
+
+struct ResultState {
+    std::vector<int> Players;
+    std::vector<std::vector<Card>> Hands;
+    int Winner;
+    int Pot;
 };
 
 struct EngineSettings {

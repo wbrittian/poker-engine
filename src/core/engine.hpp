@@ -68,9 +68,11 @@ class PokerEngine {
     int getIdx(const int& pid);
 
   public:
-    void initializeEngine(const EngineSettings& settings, std::vector<int> PlayerIds);
+    void initializeEngine(const EngineSettings& settings, const int& numPlayers);
 
     PublicState getPublicState();
+    PlayerState getPlayerState(const int& id);
+    ResultState getResultState();
     bool submitAction(const Action& action);
 
 };

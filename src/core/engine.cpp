@@ -216,13 +216,13 @@ int PokerEngine::getIdx(const int& pid) {
 // public functions
 //
 
-void PokerEngine::initializeEngine(const  EngineSettings& settings, std::vector<int> PlayerIds) {
+void PokerEngine::initializeEngine(const  EngineSettings& settings, const int& numPlayers) {
     TheDeck.refillCards();
 
     SmallSize = settings.SmallBlind;
     BigSize = settings.BigBlind;
 
-    for (int id : PlayerIds) {
+    for (int id = 0; id < numPlayers; id++) {
         Seat seat = {
             id,
             true,
@@ -241,7 +241,8 @@ void PokerEngine::initializeEngine(const  EngineSettings& settings, std::vector<
 }
 
 PublicState PokerEngine::getPublicState() {
-    PublicState state = {
+    return PublicState{
+        Round,
         Players,
         EngineStage,
         Current,
@@ -250,8 +251,12 @@ PublicState PokerEngine::getPublicState() {
         CurrentBet,
         Community
     };
+}
 
-    return state;
+PlayerState PokerEngine::getPlayerState(const int& pid) {
+    return PlayerState{
+        Hands[pid].Cards
+    };
 }
 
 bool PokerEngine::submitAction(const Action& action) {
