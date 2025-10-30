@@ -56,6 +56,7 @@ void PokerEngine::beginRound() {
 
     CurrentBet = BigSize;
     Current = getPlayer(2, small);
+    Raiser = small;
 }
 
 void PokerEngine::resolveBetting() {
@@ -308,7 +309,6 @@ bool PokerEngine::submitAction(const Action& action) {
     }
 
     incCurrent();
-    std::cout << Raiser << std::endl;
     if (Current == Raiser) {
         resolveBetting();
         advanceEngine();
