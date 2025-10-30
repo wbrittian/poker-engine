@@ -51,8 +51,8 @@ void PokerEngine::beginRound() {
     int small = SmallBlind;
     int big = getPlayer(1, small);
 
-    resolveBet(small, SmallSize);
-    resolveBet(big, BigSize);
+    addBet(small, SmallSize);
+    addBet(big, BigSize);
 
     CurrentBet = BigSize;
     Current = getPlayer(2, small);
@@ -171,11 +171,18 @@ void PokerEngine::resolveBet(Seat& player) {
 }
 
 void PokerEngine::resolveBet(const int& pid, const int& amount) {
-    Seat player = getSeat(pid);
+    Seat& player = getSeat(pid);
 
     player.Cash -= amount;
     player.PotSplit += amount;
     Pot += amount;
+}
+
+void PokerEngine::addBet(const int& pid, const int& amount) {
+    Seat& player = getSeat(pid);
+
+    player.Cash -= amount;
+    player.Bet = amount;
 }
 
 // returns -1 if h1 is better, 0 if tie, 1 if h2
@@ -261,7 +268,6 @@ PlayerState PokerEngine::getPlayerState(const int& pid) {
 
 bool PokerEngine::submitAction(const Action& action) {
     int pid = action.PlayerId;
-    int idx = getIdx(pid);
     Stage stage = EngineStage;
 
     if (pid != Current || stage == INACTIVE) {
@@ -269,7 +275,7 @@ bool PokerEngine::submitAction(const Action& action) {
     }
 
     ActionTypes type = action.Type;
-    Seat seat = getSeat(pid);
+    Seat& seat = getSeat(pid);
 
     if (type == BET) {
         int amount = action.Amount;
@@ -279,16 +285,16 @@ bool PokerEngine::submitAction(const Action& action) {
             bet = CurrentBet;
         } else if (bet >= seat.Cash) {
             bet = seat.Cash;
-            Raiser = idx;
+            Raiser = pid;
             AllIn = true;
         } else if (bet < 2 * CurrentBet) {
             return false;
         } else {
             bet = amount;
-            Raiser = idx;
+            Raiser = pid;
         }
-
-        seat.Bet = bet;
+        
+        addBet(pid, bet);
         CurrentBet = bet;
     } else if (type == FOLD) {
         Playing--;
@@ -297,9 +303,12 @@ bool PokerEngine::submitAction(const Action& action) {
         if (Playing == 1) {
             resolveFold();
         }
+    } else if (type == NONE) {
+        return false;
     }
 
     incCurrent();
+    std::cout << Raiser << std::endl;
     if (Current == Raiser) {
         resolveBetting();
         advanceEngine();

@@ -63,6 +63,7 @@ class PokerEngine {
     void getBet(const int& pid, const int& amount);
     void resolveBet(Seat& player);
     void resolveBet(const int& pid, const int& amount);
+    void addBet(const int& pid, const int& amount);
     int compareHands(const Hand& h1, const Hand& h2);
     Seat& getSeat(const int& pid);
     int getIdx(const int& pid);

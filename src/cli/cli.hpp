@@ -8,6 +8,7 @@
 //
 
 #include <iostream>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -28,9 +29,10 @@ class CLI {
     void getName();
     EngineSettings getSettings();
     void createBots(const int& numBots);
+    void printHelp();
     // void printState(const PublicState& state);
     void printCards(const std::vector<Card>& cards);
-    Action getAction();
+    Action getAction(const int& toPlay);
 
   public:
     EngineSettings startup(const int& numPlayers);
