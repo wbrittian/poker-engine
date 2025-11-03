@@ -150,10 +150,10 @@ int PokerEngine::getPlayer(const int& point, const int& n) {
 }
 
 void PokerEngine::getCurrent() {
-    int current;
-    Seat currentPlayer = Players[SmallBlind];
+    int current = SmallBlind;
+    Seat currentPlayer = Players[current];
     while (!currentPlayer.Active) {
-        current = getPlayer(Current, 1);
+        current = getPlayer(current, 1);
         currentPlayer = Players[current];
     }
     Current = current;
