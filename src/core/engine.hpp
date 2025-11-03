@@ -35,7 +35,7 @@ class PokerEngine {
 
     int Current = 0;
     int SmallBlind = 0;
-    int Raiser;
+    int LastAction;
     bool AllIn = false;
 
     int Playing;
@@ -57,9 +57,10 @@ class PokerEngine {
     void resetRound();
 
     // other helpers
-    int getPlayer(const int& n, const int& pointer);
+    int getPlayer(const int& point, const int& n);
     void getCurrent();
     void incCurrent();
+    int getLast(const int& raiser); // todo: refactor some of these
     void getBet(const int& pid, const int& amount);
     void resolveBet(Seat& player);
     void resolveBet(const int& pid, const int& amount);

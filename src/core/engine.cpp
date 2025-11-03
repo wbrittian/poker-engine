@@ -22,12 +22,15 @@ void PokerEngine::advanceEngine() {
         return;
     } else if (stage == FLOP) {
         getCurrent();
+        LastAction = getLast(Current);
         Community = TheDeck.drawCards(3);
     } else if (stage == TURN) {
         getCurrent();
+        LastAction = getLast(Current);
         Community.push_back(TheDeck.drawCard());
     } else if (stage == RIVER) {
         getCurrent();
+        LastAction = getLast(Current);
         Community.push_back(TheDeck.drawCard());
     } else if (stage == SHOWDOWN) {
         resolveShowdown();
@@ -56,7 +59,7 @@ void PokerEngine::beginRound() {
 
     CurrentBet = BigSize;
     Current = getPlayer(2, small);
-    Raiser = small;
+    LastAction = big;
 }
 
 void PokerEngine::resolveBetting() {
@@ -140,7 +143,10 @@ void PokerEngine::resetRound() {
 
 // helper functions
 int PokerEngine::getPlayer(const int& point, const int& n) {
-    return (point + n) % Players.size();
+    int size = static_cast<int>(Players.size());
+    int res = (point + n) % size;
+    if (res < 0) res += size;
+    return res;
 }
 
 void PokerEngine::getCurrent() {
@@ -154,13 +160,23 @@ void PokerEngine::getCurrent() {
 }
 
 void PokerEngine::incCurrent() {
-    int current;
+    int current = Current;
     Seat currentPlayer;
     do {
-        current = getPlayer(Current, 1);
+        current = getPlayer(current, 1);
         currentPlayer = Players[current];
     } while (!currentPlayer.Active);
     Current = current;
+}
+
+int PokerEngine::getLast(const int& raiser) {
+    int current = raiser;
+    Seat currentPlayer;
+    do {
+        current = getPlayer(current, 1);
+        currentPlayer = Players[current];
+    } while (!currentPlayer.Active);
+    return current;
 }
 
 void PokerEngine::resolveBet(Seat& player) {
@@ -286,13 +302,13 @@ bool PokerEngine::submitAction(const Action& action) {
             bet = CurrentBet;
         } else if (bet >= seat.Cash) {
             bet = seat.Cash;
-            Raiser = pid;
+            LastAction = getLast(pid);
             AllIn = true;
         } else if (bet < 2 * CurrentBet) {
             return false;
         } else {
             bet = amount;
-            Raiser = pid;
+            LastAction = getLast(pid);
         }
         
         addBet(pid, bet);
@@ -308,10 +324,11 @@ bool PokerEngine::submitAction(const Action& action) {
         return false;
     }
 
-    incCurrent();
-    if (Current == Raiser) {
+    if (Current == LastAction) {
         resolveBetting();
         advanceEngine();
+    } else {
+        incCurrent();
     }
 
     return true;
