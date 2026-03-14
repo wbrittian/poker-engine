@@ -1,0 +1,59 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Emscripten
+        uses: mymindstorm/setup-emsdk@v14
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Conan
+        run: pip install conan
+
+      - name: Build Wasm
+        run: |
+          mkdir -p build-wasm
+          emcmake cmake -B build-wasm -DCMAKE_BUILD_TYPE=Release .
+          cmake --build build-wasm --target poker-engine-wasm
+          mkdir -p web/public
+          cp build-wasm/poker_engine.js build-wasm/poker_engine.wasm web/public/
+
+      - name: Build React app
+        run: cd web && npm ci && npm run build -- --base=/poker-engine/
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: web/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

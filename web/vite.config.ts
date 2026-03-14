@@ -3,8 +3,10 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
-  // Exclude the Wasm glue script from Vite's module graph — it's loaded via a
-  // <script> tag in the hook so Emscripten's own module format is preserved.
+  // Use /poker-engine/ as the base when deploying to GitHub Pages
+  // (https://williambrittian.github.io/poker-engine/).
+  // Locally (make web / npm run dev) the base stays at /.
+  base: '/',
   optimizeDeps: {
     exclude: ['poker_engine'],
   },
