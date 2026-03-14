@@ -1,12 +1,35 @@
 cmake_minimum_required(VERSION 3.15)
 project(poker-engine)
 
-enable_testing()
-
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+# ---------------------------------------------------------------------------
+# WebAssembly build (invoked via `emcmake cmake`)
+# ---------------------------------------------------------------------------
+if(EMSCRIPTEN)
+    file(GLOB_RECURSE WASM_SOURCES src/core/*.cpp src/bots/*.cpp)
+    add_executable(poker-engine-wasm ${WASM_SOURCES} src/wasm/bindings.cpp)
+    set_target_properties(poker-engine-wasm PROPERTIES
+        OUTPUT_NAME "poker_engine"
+        SUFFIX ".js"
+    )
+    target_link_options(poker-engine-wasm PRIVATE
+        "--bind"
+        "-sALLOW_MEMORY_GROWTH=1"
+        "-sMODULARIZE=1"
+        "-sEXPORT_NAME=PokerEngineModule"
+        "-sENVIRONMENT=web"
+    )
+    return()
+endif()
+
+# ---------------------------------------------------------------------------
+# Native build
+# ---------------------------------------------------------------------------
+enable_testing()
 
 include(${CMAKE_BINARY_DIR}/conan_toolchain.cmake)
 
