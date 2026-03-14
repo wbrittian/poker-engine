@@ -15,6 +15,7 @@
 #include "../core/deck/hand.hpp"
 
 void setColor(const std::string& color);
+void clearScreen();
 bool isInteger(const std::string& str);
 
 std::string to_utf8(char16_t ch);

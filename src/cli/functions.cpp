@@ -23,7 +23,13 @@ void setColor(const std::string& color) {
         std::cout << "\033[0m";
     } else if (color == "grey") {
         std::cout << "\033[90m";
+    } else if (color == "yellow") {
+        std::cout << "\033[33m";
     }
+}
+
+void clearScreen() {
+    std::cout << "\033[2J\033[H";
 }
 
 bool isInteger(const std::string& str) {

@@ -50,22 +50,9 @@ void CLI::printTitle() {
 
 // gets player name from terminal
 void CLI::getName() {
-    bool correct = false;
-
-    while (!correct) {
-        std::cout << "please enter your name:" << std::endl;
-        std::getline(std::cin, Name);
-        std::cout << std::endl;
-
-        std::string ans;
-        std::cout << "does this look right (y/n)? " << Name << std::endl;
-        std::getline(std::cin, ans);
-        std::cout << std::endl;
-
-        if (ans == "y") {
-            correct = true;
-        }
-    }
+    std::cout << "Enter your name: ";
+    std::getline(std::cin, Name);
+    std::cout << std::endl;
 }
 
 EngineSettings CLI::getSettings() {
@@ -84,92 +71,121 @@ void CLI::createBots(const int& numBots) {
 }
 
 void CLI::printHelp() {
-    std::cout << "----------------------------" << std::endl;
-    std::cout << "............HELP............";
-    std::cout << std::endl << std::endl << std::endl << std::endl << std::endl;
-    std::cout << "h -> get list of available commands" << std::endl
-              << "c -> call the current bet or check" << std::endl
-              << "b/r [AMOUNT] -> bet (or raise) the given amount" << std::endl
-              << "f -> fold your hand" << std::endl;
-    std::cout << std::endl << std::endl << std::endl << std::endl;
-    std::cout << "----------------------------" << std::endl;
-
+    std::cout << std::endl;
+    std::cout << "\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550" << std::endl;
+    std::cout << " COMMANDS" << std::endl;
+    std::cout << "\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550" << std::endl;
+    std::cout << " h            show this help menu" << std::endl;
+    std::cout << " c            call the current bet or check" << std::endl;
+    std::cout << " r/b AMOUNT   raise (or bet) the given amount" << std::endl;
+    std::cout << " f            fold your hand" << std::endl;
+    std::cout << "\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550" << std::endl;
+    std::cout << std::endl << "[press enter]";
     std::cin.get();
 }
 
 void CLI::printState(const PublicState& state, const PlayerState& pstate) {
-    std::cout << "----------------------------" << std::endl;
-    std::cout << "Hand " << state.HandNum << " ";
-    switch (state.EngineStage) {
-        case PREFLOP:
-            std::cout << "Preflop";
-            break;
-        case FLOP:
-            std::cout << "Flop";
-            break;
-        case TURN:
-            std::cout << "Turn";
-            break;
-        case RIVER:
-            std::cout << "River";
-            break;
-        case SHOWDOWN:
-            std::cout << "Showdown";
-            break;
-    }
-    std::cout << std::endl << std::endl;
+    clearScreen();
 
-    std::cout << "Pot: " << state.Pot << std::endl;
-    std::cout << "Bet: " << state.CurrentBet << std::endl;
+    std::string stage;
+    switch (state.EngineStage) {
+        case PREFLOP:   stage = "Preflop";  break;
+        case FLOP:      stage = "Flop";     break;
+        case TURN:      stage = "Turn";     break;
+        case RIVER:     stage = "River";    break;
+        case SHOWDOWN:  stage = "Showdown"; break;
+        default:        stage = "";         break;
+    }
+
+    std::cout << "\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550" << std::endl;
+    std::cout << " Hand " << state.HandNum << " | " << stage << std::endl;
+    std::cout << " Pot: "; setColor("green"); std::cout << state.Pot << _chip(); setColor("black");
+    std::cout << "   Bet: "; setColor("purple"); std::cout << state.CurrentBet << _chip(); setColor("black");
     std::cout << std::endl;
-    
-    for (int i = 0; i < state.Players.size(); i++) {
-        Seat cur = state.Players[i];
+    std::cout << "\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550" << std::endl;
+    std::cout << std::endl;
+
+    for (int i = 0; i < (int)state.Players.size(); i++) {
+        const Seat& cur = state.Players[i];
+
         if (i == state.Current) {
             std::cout << "> ";
         } else {
             std::cout << "  ";
         }
 
-        if (!cur.Active) {
-            setColor("grey");
-        }
+        if (!cur.Active) setColor("grey");
 
-        std::cout << Names[i] << " (";
-        
+        // pad name to 14 chars
+        std::string name = Names[i];
+        std::cout << name;
+        int pad = 14 - (int)name.size();
+        for (int j = 0; j < pad; j++) std::cout << ' ';
+
         if (cur.Active) {
             setColor("green");
-        }
-
-        std::cout << cur.Cash << _chip();
-
-        if (cur.Active) {
+            std::cout << cur.Cash << _chip();
+            setColor("black");
+            std::cout << "  bet: ";
+            if (cur.Bet > 0) {
+                setColor("purple");
+                std::cout << cur.Bet << _chip();
+                setColor("black");
+            } else {
+                std::cout << "-";
+            }
+            if (cur.Cash == 0) {
+                std::cout << "  ";
+                setColor("yellow");
+                std::cout << "[ALL IN]";
+                setColor("black");
+            }
+        } else {
+            setColor("grey");
+            std::cout << "[FOLDED]";
             setColor("black");
         }
 
-        std::cout << "): ";
-
-        if (cur.Active) {
-            setColor("purple");
-        }
-
-        std::cout << cur.Bet << _chip();
-
-        setColor("black");
         std::cout << std::endl;
     }
 
-    std::cout << std::endl << "Community cards: ";
-    printCards(state.Community);
-    std::cout << std::endl << "Your cards: ";
+    std::cout << std::endl;
+    std::cout << "Community:  ";
+    if (state.Community.empty()) {
+        std::cout << "-";
+    } else {
+        printCards(state.Community);
+    }
+    std::cout << std::endl;
+    std::cout << "Your hand:  ";
     printCards(pstate.Hand);
     std::cout << std::endl << std::endl;
 }
 
 void CLI::printResults(const ResultState& results) {
-    std::cout << "----------------------------" << std::endl;
-    std::cout << Names[results.Winner] << " wins " << _chip() << results.Pot << "!" << std::endl;
-    std::cout << "----------------------------" << std::endl << std::endl;
+    clearScreen();
+    std::cout << "\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550" << std::endl;
+    setColor("yellow");
+    std::cout << " " << Names[results.Winner] << " wins " << _chip() << results.Pot << "!";
+    setColor("black");
+    std::cout << std::endl;
+    std::cout << "\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550" << std::endl;
+
+    if (!results.Hands.empty()) {
+        std::cout << std::endl;
+        for (int i = 0; i < (int)results.Players.size(); i++) {
+            int pid = results.Players[i];
+            std::string name = Names[pid];
+            std::cout << " " << name << ": ";
+            for (const Card& c : results.Hands[i]) {
+                printCard(c);
+                std::cout << " ";
+            }
+            std::cout << std::endl;
+        }
+    }
+
+    std::cout << std::endl << "[press enter]";
     std::cin.get();
 }
 
@@ -182,7 +198,13 @@ void CLI::printCards(const std::vector<Card>& cards) {
 
 Action CLI::getAction(const int& toPlay) {
     while (true) {
-        std::cout << toPlay << " to call > ";
+        if (toPlay == 0) {
+            std::cout << "[c] check  [r] raise  [f] fold  [h] help" << std::endl;
+            std::cout << "check > ";
+        } else {
+            std::cout << "[c] call (" << toPlay << _chip() << ")  [r] raise  [f] fold  [h] help" << std::endl;
+            std::cout << "action > ";
+        }
 
         std::string line;
         std::string cmd, s_amt;
@@ -260,7 +282,24 @@ void CLI::runGame(PokerEngine engine) {
                     break;
                 }
             }
-            if (bot) Engine.submitAction(bot->getAction(state));
+            if (bot) {
+                Action botAction = bot->getAction(state);
+                Engine.submitAction(botAction);
+
+                std::string botName = Names[state.Current];
+                std::cout << botName << " ";
+                if (botAction.Type == FOLD) {
+                    std::cout << "folds.";
+                } else if (botAction.Amount > 0) {
+                    std::cout << "raises to " << botAction.Amount << _chip() << ".";
+                } else if (state.CurrentBet == 0) {
+                    std::cout << "checks.";
+                } else {
+                    std::cout << "calls " << state.CurrentBet << _chip() << ".";
+                }
+                std::cout << std::endl;
+            }
+            std::cout << "[press enter]";
             std::cin.get();
         }
     }
