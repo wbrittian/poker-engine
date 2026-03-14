@@ -25,6 +25,8 @@ void setColor(const std::string& color) {
         std::cout << "\033[90m";
     } else if (color == "yellow") {
         std::cout << "\033[33m";
+    } else if (color == "cyan") {
+        std::cout << "\033[36m";
     }
 }
 

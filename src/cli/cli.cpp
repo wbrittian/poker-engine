@@ -163,12 +163,12 @@ void CLI::printState(const PublicState& state, const PlayerState& pstate) {
 
         if (i == sbIdx) {
             std::cout << "  ";
-            setColor("blue");
+            setColor("cyan");
             std::cout << "[SB]";
             setColor("black");
         } else if (i == bbIdx) {
             std::cout << "  ";
-            setColor("purple");
+            setColor("yellow");
             std::cout << "[BB]";
             setColor("black");
         }
