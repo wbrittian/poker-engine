@@ -146,6 +146,11 @@ void PokerEngine::resolveShowdown() {
             int payout = (i == 0) ? (int)ceil(split) : (int)floor(split);
             Players[getIdx(winners[i])].Cash += payout;
         }
+
+        if (!winners.empty()) {
+            Result.Winner = winners[0];
+            Result.Pot = Pot;
+        }
     }
 
     resetRound();
@@ -156,6 +161,8 @@ void PokerEngine::resolveFold() {
 
     for (Seat& player : Players) {
         if (player.Active) {
+            Result.Winner = player.PlayerId;
+            Result.Pot = Pot;
             player.Cash += Pot;
             break;
         }
@@ -339,6 +346,10 @@ PublicState PokerEngine::getPublicState() {
         CurrentBet,
         Community
     };
+}
+
+ResultState PokerEngine::getResultState() {
+    return Result;
 }
 
 PlayerState PokerEngine::getPlayerState(const int& pid) {

@@ -48,6 +48,7 @@ class PokerEngine {
 
     std::vector<Card> Community;
     std::vector<SidePot> SidePots;
+    ResultState Result;
 
     // engine helpers
     void advanceEngine();
