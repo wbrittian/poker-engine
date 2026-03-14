@@ -149,7 +149,7 @@ export function usePokerEngine(): PokerEngineState {
   // Load the Wasm module once on mount.
   useEffect(() => {
     const script = document.createElement('script');
-    script.src = '/poker_engine.js';
+    script.src = `${import.meta.env.BASE_URL}poker_engine.js`;
     script.onload = async () => {
       const mod = await window.PokerEngineModule();
       const manager = new mod.GameManager();
