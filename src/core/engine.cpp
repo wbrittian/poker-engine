@@ -57,8 +57,8 @@ void PokerEngine::beginRound() {
     int small = SmallBlind;
     int big = getPlayer(1, small);
 
-    addBet(small, SmallSize);
-    addBet(big, BigSize);
+    addBet(Players[small].PlayerId, SmallSize);
+    addBet(Players[big].PlayerId, BigSize);
 
     CurrentBet = BigSize;
     Current = getPlayer(2, small);
@@ -107,8 +107,12 @@ void PokerEngine::computeSidePots() {
 }
 
 void PokerEngine::resolveShowdown() {
+    Result.Players.clear();
+    Result.Hands.clear();
     for (int i = 0; i < Players.size(); i++) {
         if (Players[i].Active) {
+            Result.Players.push_back(Players[i].PlayerId);
+            Result.Hands.push_back(Hands[i].Cards);
             Hands[i].evaluateHand(Community);
         }
     }
@@ -158,6 +162,9 @@ void PokerEngine::resolveShowdown() {
 
 void PokerEngine::resolveFold() {
     resolveBetting();
+
+    Result.Players.clear();
+    Result.Hands.clear();
 
     for (Seat& player : Players) {
         if (player.Active) {
@@ -353,16 +360,16 @@ ResultState PokerEngine::getResultState() {
 }
 
 PlayerState PokerEngine::getPlayerState(const int& pid) {
-    return PlayerState{
-        Hands[getIdx(pid)].Cards
-    };
+    int idx = getIdx(pid);
+    if (idx == -1) return PlayerState{{}};
+    return PlayerState{Hands[idx].Cards};
 }
 
 bool PokerEngine::submitAction(const Action& action) {
     int pid = action.PlayerId;
     Stage stage = EngineStage;
 
-    if (pid != Current || stage == INACTIVE) {
+    if (getIdx(pid) != Current || stage == INACTIVE) {
         return false;
     }
 
@@ -372,22 +379,28 @@ bool PokerEngine::submitAction(const Action& action) {
     if (type == BET) {
         int amount = action.Amount;
         int bet;
+        int maxBet = seat.Bet + seat.Cash;
 
         if (amount == 0) {
-            bet = CurrentBet;
+            if (CurrentBet >= maxBet) {
+                bet = maxBet;
+                AllIn = true;
+            } else {
+                bet = CurrentBet;
+            }
         } else if (amount >= seat.Cash) {
-            bet = seat.Cash;
-            LastAction = getLast(pid);
+            bet = maxBet;
+            LastAction = getLast(Current);
             AllIn = true;
         } else if (amount < std::max(2 * CurrentBet, BigSize)) {
             return false;
         } else {
             bet = amount;
-            LastAction = getLast(pid);
+            LastAction = getLast(Current);
         }
-        
+
         addBet(pid, bet);
-        CurrentBet = bet;
+        if (bet > CurrentBet) CurrentBet = bet;
     } else if (type == FOLD) {
         Playing--;
         seat.Active = false;

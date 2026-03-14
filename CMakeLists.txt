@@ -42,6 +42,7 @@ file(GLOB_RECURSE INTEGRATION_TEST_SOURCES test/integration/*.cpp)
 set(FIXTURES_SOURCE test/fixtures.cpp)
 
 list(FILTER POKER_ENGINE_SOURCES EXCLUDE REGEX "main\\.cpp$")
+list(FILTER POKER_ENGINE_SOURCES EXCLUDE REGEX "wasm/")
 
 add_library(SourceLibrary ${POKER_ENGINE_SOURCES})
 add_library(FixtureLibrary ${FIXTURES_SOURCE})
