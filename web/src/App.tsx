@@ -12,6 +12,7 @@ export default function App() {
     resultState,
     showResult,
     isGameOver,
+    actionLog,
     submitCall,
     submitFold,
     submitBet,
@@ -40,7 +41,7 @@ export default function App() {
           <p>
             {winner?.playerId === HUMAN_ID
               ? '🏆 You win the whole table!'
-              : `Player ${winner?.playerId} takes it all.`}
+              : `${winner ? `Player ${winner.playerId}` : 'Someone'} takes it all.`}
           </p>
           <button className="btn btn-continue" onClick={() => window.location.reload()}>
             Play again
@@ -59,6 +60,7 @@ export default function App() {
         gameState={gameState}
         handState={handState}
         isHumanTurn={isHumanTurn}
+        actionLog={actionLog}
       />
 
       {isHumanTurn && humanPlayer && (

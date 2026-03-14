@@ -7,18 +7,17 @@ import {
   HandState,
   HUMAN_ID,
   NUM_PLAYERS,
+  PLAYER_NAMES,
   ResultState,
   SMALL_BLIND,
   STARTING_CASH,
 } from './types';
 
-// Delay (ms) before a bot submits its action — gives the user time to see
-// what's happening before the table state changes.
 const BOT_DELAY_MS = 700;
+const MAX_LOG = 5;
 
 declare global {
   interface Window {
-    // Emscripten factory function injected by poker_engine.js
     PokerEngineModule: (opts?: object) => Promise<GameManagerModule>;
   }
 }
@@ -45,10 +44,28 @@ export interface PokerEngineState {
   resultState: ResultState | null;
   showResult: boolean;
   isGameOver: boolean;
+  actionLog: string[];
   submitCall: () => void;
   submitFold: () => void;
   submitBet: (amount: number) => void;
   dismissResult: () => void;
+}
+
+function describeAction(
+  pid: number,
+  prevBet: number,
+  prevCurrentBet: number,
+  newActive: boolean,
+  newBet: number,
+): string {
+  const name = PLAYER_NAMES[pid] ?? `Player ${pid}`;
+  if (!newActive) return `${name} folded`;
+  if (newBet > prevBet) {
+    if (newBet > prevCurrentBet) return `${name} raised to $${newBet}`;
+    if (prevCurrentBet === 0) return `${name} checked`;
+    return `${name} called $${newBet - prevBet}`;
+  }
+  return `${name} checked`;
 }
 
 export function usePokerEngine(): PokerEngineState {
@@ -59,27 +76,22 @@ export function usePokerEngine(): PokerEngineState {
   const [resultState, setResultState] = useState<ResultState | null>(null);
   const [showResult, setShowResult] = useState(false);
   const [isOver, setIsOver] = useState(false);
+  const [actionLog, setActionLog] = useState<string[]>([]);
 
-  // Track hand number to detect transitions between hands.
   const prevHandNumRef = useRef<number>(-1);
-  // Prevent concurrent bot-action timers.
   const botTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const readState = useCallback((): GameState | null => {
-    const m = managerRef.current;
-    if (!m) return null;
-    return JSON.parse(m.getPublicState()) as GameState;
+  const pushLog = useCallback((entry: string) => {
+    setActionLog((prev) => [entry, ...prev].slice(0, MAX_LOG));
   }, []);
 
-  // Refresh React state from the engine after any action.
-  const refresh = useCallback(() => {
+  const refreshState = useCallback(() => {
     const m = managerRef.current;
     if (!m) return;
 
     const gs = JSON.parse(m.getPublicState()) as GameState;
     const hs = JSON.parse(m.getPlayerState()) as HandState;
 
-    // Detect hand transition — the engine auto-advances so handNum increments.
     if (prevHandNumRef.current !== -1 && gs.handNum !== prevHandNumRef.current) {
       const rs = JSON.parse(m.getResultState()) as ResultState;
       setResultState(rs);
@@ -89,38 +101,53 @@ export function usePokerEngine(): PokerEngineState {
 
     setGameState(gs);
     setHandState(hs);
-
-    if (m.isGameOver()) {
-      setIsOver(true);
-    }
+    if (m.isGameOver()) setIsOver(true);
   }, []);
 
-  // Trigger bot actions automatically with a small delay.
+  // Auto-fire bot actions.
   useEffect(() => {
     if (!loaded || !gameState) return;
-    if (showResult) return; // pause bot while result overlay is visible
-    // stage 0 = INACTIVE (game over)
+    if (showResult) return;
     if (gameState.stage === 0) return;
 
     const currentPid = gameState.players[gameState.current]?.playerId;
-    if (currentPid === HUMAN_ID) return; // human's turn
+    if (currentPid === HUMAN_ID) return;
 
-    // Schedule bot action.
     if (botTimerRef.current) clearTimeout(botTimerRef.current);
     botTimerRef.current = setTimeout(() => {
-      managerRef.current?.botAction();
-      refresh();
+      const m = managerRef.current;
+      if (!m) return;
+
+      // Snapshot state before the action so we can describe it.
+      const before = JSON.parse(m.getPublicState()) as GameState;
+      const actor = before.players[before.current];
+      const prevBet = actor?.bet ?? 0;
+      const prevCurrentBet = before.currentBet;
+
+      m.botAction();
+
+      const after = JSON.parse(m.getPublicState()) as GameState;
+      const actorAfter = after.players.find((p) => p.playerId === actor?.playerId);
+      if (actor) {
+        pushLog(
+          describeAction(
+            actor.playerId,
+            prevBet,
+            prevCurrentBet,
+            actorAfter?.active ?? false,
+            actorAfter?.bet ?? prevBet,
+          ),
+        );
+      }
+
+      refreshState();
     }, BOT_DELAY_MS);
 
-    return () => {
-      if (botTimerRef.current) clearTimeout(botTimerRef.current);
-    };
-  }, [gameState, loaded, showResult, refresh]);
+    return () => { if (botTimerRef.current) clearTimeout(botTimerRef.current); };
+  }, [gameState, loaded, showResult, refreshState, pushLog]);
 
   // Load the Wasm module once on mount.
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-
     const script = document.createElement('script');
     script.src = '/poker_engine.js';
     script.onload = async () => {
@@ -136,41 +163,44 @@ export function usePokerEngine(): PokerEngineState {
       setHandState(hs);
       setLoaded(true);
     };
-    script.onerror = () => {
-      console.error(
-        'Failed to load poker_engine.js. Run `make wasm` first to generate the Wasm build.',
-      );
-    };
+    script.onerror = () => console.error('Failed to load poker_engine.js — run `make wasm` first.');
     document.head.appendChild(script);
-    return () => {
-      document.head.removeChild(script);
-    };
+    return () => { document.head.removeChild(script); };
   }, []);
 
   const submitCall = useCallback(() => {
-    managerRef.current?.humanAction(ACTION_BET, 0);
-    refresh();
-  }, [refresh]);
+    const m = managerRef.current;
+    if (!m) return;
+    const gs = JSON.parse(m.getPublicState()) as GameState;
+    const me = gs.players.find((p) => p.playerId === HUMAN_ID);
+    const toCall = gs.currentBet - (me?.bet ?? 0);
+    m.humanAction(ACTION_BET, 0);
+    pushLog(toCall === 0 ? 'You checked' : `You called $${toCall}`);
+    refreshState();
+  }, [refreshState, pushLog]);
 
   const submitFold = useCallback(() => {
     managerRef.current?.humanAction(ACTION_FOLD, 0);
-    refresh();
-  }, [refresh]);
+    pushLog('You folded');
+    refreshState();
+  }, [refreshState, pushLog]);
 
   const submitBet = useCallback(
     (amount: number) => {
-      managerRef.current?.humanAction(ACTION_BET, amount);
-      refresh();
+      const m = managerRef.current;
+      if (!m) return;
+      const gs = JSON.parse(m.getPublicState()) as GameState;
+      m.humanAction(ACTION_BET, amount);
+      pushLog(gs.currentBet === 0 ? `You bet $${amount}` : `You raised to $${amount}`);
+      refreshState();
     },
-    [refresh],
+    [refreshState, pushLog],
   );
 
   const dismissResult = useCallback(() => {
     setShowResult(false);
-    // Re-read state in case the game is over after dismissal.
-    const gs = readState();
-    if (gs) setGameState(gs);
-  }, [readState]);
+    refreshState();
+  }, [refreshState]);
 
   return {
     loaded,
@@ -179,6 +209,7 @@ export function usePokerEngine(): PokerEngineState {
     resultState,
     showResult,
     isGameOver: isOver,
+    actionLog,
     submitCall,
     submitFold,
     submitBet,
