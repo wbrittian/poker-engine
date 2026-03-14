@@ -134,6 +134,12 @@ void CLI::printState(const PublicState& state, const PlayerState& pstate) {
             } else {
                 std::cout << "-";
             }
+            if (cur.PotSplit > 0) {
+                std::cout << "  in: ";
+                setColor("blue");
+                std::cout << cur.PotSplit << _chip();
+                setColor("black");
+            }
             if (cur.Cash == 0) {
                 std::cout << "  ";
                 setColor("yellow");
@@ -143,6 +149,12 @@ void CLI::printState(const PublicState& state, const PlayerState& pstate) {
         } else {
             setColor("grey");
             std::cout << "[FOLDED]";
+            if (cur.PotSplit > 0) {
+                setColor("black");
+                std::cout << "  in: ";
+                setColor("blue");
+                std::cout << cur.PotSplit << _chip();
+            }
             setColor("black");
         }
 
