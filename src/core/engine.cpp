@@ -394,6 +394,9 @@ bool PokerEngine::submitAction(const Action& action) {
 
         if (Playing == 1) {
             resolveFold();
+            if (Players.size() > 1) {
+                advanceEngine();
+            }
             return true;
         }
     } else if (type == NONE) {
