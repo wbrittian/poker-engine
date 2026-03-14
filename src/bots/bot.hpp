@@ -20,5 +20,6 @@ private:
 public:
     Bot(int pid) : Id(pid) {}
 
+    int getId() const { return Id; }
     Action getAction(const PublicState& gameState);
 };

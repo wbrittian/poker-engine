@@ -167,7 +167,10 @@ void CLI::printState(const PublicState& state, const PlayerState& pstate) {
 }
 
 void CLI::printResults(const ResultState& results) {
-    // TODO
+    std::cout << "----------------------------" << std::endl;
+    std::cout << Names[results.Winner] << " wins " << _chip() << results.Pot << "!" << std::endl;
+    std::cout << "----------------------------" << std::endl << std::endl;
+    std::cin.get();
 }
 
 void CLI::printCards(const std::vector<Card>& cards) {
@@ -178,28 +181,31 @@ void CLI::printCards(const std::vector<Card>& cards) {
 }
 
 Action CLI::getAction(const int& toPlay) {
-    
-    std::cout << toPlay << " to call > ";
+    while (true) {
+        std::cout << toPlay << " to call > ";
 
-    std::string line;
-    std::string cmd, s_amt;
+        std::string line;
+        std::string cmd, s_amt;
 
-    std::getline(std::cin, line);
-    std::istringstream iss(line);
-    iss >> cmd >> s_amt;
+        std::getline(std::cin, line);
+        std::istringstream iss(line);
+        iss >> cmd >> s_amt;
 
-    if (cmd == "h") {
-        printHelp();
-    } else if (cmd == "c") {
-        return Action{Id, BET, 0};
-    } else if (cmd == "b" || cmd == "r") {
-        int amt = std::stoi(s_amt);
-        return Action{Id, BET, amt};
-    } else if (cmd == "f") {
-        return Action{Id, FOLD};
+        if (cmd == "h") {
+            printHelp();
+        } else if (cmd == "c") {
+            return Action{Id, BET, 0};
+        } else if (cmd == "b" || cmd == "r") {
+            try {
+                int amt = std::stoi(s_amt);
+                return Action{Id, BET, amt};
+            } catch (...) {
+                std::cout << "invalid amount" << std::endl;
+            }
+        } else if (cmd == "f") {
+            return Action{Id, FOLD};
+        }
     }
-        
-    return Action{Id, NONE};  
 }
 
 //
@@ -220,18 +226,41 @@ EngineSettings CLI::startup(const int& numPlayers) {
 
 void CLI::runGame(PokerEngine engine) {
     Engine = engine;
+    int lastRound = 0;
 
     while (true) {
         PublicState state = Engine.getPublicState();
+
+        if (state.EngineStage == INACTIVE) {
+            printResults(Engine.getResultState());
+            std::cout << "Game over! " << Names[state.Players[0].PlayerId] << " wins!" << std::endl;
+            break;
+        }
+
+        if (state.HandNum != lastRound && lastRound != 0) {
+            printResults(Engine.getResultState());
+            lastRound = state.HandNum;
+        } else if (lastRound == 0) {
+            lastRound = state.HandNum;
+        }
+
         PlayerState pstate = Engine.getPlayerState(Id);
         printState(state, pstate);
-        
-        if (state.Current == Id) {
-            Action action = getAction(state.CurrentBet - state.Players[Id].Bet);
+
+        int currentPid = state.Players[state.Current].PlayerId;
+
+        if (currentPid == Id) {
+            Action action = getAction(state.CurrentBet - state.Players[state.Current].Bet);
             Engine.submitAction(action);
         } else {
-            Action action = Bots[state.Current - 1].getAction(state);
-            Engine.submitAction(action);
+            Bot* bot = nullptr;
+            for (Bot& b : Bots) {
+                if (b.getId() == currentPid) {
+                    bot = &b;
+                    break;
+                }
+            }
+            if (bot) Engine.submitAction(bot->getAction(state));
             std::cin.get();
         }
     }
