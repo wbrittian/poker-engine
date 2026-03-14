@@ -132,7 +132,7 @@ void CLI::printState(const PublicState& state, const PlayerState& pstate) {
     // column header row
     auto colHeader = hbox({
         text("  "),
-        text("Name")    | size(WIDTH, EQUAL, W_NAME),
+        text("Name")    | size(WIDTH, EQUAL, W_NAME) | dim,
         text("Cash")    | size(WIDTH, EQUAL, W_VAL) | dim,
         text("Bet")     | size(WIDTH, EQUAL, W_VAL) | dim,
         text("In")      | size(WIDTH, EQUAL, W_VAL) | dim,
