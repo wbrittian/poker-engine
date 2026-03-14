@@ -16,6 +16,7 @@
 
 void setColor(const std::string& color);
 void clearScreen();
+std::string hline(int n = 50);
 bool isInteger(const std::string& str);
 
 std::string to_utf8(char16_t ch);

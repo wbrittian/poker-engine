@@ -72,14 +72,14 @@ void CLI::createBots(const int& numBots) {
 
 void CLI::printHelp() {
     std::cout << std::endl;
-    std::cout << "\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550" << std::endl;
+    std::cout << hline() << std::endl;
     std::cout << " COMMANDS" << std::endl;
-    std::cout << "\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550" << std::endl;
+    std::cout << hline() << std::endl;
     std::cout << " h            show this help menu" << std::endl;
     std::cout << " c            call the current bet or check" << std::endl;
     std::cout << " r/b AMOUNT   raise (or bet) the given amount" << std::endl;
     std::cout << " f            fold your hand" << std::endl;
-    std::cout << "\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550" << std::endl;
+    std::cout << hline() << std::endl;
     std::cout << std::endl << "[press enter]";
     std::cin.get();
 }
@@ -97,13 +97,16 @@ void CLI::printState(const PublicState& state, const PlayerState& pstate) {
         default:        stage = "";         break;
     }
 
-    std::cout << "\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550" << std::endl;
+    std::cout << hline() << std::endl;
     std::cout << " Hand " << state.HandNum << " | " << stage << std::endl;
     std::cout << " Pot: "; setColor("green"); std::cout << state.Pot << _chip(); setColor("black");
     std::cout << "   Bet: "; setColor("purple"); std::cout << state.CurrentBet << _chip(); setColor("black");
     std::cout << std::endl;
-    std::cout << "\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550" << std::endl;
+    std::cout << hline() << std::endl;
     std::cout << std::endl;
+
+    int sbIdx = state.SmallBlind;
+    int bbIdx = (state.SmallBlind + 1) % (int)state.Players.size();
 
     for (int i = 0; i < (int)state.Players.size(); i++) {
         const Seat& cur = state.Players[i];
@@ -158,6 +161,18 @@ void CLI::printState(const PublicState& state, const PlayerState& pstate) {
             setColor("black");
         }
 
+        if (i == sbIdx) {
+            std::cout << "  ";
+            setColor("blue");
+            std::cout << "[SB]";
+            setColor("black");
+        } else if (i == bbIdx) {
+            std::cout << "  ";
+            setColor("purple");
+            std::cout << "[BB]";
+            setColor("black");
+        }
+
         std::cout << std::endl;
     }
 
@@ -176,12 +191,12 @@ void CLI::printState(const PublicState& state, const PlayerState& pstate) {
 
 void CLI::printResults(const ResultState& results) {
     clearScreen();
-    std::cout << "\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550" << std::endl;
+    std::cout << hline() << std::endl;
     setColor("yellow");
     std::cout << " " << Names[results.Winner] << " wins " << _chip() << results.Pot << "!";
     setColor("black");
     std::cout << std::endl;
-    std::cout << "\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550" << std::endl;
+    std::cout << hline() << std::endl;
 
     if (!results.Hands.empty()) {
         std::cout << std::endl;

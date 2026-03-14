@@ -32,6 +32,12 @@ void clearScreen() {
     std::cout << "\033[2J\033[H";
 }
 
+std::string hline(int n) {
+    std::string result;
+    for (int i = 0; i < n; i++) result += to_utf8(u'\u2550');
+    return result;
+}
+
 bool isInteger(const std::string& str) {
     std::stringstream ss(str);
     int i;
