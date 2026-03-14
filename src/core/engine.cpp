@@ -34,7 +34,9 @@ void PokerEngine::advanceEngine() {
         Community.push_back(TheDeck.drawCard());
     } else if (stage == SHOWDOWN) {
         resolveShowdown();
-        advanceEngine();
+        if (Players.size() > 1) {
+            advanceEngine();
+        }
         return;
     }
 
@@ -71,51 +73,79 @@ void PokerEngine::resolveBetting() {
     CurrentBet = 0;
 }
 
-void PokerEngine::resolveShowdown() {
-    // figure out best hand
-    std::vector<int> bestHands;
+void PokerEngine::computeSidePots() {
+    SidePots.clear();
+
+    std::vector<int> sortedIdx;
     for (int i = 0; i < Players.size(); i++) {
-        Seat player = Players[i];
+        if (Players[i].Active) sortedIdx.push_back(i);
+    }
+    std::sort(sortedIdx.begin(), sortedIdx.end(), [this](int a, int b) {
+        return Players[a].PotSplit < Players[b].PotSplit;
+    });
 
-        if (!player.Active) continue;
+    int prev = 0;
+    for (int si : sortedIdx) {
+        int level = Players[si].PotSplit;
+        if (level <= prev) continue;
 
-        Hands[i].evaluateHand(Community);
-        if (bestHands.size() == 0) {
-            bestHands.push_back(i);
-        } else {
-            bool better = false;
-            Hand myHand = Hands[i];
-            for (int j = bestHands.size() - 1; j >= 0; j--) {
-                Hand theirHand = Hands[bestHands[j]];
-                int res = compareHands(myHand, theirHand);
+        int potAmount = 0;
+        for (const Seat& s : Players) {
+            potAmount += std::min(s.PotSplit, level) - prev;
+        }
 
-                if (res == 1) {
-                    break;
-                }
-
-                better = true;
-                if (res == -1) {
-                    bestHands.erase(bestHands.begin() + j);
-                }
+        std::vector<int> eligible;
+        for (const Seat& s : Players) {
+            if (s.Active && s.PotSplit >= level) {
+                eligible.push_back(s.PlayerId);
             }
+        }
 
-            if (better) bestHands.push_back(i);
+        SidePots.push_back({potAmount, eligible});
+        prev = level;
+    }
+}
+
+void PokerEngine::resolveShowdown() {
+    for (int i = 0; i < Players.size(); i++) {
+        if (Players[i].Active) {
+            Hands[i].evaluateHand(Community);
         }
     }
 
-    // pay out winner(s)
-    // TODO: add sidepot management
-    float split = ((float) Pot) / bestHands.size();
+    computeSidePots();
 
-    for (int i = 0; i < bestHands.size(); i++) {
-        int payout;
-        if (i == 0) {
-            payout = ceil(split);
-        } else {
-            payout = floor(split);
+    for (const SidePot& pot : SidePots) {
+        std::vector<int> winners;
+
+        for (int pid : pot.Eligible) {
+            int idx = getIdx(pid);
+            if (idx == -1) continue;
+
+            if (winners.empty()) {
+                winners.push_back(pid);
+            } else {
+                Hand& myHand = Hands[idx];
+                bool better = false;
+                for (int j = winners.size() - 1; j >= 0; j--) {
+                    int res = compareHands(myHand, Hands[getIdx(winners[j])]);
+                    if (res == 1) {
+                        break;
+                    }
+                    better = true;
+                    if (res == -1) {
+                        winners.erase(winners.begin() + j);
+                    }
+                }
+                if (better) winners.push_back(pid);
+            }
         }
 
-        Players[bestHands[i]].Cash += payout;
+        float split = (float)pot.Amount / winners.size();
+        for (int i = 0; i < winners.size(); i++) {
+            int payout = (i == 0) ? (int)ceil(split) : (int)floor(split);
+            Players[getIdx(winners[i])].Cash += payout;
+        }
     }
 
     resetRound();
@@ -135,19 +165,39 @@ void PokerEngine::resolveFold() {
 }
 
 void PokerEngine::resetRound() {
-    // move blinds, reset engine state
     Pot = 0;
+    SidePots.clear();
     TheDeck.refillCards();
-    SmallBlind = getPlayer(SmallBlind, 1);
 
-    for (int i = 0; i < Players.size(); i++) {
-        Players[i].Active = true;
-        Players[i].PotSplit = 0;
-        Hands[i].Cards.clear();
+    int oldSbId = Players[SmallBlind].PlayerId;
+
+    for (int i = Players.size() - 1; i >= 0; i--) {
+        if (Players[i].Cash == 0) {
+            Players.erase(Players.begin() + i);
+            Hands.erase(Hands.begin() + i);
+        }
     }
 
     AllIn = false;
     EngineStage = INACTIVE;
+
+    if (Players.size() <= 1) return;
+
+    // find next small blind after old SB in ID rotation
+    SmallBlind = 0;
+    for (int i = 0; i < Players.size(); i++) {
+        if (Players[i].PlayerId > oldSbId) {
+            SmallBlind = i;
+            break;
+        }
+    }
+
+    for (int i = 0; i < Players.size(); i++) {
+        Players[i].Active = true;
+        Players[i].Bet = 0;
+        Players[i].PotSplit = 0;
+        Hands[i].Cards.clear();
+    }
 }
 
 
@@ -293,7 +343,7 @@ PublicState PokerEngine::getPublicState() {
 
 PlayerState PokerEngine::getPlayerState(const int& pid) {
     return PlayerState{
-        Hands[pid].Cards
+        Hands[getIdx(pid)].Cards
     };
 }
 
