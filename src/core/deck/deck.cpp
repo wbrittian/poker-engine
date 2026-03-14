@@ -9,6 +9,13 @@
 
 #include "deck.hpp"
 
+#include <random>
+
+static std::mt19937& rng() {
+    static std::mt19937 gen(std::random_device{}());
+    return gen;
+}
+
 // empties deck and adds 52 cards back to it
 void Deck::refillCards() {
     this->Cards.clear();
@@ -36,9 +43,7 @@ Card Deck::drawCard() {
         throw std::length_error("No more cards in deck");
     }
 
-    srand(time(0));
-
-    int idx = arc4random() % this->Cards.size();
+    int idx = std::uniform_int_distribution<int>(0, this->Cards.size() - 1)(rng());
     Card card = this->Cards[idx];
 
     this->Cards.erase(this->Cards.begin() + idx);

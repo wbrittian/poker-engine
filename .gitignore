@@ -2,3 +2,13 @@ build
 CMakeUserPresets.json
 .vscode
 .cache
+
+# Wasm build output
+build-wasm/
+
+# Web — generated Wasm artifacts (produced by `make wasm`)
+web/public/poker_engine.js
+web/public/poker_engine.wasm
+
+# Web — dependencies and lock file
+web/node_modules/

@@ -1,4 +1,4 @@
-.PHONY: build run install test
+.PHONY: build run install test wasm web
 
 build: install
 	@cd build && cmake .. -DCMAKE_TOOLCHAIN_FILE=./conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release
@@ -29,3 +29,13 @@ lint:
 format:
 	find src test -name '*.cpp' -o -name '*.hpp' | xargs clang-format --style=file -i
 	run-clang-tidy -fix -j $(shell sysctl -n hw.ncpu) -p build
+
+wasm: install
+	mkdir -p build-wasm
+	emcmake cmake -B build-wasm -DCMAKE_BUILD_TYPE=Release .
+	cmake --build build-wasm --target poker-engine-wasm
+	mkdir -p web/public
+	cp build-wasm/poker_engine.js build-wasm/poker_engine.wasm web/public/
+
+web: wasm
+	cd web && npm install && npm run dev

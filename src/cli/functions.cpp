@@ -23,7 +23,21 @@ void setColor(const std::string& color) {
         std::cout << "\033[0m";
     } else if (color == "grey") {
         std::cout << "\033[90m";
+    } else if (color == "yellow") {
+        std::cout << "\033[33m";
+    } else if (color == "cyan") {
+        std::cout << "\033[36m";
     }
+}
+
+void clearScreen() {
+    std::cout << "\033[2J\033[H";
+}
+
+std::string hline(int n) {
+    std::string result;
+    for (int i = 0; i < n; i++) result += to_utf8(u'\u2550');
+    return result;
 }
 
 bool isInteger(const std::string& str) {
@@ -88,6 +102,11 @@ std::string matchToSymbol(Suit suit) {
 }
 
 std::string ranks[13] = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"};
+
+std::string cardString(const Card& card) {
+    return ranks[card.Rank] + matchToSymbol(card.Suit);
+}
+
 void printCard(Card card) {
     Suit suit = card.Suit;
     Rank rank = card.Rank;

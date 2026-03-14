@@ -50,22 +50,9 @@ void CLI::printTitle() {
 
 // gets player name from terminal
 void CLI::getName() {
-    bool correct = false;
-
-    while (!correct) {
-        std::cout << "please enter your name:" << std::endl;
-        std::getline(std::cin, Name);
-        std::cout << std::endl;
-
-        std::string ans;
-        std::cout << "does this look right (y/n)? " << Name << std::endl;
-        std::getline(std::cin, ans);
-        std::cout << std::endl;
-
-        if (ans == "y") {
-            correct = true;
-        }
-    }
+    std::cout << "Enter your name: ";
+    std::getline(std::cin, Name);
+    std::cout << std::endl;
 }
 
 EngineSettings CLI::getSettings() {
@@ -84,86 +71,180 @@ void CLI::createBots(const int& numBots) {
 }
 
 void CLI::printHelp() {
-    std::cout << "----------------------------" << std::endl;
-    std::cout << "............HELP............";
-    std::cout << std::endl << std::endl << std::endl << std::endl << std::endl;
-    std::cout << "h -> get list of available commands" << std::endl
-              << "c -> call the current bet or check" << std::endl
-              << "b/r [AMOUNT] -> bet (or raise) the given amount" << std::endl
-              << "f -> fold your hand" << std::endl;
-    std::cout << std::endl << std::endl << std::endl << std::endl;
-    std::cout << "----------------------------" << std::endl;
+    using namespace ftxui;
 
+    auto document = vbox({
+        text(" COMMANDS") | bold,
+        separator(),
+        text(" h            show this help menu"),
+        text(" c            call the current bet or check"),
+        text(" r/b AMOUNT   raise (or bet) the given amount"),
+        text(" f            fold your hand"),
+    }) | border;
+
+    auto screen = Screen::Create(Dimension::Full(), Dimension::Fit(document));
+    Render(screen, document);
+    std::cout << std::endl << screen.ToString() << std::endl;
+    std::cout << "[press enter]";
     std::cin.get();
 }
 
+ftxui::Element CLI::cardElement(const Card& card) {
+    using namespace ftxui;
+    auto s = cardString(card);
+    if (card.Suit == HEARTS || card.Suit == DIAMONDS) {
+        return text(s) | color(Color::Red);
+    }
+    return text(s);
+}
+
 void CLI::printState(const PublicState& state, const PlayerState& pstate) {
-    std::cout << "----------------------------" << std::endl;
-    std::cout << "Hand " << state.HandNum << " ";
+    using namespace ftxui;
+
+    std::string stage;
     switch (state.EngineStage) {
-        case PREFLOP:
-            std::cout << "Preflop";
-            break;
-        case FLOP:
-            std::cout << "Flop";
-            break;
-        case TURN:
-            std::cout << "Turn";
-            break;
-        case RIVER:
-            std::cout << "River";
-            break;
-        case SHOWDOWN:
-            std::cout << "Showdown";
-            break;
+        case PREFLOP:   stage = "Preflop";  break;
+        case FLOP:      stage = "Flop";     break;
+        case TURN:      stage = "Turn";     break;
+        case RIVER:     stage = "River";    break;
+        case SHOWDOWN:  stage = "Showdown"; break;
+        default:        stage = "";         break;
     }
-    std::cout << std::endl << std::endl;
 
-    std::cout << "Pot: " << state.Pot << std::endl;
-    std::cout << "Bet: " << state.CurrentBet << std::endl;
-    std::cout << std::endl;
-    
-    for (int i = 0; i < state.Players.size(); i++) {
-        Seat cur = state.Players[i];
-        if (i == state.Current) {
-            std::cout << "> ";
+    int sbIdx = state.SmallBlind;
+    int bbIdx = (state.SmallBlind + 1) % (int)state.Players.size();
+
+    // header
+    auto header = vbox({
+        hbox({text(" Hand "), text(std::to_string(state.HandNum)) | bold,
+              text(" | "), text(stage) | bold}),
+        hbox({text(" Pot: "),
+              text(std::to_string(state.Pot) + _chip()) | color(Color::Green),
+              text("   Bet: "),
+              text(std::to_string(state.CurrentBet) + _chip()) | color(Color::Magenta)}),
+    });
+
+    // column widths
+    const int W_NAME = 16;
+    const int W_VAL  = 9;
+    const int W_TAG  = 9;
+
+    // column header row
+    auto colHeader = hbox({
+        text("  "),
+        text("Name")    | size(WIDTH, EQUAL, W_NAME) | dim,
+        text("Cash")    | size(WIDTH, EQUAL, W_VAL) | dim,
+        text("Bet")     | size(WIDTH, EQUAL, W_VAL) | dim,
+        text("In")      | size(WIDTH, EQUAL, W_VAL) | dim,
+    });
+
+    // player rows
+    Elements playerRows;
+    playerRows.push_back(colHeader);
+    for (int i = 0; i < (int)state.Players.size(); i++) {
+        const Seat& cur = state.Players[i];
+
+        auto cursor = text(i == state.Current ? "> " : "  ");
+        auto nameCell = text(Names[i]) | size(WIDTH, EQUAL, W_NAME);
+
+        Element cashCell, betCell, inCell, statusCell;
+
+        if (cur.Active) {
+            cashCell   = text(std::to_string(cur.Cash) + _chip())
+                         | color(Color::Green) | size(WIDTH, EQUAL, W_VAL);
+            betCell    = (cur.Bet > 0
+                         ? text(std::to_string(cur.Bet) + _chip()) | color(Color::Magenta)
+                         : text("-"))
+                         | size(WIDTH, EQUAL, W_VAL);
+            inCell     = (cur.PotSplit > 0
+                         ? text(std::to_string(cur.PotSplit) + _chip()) | color(Color::Blue)
+                         : text("-"))
+                         | size(WIDTH, EQUAL, W_VAL);
+            statusCell = cur.Cash == 0
+                         ? text("[ALL IN]") | color(Color::Yellow) | size(WIDTH, EQUAL, W_TAG)
+                         : text("") | size(WIDTH, EQUAL, W_TAG);
         } else {
-            std::cout << "  ";
+            cashCell   = text("[FOLDED]") | dim | size(WIDTH, EQUAL, W_VAL);
+            betCell    = text("-")        | dim | size(WIDTH, EQUAL, W_VAL);
+            inCell     = (cur.PotSplit > 0
+                         ? text(std::to_string(cur.PotSplit) + _chip()) | color(Color::Blue)
+                         : text("-") | dim)
+                         | size(WIDTH, EQUAL, W_VAL);
+            statusCell = text("") | size(WIDTH, EQUAL, W_TAG);
         }
 
-        if (!cur.Active) {
-            setColor("grey");
-        }
+        Element blindTag = text("") | size(WIDTH, EQUAL, 5);
+        if (i == sbIdx)      blindTag = text("[SB]") | color(Color::Cyan)   | size(WIDTH, EQUAL, 5);
+        else if (i == bbIdx) blindTag = text("[BB]") | color(Color::Yellow) | size(WIDTH, EQUAL, 5);
 
-        std::cout << Names[i] << " (";
-        
-        if (cur.Active) {
-            setColor("green");
-        }
-
-        std::cout << cur.Cash << _chip();
-
-        if (cur.Active) {
-            setColor("black");
-        }
-
-        std::cout << "): ";
-
-        if (cur.Active) {
-            setColor("purple");
-        }
-
-        std::cout << cur.Bet << _chip();
-
-        setColor("black");
-        std::cout << std::endl;
+        playerRows.push_back(hbox({cursor, nameCell, cashCell, betCell, inCell, statusCell, blindTag}));
     }
 
-    std::cout << std::endl << "Community cards: ";
-    printCards(state.Community);
-    std::cout << std::endl << "Your cards: ";
-    printCards(pstate.Hand);
-    std::cout << std::endl << std::endl;
+    // community cards
+    Elements community;
+    community.push_back(text(" Community:  "));
+    if (state.Community.empty()) {
+        community.push_back(text("-"));
+    } else {
+        for (const Card& c : state.Community) {
+            community.push_back(cardElement(c));
+            community.push_back(text(" "));
+        }
+    }
+
+    // your hand
+    Elements hand;
+    hand.push_back(text(" Your hand:  "));
+    for (const Card& c : pstate.Hand) {
+        hand.push_back(cardElement(c));
+        hand.push_back(text(" "));
+    }
+
+    auto document = vbox({
+        header,
+        separator(),
+        vbox(playerRows),
+        separator(),
+        hbox(community),
+        hbox(hand),
+    }) | border;
+
+    clearScreen();
+    auto screen = Screen::Create(Dimension::Full(), Dimension::Fit(document));
+    Render(screen, document);
+    std::cout << screen.ToString() << std::endl;
+}
+
+void CLI::printResults(const ResultState& results) {
+    using namespace ftxui;
+
+    Elements content;
+    content.push_back(
+        text(" " + Names[results.Winner] + " wins " + _chip() + std::to_string(results.Pot) + "!")
+        | color(Color::Yellow) | bold
+    );
+
+    if (!results.Hands.empty()) {
+        content.push_back(separator());
+        for (int i = 0; i < (int)results.Players.size(); i++) {
+            int pid = results.Players[i];
+            Elements row;
+            row.push_back(text(" " + Names[pid] + ":  "));
+            for (const Card& c : results.Hands[i]) {
+                row.push_back(cardElement(c));
+                row.push_back(text(" "));
+            }
+            content.push_back(hbox(row));
+        }
+    }
+
+    auto document = vbox(content) | border;
+    clearScreen();
+    auto screen = Screen::Create(Dimension::Full(), Dimension::Fit(document));
+    Render(screen, document);
+    std::cout << screen.ToString() << std::endl;
+    std::cout << "[press enter]";
+    std::cin.get();
 }
 
 void CLI::printCards(const std::vector<Card>& cards) {
@@ -173,29 +254,38 @@ void CLI::printCards(const std::vector<Card>& cards) {
     }
 }
 
-Action CLI::getAction(const int& toPlay) {
-    
-    std::cout << toPlay << " to call > ";
+Action CLI::getAction(const int& toPlay, const int& minRaise) {
+    while (true) {
+        if (toPlay == 0) {
+            std::cout << "[c] check  [r] raise (min " << minRaise << _chip() << ")  [f] fold  [h] help" << std::endl;
+            std::cout << "check > ";
+        } else {
+            std::cout << "[c] call (" << toPlay << _chip() << ")  [r] raise (min " << minRaise << _chip() << ")  [f] fold  [h] help" << std::endl;
+            std::cout << "action > ";
+        }
 
-    std::string line;
-    std::string cmd, s_amt;
+        std::string line;
+        std::string cmd, s_amt;
 
-    std::getline(std::cin, line);
-    std::istringstream iss(line);
-    iss >> cmd >> s_amt;
+        std::getline(std::cin, line);
+        std::istringstream iss(line);
+        iss >> cmd >> s_amt;
 
-    if (cmd == "h") {
-        printHelp();
-    } else if (cmd == "c") {
-        return Action{Id, BET, 0};
-    } else if (cmd == "b" || cmd == "r") {
-        int amt = std::stoi(s_amt);
-        return Action{Id, BET, amt};
-    } else if (cmd == "f") {
-        return Action{Id, FOLD};
+        if (cmd == "h") {
+            printHelp();
+        } else if (cmd == "c") {
+            return Action{Id, BET, 0};
+        } else if (cmd == "b" || cmd == "r") {
+            try {
+                int amt = std::stoi(s_amt);
+                return Action{Id, BET, amt};
+            } catch (...) {
+                std::cout << "invalid amount" << std::endl;
+            }
+        } else if (cmd == "f") {
+            return Action{Id, FOLD};
+        }
     }
-        
-    return Action{Id, NONE};  
 }
 
 //
@@ -216,18 +306,59 @@ EngineSettings CLI::startup(const int& numPlayers) {
 
 void CLI::runGame(PokerEngine engine) {
     Engine = engine;
+    int lastRound = 0;
 
     while (true) {
         PublicState state = Engine.getPublicState();
+
+        if (state.EngineStage == INACTIVE) {
+            printResults(Engine.getResultState());
+            std::cout << "Game over! " << Names[state.Players[0].PlayerId] << " wins!" << std::endl;
+            break;
+        }
+
+        if (state.HandNum != lastRound && lastRound != 0) {
+            printResults(Engine.getResultState());
+            lastRound = state.HandNum;
+        } else if (lastRound == 0) {
+            lastRound = state.HandNum;
+        }
+
         PlayerState pstate = Engine.getPlayerState(Id);
         printState(state, pstate);
-        
-        if (state.Current == Id) {
-            Action action = getAction(state.CurrentBet - state.Players[Id].Bet);
+
+        int currentPid = state.Players[state.Current].PlayerId;
+
+        if (currentPid == Id) {
+            int minRaise = std::max(2 * state.CurrentBet, state.SmallBlind * 2);
+            Action action = getAction(state.CurrentBet - state.Players[state.Current].Bet, minRaise);
             Engine.submitAction(action);
         } else {
-            Action action = Bots[state.Current - 1].getAction(state);
-            Engine.submitAction(action);
+            Bot* bot = nullptr;
+            for (Bot& b : Bots) {
+                if (b.getId() == currentPid) {
+                    bot = &b;
+                    break;
+                }
+            }
+            if (bot) {
+                Action botAction = bot->getAction(state);
+                Engine.submitAction(botAction);
+
+                std::string botName = Names[state.Current];
+                std::cout << botName << " ";
+                if (botAction.Type == FOLD) {
+                    std::cout << "folds.";
+                } else if (botAction.Amount > 0) {
+                    std::cout << "raises to " << botAction.Amount << _chip() << ".";
+                } else if (state.CurrentBet == 0) {
+                    std::cout << "checks.";
+                } else {
+                    std::cout << "calls " << state.CurrentBet << _chip() << ".";
+                }
+                std::cout << std::endl;
+            }
+            std::cout << "[press enter]";
             std::cin.get();
         }
     }

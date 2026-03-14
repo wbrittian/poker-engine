@@ -47,6 +47,8 @@ class PokerEngine {
     int CurrentBet = 0;
 
     std::vector<Card> Community;
+    std::vector<SidePot> SidePots;
+    ResultState Result;
 
     // engine helpers
     void advanceEngine();
@@ -54,6 +56,7 @@ class PokerEngine {
     void resolveBetting();
     void resolveFold();
     void resolveShowdown();
+    void computeSidePots();
     void resetRound();
 
     // other helpers
