@@ -71,21 +71,35 @@ void CLI::createBots(const int& numBots) {
 }
 
 void CLI::printHelp() {
-    std::cout << std::endl;
-    std::cout << hline() << std::endl;
-    std::cout << " COMMANDS" << std::endl;
-    std::cout << hline() << std::endl;
-    std::cout << " h            show this help menu" << std::endl;
-    std::cout << " c            call the current bet or check" << std::endl;
-    std::cout << " r/b AMOUNT   raise (or bet) the given amount" << std::endl;
-    std::cout << " f            fold your hand" << std::endl;
-    std::cout << hline() << std::endl;
-    std::cout << std::endl << "[press enter]";
+    using namespace ftxui;
+
+    auto document = vbox({
+        text(" COMMANDS") | bold,
+        separator(),
+        text(" h            show this help menu"),
+        text(" c            call the current bet or check"),
+        text(" r/b AMOUNT   raise (or bet) the given amount"),
+        text(" f            fold your hand"),
+    }) | border;
+
+    auto screen = Screen::Create(Dimension::Full(), Dimension::Fit(document));
+    Render(screen, document);
+    std::cout << std::endl << screen.ToString() << std::endl;
+    std::cout << "[press enter]";
     std::cin.get();
 }
 
+ftxui::Element CLI::cardElement(const Card& card) {
+    using namespace ftxui;
+    auto s = cardString(card);
+    if (card.Suit == HEARTS || card.Suit == DIAMONDS) {
+        return text(s) | color(Color::Red);
+    }
+    return text(s);
+}
+
 void CLI::printState(const PublicState& state, const PlayerState& pstate) {
-    clearScreen();
+    using namespace ftxui;
 
     std::string stage;
     switch (state.EngineStage) {
@@ -97,122 +111,126 @@ void CLI::printState(const PublicState& state, const PlayerState& pstate) {
         default:        stage = "";         break;
     }
 
-    std::cout << hline() << std::endl;
-    std::cout << " Hand " << state.HandNum << " | " << stage << std::endl;
-    std::cout << " Pot: "; setColor("green"); std::cout << state.Pot << _chip(); setColor("black");
-    std::cout << "   Bet: "; setColor("purple"); std::cout << state.CurrentBet << _chip(); setColor("black");
-    std::cout << std::endl;
-    std::cout << hline() << std::endl;
-    std::cout << std::endl;
-
     int sbIdx = state.SmallBlind;
     int bbIdx = (state.SmallBlind + 1) % (int)state.Players.size();
 
+    // header
+    auto header = vbox({
+        hbox({text(" Hand "), text(std::to_string(state.HandNum)) | bold,
+              text(" | "), text(stage) | bold}),
+        hbox({text(" Pot: "),
+              text(std::to_string(state.Pot) + _chip()) | color(Color::Green),
+              text("   Bet: "),
+              text(std::to_string(state.CurrentBet) + _chip()) | color(Color::Magenta)}),
+    });
+
+    // player rows
+    Elements playerRows;
     for (int i = 0; i < (int)state.Players.size(); i++) {
         const Seat& cur = state.Players[i];
 
-        if (i == state.Current) {
-            std::cout << "> ";
-        } else {
-            std::cout << "  ";
-        }
+        Elements row;
+        row.push_back(text(i == state.Current ? "> " : "  "));
 
-        if (!cur.Active) setColor("grey");
-
-        // pad name to 14 chars
         std::string name = Names[i];
-        std::cout << name;
-        int pad = 14 - (int)name.size();
-        for (int j = 0; j < pad; j++) std::cout << ' ';
+        while ((int)name.size() < 14) name += ' ';
+        row.push_back(text(name));
 
         if (cur.Active) {
-            setColor("green");
-            std::cout << cur.Cash << _chip();
-            setColor("black");
-            std::cout << "  bet: ";
-            if (cur.Bet > 0) {
-                setColor("purple");
-                std::cout << cur.Bet << _chip();
-                setColor("black");
-            } else {
-                std::cout << "-";
-            }
+            row.push_back(text(std::to_string(cur.Cash) + _chip()) | color(Color::Green));
+            row.push_back(text("  bet: "));
+            row.push_back(cur.Bet > 0
+                ? text(std::to_string(cur.Bet) + _chip()) | color(Color::Magenta)
+                : text("-"));
             if (cur.PotSplit > 0) {
-                std::cout << "  in: ";
-                setColor("blue");
-                std::cout << cur.PotSplit << _chip();
-                setColor("black");
+                row.push_back(text("  in: "));
+                row.push_back(text(std::to_string(cur.PotSplit) + _chip()) | color(Color::Blue));
             }
             if (cur.Cash == 0) {
-                std::cout << "  ";
-                setColor("yellow");
-                std::cout << "[ALL IN]";
-                setColor("black");
+                row.push_back(text("  "));
+                row.push_back(text("[ALL IN]") | color(Color::Yellow));
             }
         } else {
-            setColor("grey");
-            std::cout << "[FOLDED]";
+            row.push_back(text("[FOLDED]") | dim);
             if (cur.PotSplit > 0) {
-                setColor("black");
-                std::cout << "  in: ";
-                setColor("blue");
-                std::cout << cur.PotSplit << _chip();
+                row.push_back(text("  in: ") | dim);
+                row.push_back(text(std::to_string(cur.PotSplit) + _chip()) | color(Color::Blue));
             }
-            setColor("black");
         }
 
         if (i == sbIdx) {
-            std::cout << "  ";
-            setColor("cyan");
-            std::cout << "[SB]";
-            setColor("black");
+            row.push_back(text("  [SB]") | color(Color::Cyan));
         } else if (i == bbIdx) {
-            std::cout << "  ";
-            setColor("yellow");
-            std::cout << "[BB]";
-            setColor("black");
+            row.push_back(text("  [BB]") | color(Color::Yellow));
         }
 
-        std::cout << std::endl;
+        playerRows.push_back(hbox(row));
     }
 
-    std::cout << std::endl;
-    std::cout << "Community:  ";
+    // community cards
+    Elements community;
+    community.push_back(text(" Community:  "));
     if (state.Community.empty()) {
-        std::cout << "-";
+        community.push_back(text("-"));
     } else {
-        printCards(state.Community);
+        for (const Card& c : state.Community) {
+            community.push_back(cardElement(c));
+            community.push_back(text(" "));
+        }
     }
-    std::cout << std::endl;
-    std::cout << "Your hand:  ";
-    printCards(pstate.Hand);
-    std::cout << std::endl << std::endl;
+
+    // your hand
+    Elements hand;
+    hand.push_back(text(" Your hand:  "));
+    for (const Card& c : pstate.Hand) {
+        hand.push_back(cardElement(c));
+        hand.push_back(text(" "));
+    }
+
+    auto document = vbox({
+        header,
+        separator(),
+        vbox(playerRows),
+        separator(),
+        hbox(community),
+        hbox(hand),
+    }) | border;
+
+    clearScreen();
+    auto screen = Screen::Create(Dimension::Full(), Dimension::Fit(document));
+    Render(screen, document);
+    std::cout << screen.ToString() << std::endl;
 }
 
 void CLI::printResults(const ResultState& results) {
-    clearScreen();
-    std::cout << hline() << std::endl;
-    setColor("yellow");
-    std::cout << " " << Names[results.Winner] << " wins " << _chip() << results.Pot << "!";
-    setColor("black");
-    std::cout << std::endl;
-    std::cout << hline() << std::endl;
+    using namespace ftxui;
+
+    Elements content;
+    content.push_back(
+        text(" " + Names[results.Winner] + " wins " + _chip() + std::to_string(results.Pot) + "!")
+        | color(Color::Yellow) | bold
+    );
 
     if (!results.Hands.empty()) {
-        std::cout << std::endl;
+        content.push_back(separator());
         for (int i = 0; i < (int)results.Players.size(); i++) {
             int pid = results.Players[i];
-            std::string name = Names[pid];
-            std::cout << " " << name << ": ";
+            Elements row;
+            row.push_back(text(" " + Names[pid] + ":  "));
             for (const Card& c : results.Hands[i]) {
-                printCard(c);
-                std::cout << " ";
+                row.push_back(cardElement(c));
+                row.push_back(text(" "));
             }
-            std::cout << std::endl;
+            content.push_back(hbox(row));
         }
     }
 
-    std::cout << std::endl << "[press enter]";
+    auto document = vbox(content) | border;
+    clearScreen();
+    auto screen = Screen::Create(Dimension::Full(), Dimension::Fit(document));
+    Render(screen, document);
+    std::cout << screen.ToString() << std::endl;
+    std::cout << "[press enter]";
     std::cin.get();
 }
 

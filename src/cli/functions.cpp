@@ -102,6 +102,11 @@ std::string matchToSymbol(Suit suit) {
 }
 
 std::string ranks[13] = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"};
+
+std::string cardString(const Card& card) {
+    return ranks[card.Rank] + matchToSymbol(card.Suit);
+}
+
 void printCard(Card card) {
     Suit suit = card.Suit;
     Rank rank = card.Rank;

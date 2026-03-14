@@ -28,5 +28,8 @@ std::string _diamond();
 std::string _chip();
 std::string _chips();
 
+extern std::string ranks[13];
+
 std::string matchToSymbol(Suit suit);
+std::string cardString(const Card& card);
 void printCard(Card card);
