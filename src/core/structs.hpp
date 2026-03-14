@@ -65,6 +65,11 @@ struct ResultState {
     int Pot;
 };
 
+struct SidePot {
+    int Amount;
+    std::vector<int> Eligible;
+};
+
 struct EngineSettings {
     int BigBlind = 20;
     int SmallBlind = 10;
