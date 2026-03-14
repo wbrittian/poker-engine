@@ -124,47 +124,60 @@ void CLI::printState(const PublicState& state, const PlayerState& pstate) {
               text(std::to_string(state.CurrentBet) + _chip()) | color(Color::Magenta)}),
     });
 
+    // column widths
+    const int W_NAME = 16;
+    const int W_VAL  = 9;
+    const int W_TAG  = 9;
+
+    // column header row
+    auto colHeader = hbox({
+        text("  "),
+        text("Name")    | size(WIDTH, EQUAL, W_NAME),
+        text("Cash")    | size(WIDTH, EQUAL, W_VAL) | dim,
+        text("Bet")     | size(WIDTH, EQUAL, W_VAL) | dim,
+        text("In")      | size(WIDTH, EQUAL, W_VAL) | dim,
+    });
+
     // player rows
     Elements playerRows;
+    playerRows.push_back(colHeader);
     for (int i = 0; i < (int)state.Players.size(); i++) {
         const Seat& cur = state.Players[i];
 
-        Elements row;
-        row.push_back(text(i == state.Current ? "> " : "  "));
+        auto cursor = text(i == state.Current ? "> " : "  ");
+        auto nameCell = text(Names[i]) | size(WIDTH, EQUAL, W_NAME);
 
-        std::string name = Names[i];
-        while ((int)name.size() < 14) name += ' ';
-        row.push_back(text(name));
+        Element cashCell, betCell, inCell, statusCell;
 
         if (cur.Active) {
-            row.push_back(text(std::to_string(cur.Cash) + _chip()) | color(Color::Green));
-            row.push_back(text("  bet: "));
-            row.push_back(cur.Bet > 0
-                ? text(std::to_string(cur.Bet) + _chip()) | color(Color::Magenta)
-                : text("-"));
-            if (cur.PotSplit > 0) {
-                row.push_back(text("  in: "));
-                row.push_back(text(std::to_string(cur.PotSplit) + _chip()) | color(Color::Blue));
-            }
-            if (cur.Cash == 0) {
-                row.push_back(text("  "));
-                row.push_back(text("[ALL IN]") | color(Color::Yellow));
-            }
+            cashCell   = text(std::to_string(cur.Cash) + _chip())
+                         | color(Color::Green) | size(WIDTH, EQUAL, W_VAL);
+            betCell    = (cur.Bet > 0
+                         ? text(std::to_string(cur.Bet) + _chip()) | color(Color::Magenta)
+                         : text("-"))
+                         | size(WIDTH, EQUAL, W_VAL);
+            inCell     = (cur.PotSplit > 0
+                         ? text(std::to_string(cur.PotSplit) + _chip()) | color(Color::Blue)
+                         : text("-"))
+                         | size(WIDTH, EQUAL, W_VAL);
+            statusCell = cur.Cash == 0
+                         ? text("[ALL IN]") | color(Color::Yellow) | size(WIDTH, EQUAL, W_TAG)
+                         : text("") | size(WIDTH, EQUAL, W_TAG);
         } else {
-            row.push_back(text("[FOLDED]") | dim);
-            if (cur.PotSplit > 0) {
-                row.push_back(text("  in: ") | dim);
-                row.push_back(text(std::to_string(cur.PotSplit) + _chip()) | color(Color::Blue));
-            }
+            cashCell   = text("[FOLDED]") | dim | size(WIDTH, EQUAL, W_VAL);
+            betCell    = text("-")        | dim | size(WIDTH, EQUAL, W_VAL);
+            inCell     = (cur.PotSplit > 0
+                         ? text(std::to_string(cur.PotSplit) + _chip()) | color(Color::Blue)
+                         : text("-") | dim)
+                         | size(WIDTH, EQUAL, W_VAL);
+            statusCell = text("") | size(WIDTH, EQUAL, W_TAG);
         }
 
-        if (i == sbIdx) {
-            row.push_back(text("  [SB]") | color(Color::Cyan));
-        } else if (i == bbIdx) {
-            row.push_back(text("  [BB]") | color(Color::Yellow));
-        }
+        Element blindTag = text("") | size(WIDTH, EQUAL, 5);
+        if (i == sbIdx)      blindTag = text("[SB]") | color(Color::Cyan)   | size(WIDTH, EQUAL, 5);
+        else if (i == bbIdx) blindTag = text("[BB]") | color(Color::Yellow) | size(WIDTH, EQUAL, 5);
 
-        playerRows.push_back(hbox(row));
+        playerRows.push_back(hbox({cursor, nameCell, cashCell, betCell, inCell, statusCell, blindTag}));
     }
 
     // community cards
