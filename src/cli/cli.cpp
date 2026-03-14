@@ -208,13 +208,13 @@ void CLI::printCards(const std::vector<Card>& cards) {
     }
 }
 
-Action CLI::getAction(const int& toPlay) {
+Action CLI::getAction(const int& toPlay, const int& minRaise) {
     while (true) {
         if (toPlay == 0) {
-            std::cout << "[c] check  [r] raise  [f] fold  [h] help" << std::endl;
+            std::cout << "[c] check  [r] raise (min " << minRaise << _chip() << ")  [f] fold  [h] help" << std::endl;
             std::cout << "check > ";
         } else {
-            std::cout << "[c] call (" << toPlay << _chip() << ")  [r] raise  [f] fold  [h] help" << std::endl;
+            std::cout << "[c] call (" << toPlay << _chip() << ")  [r] raise (min " << minRaise << _chip() << ")  [f] fold  [h] help" << std::endl;
             std::cout << "action > ";
         }
 
@@ -284,7 +284,8 @@ void CLI::runGame(PokerEngine engine) {
         int currentPid = state.Players[state.Current].PlayerId;
 
         if (currentPid == Id) {
-            Action action = getAction(state.CurrentBet - state.Players[state.Current].Bet);
+            int minRaise = std::max(2 * state.CurrentBet, state.SmallBlind * 2);
+            Action action = getAction(state.CurrentBet - state.Players[state.Current].Bet, minRaise);
             Engine.submitAction(action);
         } else {
             Bot* bot = nullptr;

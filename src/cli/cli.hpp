@@ -32,7 +32,7 @@ class CLI {
     void printHelp();
     // void printState(const PublicState& state);
     void printCards(const std::vector<Card>& cards);
-    Action getAction(const int& toPlay);
+    Action getAction(const int& toPlay, const int& minRaise);
 
   public:
     EngineSettings startup(const int& numPlayers);
