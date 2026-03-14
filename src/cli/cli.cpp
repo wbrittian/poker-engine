@@ -166,6 +166,10 @@ void CLI::printState(const PublicState& state, const PlayerState& pstate) {
     std::cout << std::endl << std::endl;
 }
 
+void CLI::printResults(const ResultState& results) {
+    // TODO
+}
+
 void CLI::printCards(const std::vector<Card>& cards) {
     for (const Card& card : cards) {
         printCard(card);

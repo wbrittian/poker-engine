@@ -39,4 +39,5 @@ class CLI {
     void runGame(PokerEngine engine);
 
     void printState(const PublicState& state, const PlayerState& pstate);
+    void printResults(const ResultState& state);
 };
